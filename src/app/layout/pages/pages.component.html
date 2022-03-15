@@ -1,0 +1,76 @@
+<block-ui>
+<!-- begin:: Page -->
+
+<!-- begin:: Header Mobile -->
+<div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed ">
+    <div class="kt-header-mobile__logo">
+            <img alt="Logo" src="assets/media/logos/logo_pmp_original_40.png" />
+        </div>
+    <div class="kt-header-mobile__toolbar">
+        <button class="kt-header-mobile__toolbar-toggler kt-header-mobile__toolbar-toggler--left" id="kt_aside_mobile_toggler" (click)="openMobileMenu()"><span></span></button>
+        <button class="kt-header-mobile__toolbar-topbar-toggler" id="kt_header_mobile_topbar_toggler" (click)="openUserMobileMenu()"><i class="flaticon-more"></i></button>
+    </div>
+</div>
+
+<!-- end:: Header Mobile -->
+<div class="kt-grid kt-grid--hor kt-grid--root">
+    <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
+
+        <!-- begin:: Aside -->
+        <button class="kt-aside-close " id="kt_aside_close_btn"><i class="la la-close"></i></button>
+        <div class="kt-aside  kt-aside--fixed  kt-grid__item kt-grid kt-grid--desktop kt-grid--hor-desktop" id="kt_aside">
+
+            <!-- begin:: Aside -->
+            <div class="kt-aside__brand kt-grid__item  " id="kt_aside_brand">
+                <div class="kt-aside__brand-logo">
+                        <img alt="Logo" src="assets/media/logos/logo_pmp_original.png" />
+                </div>
+            </div>
+
+            <!-- end:: Aside -->
+
+            <!-- begin:: Aside Menu -->
+                <app-menu (aposSelecionar)="openMobileMenu()"></app-menu>
+            <!-- end:: Aside Menu -->
+        </div>
+
+        <!-- end:: Aside -->
+        <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper" id="kt_wrapper" style='padding-top: 74px !important;'>
+
+            <!-- begin:: header -->
+            <app-header></app-header>
+            <!-- end:: header-->
+
+            <div class="kt-content  kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" id="kt_content">
+
+                <!-- begin:: Content Head -->
+                <!--<div class="kt-subheader  kt-grid__item" id="kt_subheader">
+                    <div class="kt-container  kt-container--fluid ">
+                        <div class="kt-subheader__main">
+                            <h3 class="kt-subheader__title" *ngIf="!(funcionalidadeAtiva$ | async).name">Home</h3>
+                            <h3 class="kt-subheader__title" *ngIf="(funcionalidadeAtiva$ | async).name">{{ (funcionalidadeAtiva$ | async).name }}</h3>
+                            <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+                            <span class="kt-subheader__desc">Banco do Povo</span>
+                        </div>
+                    </div>
+                </div>-->
+
+                <!-- end:: Content Head -->
+
+                <!-- begin:: Content -->
+                <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+
+                    <router-outlet></router-outlet>
+                                    
+                </div>
+
+                <!-- end:: Content -->
+            </div>
+
+            <!-- end:: Footer -->
+        </div>
+    </div>
+</div>
+
+<!-- end:: Page -->
+</block-ui>

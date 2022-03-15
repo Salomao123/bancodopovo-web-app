@@ -1,0 +1,52 @@
+<form #pessoaFinanceiroForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modalFinanceiro 
+            id="modalFinanceiro" 
+            titulo="Situação Financeira"
+            sizeClass="modal-lg"
+            (fechar)="pessoaFinanceiroForm.resetForm()">
+
+        <app-modal-body *ngIf="pessoa">
+            
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Nome Negativado?</label>
+                    <select #nomeNegativadoNovo="ngModel" name="nomeNegativadoNovo" [(ngModel)]="pessoa.indicadorNomeSujo"
+                        class="form-control {{ (nomeNegativadoNovo.invalid && pessoaFinanceiroForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="1">Sim</option>
+                        <option [ngValue]="2">Não</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Score (Pontuação):</label>
+                    <input #scoreNovo="ngModel" name="scoreNovo" [(ngModel)]="pessoa.scoreNome" type="text"
+                        class="form-control" maxlength="5" appNumeroFormat
+                        placeholder="Score" />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Data da Última Consulta no Serasa*:</label>
+                    <p-calendar #dataConsultaNomeNovo="ngModel"
+                                name="dataConsultaNomeNovo"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control {{ (dataConsultaNomeNovo.invalid && pessoaFinanceiroForm.submitted) ? 'is-invalid' : '' }}"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="dd/MM/YYYY"
+                                [(ngModel)]="pessoa.dataUltimaConsultaSerasa"
+                                appDateFormat
+                                required></p-calendar>
+                </div>
+            </div>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="pessoaFinanceiroForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary" *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.PESSOA, acaoEnum.SALVAR_SITUACAO_FINANCEIRA) | async" (click)="salvar()">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

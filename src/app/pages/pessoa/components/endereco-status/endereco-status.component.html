@@ -1,0 +1,25 @@
+<form #enderecoStatusForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+        id="modalStatusEndereco" 
+        titulo="{{ ((endereco) && (status.ATIVO === endereco.status)) ? 'Inativar Endereço' : 'Ativar Endereço' }}"
+        (fechar)="enderecoStatusForm.resetForm(); modal.close();"
+        modalVinculada="modalEnderecos" [showModalVinculadaOnClose]="true">
+        <app-modal-body *ngIf="endereco">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label *ngIf="status.INATIVO === endereco.status">
+                        Deseja realmente ativar o registro?
+                    </label>
+                    <label *ngIf="status.ATIVO === endereco.status">
+                        Deseja realmente excluir/inativar o registro?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="enderecoStatusForm.resetForm(); modal.close();">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+    

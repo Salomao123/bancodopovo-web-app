@@ -1,0 +1,172 @@
+<!-- begin:: Header -->
+<div id="kt_header" class="kt-header kt-grid__item kt-header--fixed">
+  <!-- begin: Header Menu -->
+  <button
+    class="kt-header-menu-wrapper-close"
+    id="kt_header_menu_mobile_close_btn"
+  >
+    <i class="la la-close"></i>
+  </button>
+  <div class="kt-header-menu-wrapper" id="kt_header_menu_wrapper"></div>
+
+  <!-- end: Header Menu -->
+
+  <!-- begin:: Header Topbar -->
+  <div class="kt-header__topbar">
+    <!--begin: User Bar -->
+    <div class="kt-header__topbar-item kt-header__topbar-item--user">
+      <div
+        class="kt-header__topbar-wrapper"
+        data-toggle="dropdown"
+        data-offset="0px,0px"
+      >
+        <div
+          id="idDivUser"
+          class="kt-header__topbar-user"
+          (click)="userDrop.showDropUser()"
+          style="margin-right: 10px"
+        >
+          <span
+            *ngIf="usuarioLogado$ | async"
+            id="idWelcomeUser"
+            class="kt-header__topbar-welcome"
+            >Logado como&nbsp;<strong>
+              {{ (usuarioLogado$ | async).login }}</strong
+            ></span
+          >
+          <i id="idImageUser" class="fa fa-user fa-2x"></i>
+        </div>
+        <div
+          title="Simulador de Empréstimo"
+          id="idDivCalculator"
+          class="kt-header__topbar-user"
+          (click)="abrirModalSimulacao()"
+        >
+          <i class="fa fa-calculator fa-2x"></i>
+        </div>
+      </div>
+      <app-user-drop #userDrop></app-user-drop>
+    </div>
+
+    <!--end: User Bar -->
+  </div>
+
+  <!-- end:: Header Topbar -->
+</div>
+
+<!-- end:: Header -->
+
+<form>
+  <app-modal
+    #modalSimular
+    id="modalSimularEmprestimo"
+    titulo="Simulação de Empre&#769;stimo"
+    sizeClass="modal-lg"
+    (fechar)="limparDadosSimulacao()"
+  >
+    <app-modal-body>
+      <div class="collum">
+        <div class="row">
+          <div class="form-group col-xl-3">
+            <label>Linha de Credito*:</label>
+            <select
+              appMoedaFormat
+              ngModel
+              maxlength="13"
+              name="linhas"
+              [(ngModel)]="linhaSelecionada"
+              type="text"
+              class="form-control"
+              (change)="flinhaSelecionada()"
+            >
+              <option [ngValue]="linha" *ngFor="let linha of linhasCredito">
+                {{ linha.nome }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group col-xl-3">
+            <label>Valor Solicitado*:</label>
+            <input
+              appMoedaFormat
+              maxlength="13"
+              name="valor"
+              [(ngModel)]="valorFormatado"
+              (blur)="salvarValorSolicitado($event.target.value)"
+              type="text"
+              class="form-control"
+            />
+            <span class="bottomAlerts" *ngIf="!!valorSolicitadoErro">
+              {{ valorSolicitadoErro }}
+            </span>
+          </div>
+
+          <div class="form-group col-xl-3">
+            <label>Número de Parcelas*:</label>
+            <input
+              appNumeroFormat
+              maxlength="5"
+              name="parcelas"
+              [(ngModel)]="parcelas"
+              (blur)="salvarParcelas($event.target.value)"
+              type="text"
+              class="form-control"
+            />
+            <span class="bottomAlerts" *ngIf="!!parcelasErro">
+              {{ parcelasErro }}
+            </span>
+          </div>
+
+          <div class="form-group col-xl-3">
+            <label>Taxa Anual*:</label>
+            <input
+              appMoedaFormat
+              maxlength="5"
+              name="taxa"
+              [(ngModel)]="taxaAnualFormatada"
+              (blur)="salvarTaxaAnual($event.target.value)"
+              type="text"
+              class="form-control"
+            />
+            <span class="bottomAlerts" *ngIf="!!taxaAnualErro">
+              {{ taxaAnualErro }}
+            </span>
+          </div>
+        </div>
+
+        <table *ngIf="calculado" class="table table-hover tabela">
+          <thead>
+            <tr>
+              <td>Valor da prestação periódica</td>
+              <td>Valor do capital financiado</td>
+              <td>Taxa de juros</td>
+              <td>Número de parcelas</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr [(ngModel)]="calculo" [ngModelOptions]="{ standalone: true }">
+              <td>{{ calculo.prestacao }}</td>
+              <td>{{ calculo.financiado }}</td>
+              <td>{{ calculo.juros }}%</td>
+              <td>{{ calculo.parcelas }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </app-modal-body>
+
+    <app-modal-footer>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="simularEmprestimo()"
+      >
+        Simular
+      </button>
+
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">
+        Fechar
+      </button>
+    </app-modal-footer>
+  </app-modal>
+</form>

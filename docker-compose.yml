@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  bancopovoweb:
+    image: salomaocode/bancodopovo
+    container_name: bancodopovo-web
+    ports:
+      - 8081:80

@@ -1,0 +1,153 @@
+<form #pessoaNovoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalAdicionarPessoa" 
+            titulo="Adicionar Pessoa"
+            sizeClass="modal-lg"
+            (fechar)="pessoaNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="pessoa">
+            
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Tipo de Pessoa*:</label>
+                    <select #tipoPessoaNovo="ngModel" name="tipoPessoaNovo" [(ngModel)]="pessoa.tipo"
+                        class="form-control {{ (tipoPessoaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="tipoPessoa.FISICA">Pessoa Física</option>
+                        <option [ngValue]="tipoPessoa.JURIDICA">Pessoa Jurídica</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Status*:</label>
+                    <select #statusNovo="ngModel" name="statusNovo" [(ngModel)]="pessoa.status"
+                        class="form-control {{ (statusNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+            </div>
+
+            <span class="row" *ngIf="tipoPessoa.FISICA === pessoa.tipo">
+                <div class="form-group col-xl-6">
+                    <label>Nome*:</label>
+                    <input #nomeNovo="ngModel" name="nomeNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.nome" type="text"
+                        class="form-control {{ (nomeNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Nome" required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>CPF*:</label>
+                    <input #cpfNovo="ngModel" id="cpf" name="cpfNovo" [(ngModel)]="pessoa.documento" type="text" maxlength="14"
+                        class="form-control {{ (cpfNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="CPF" appCpfFormat required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Data de Nascimento*:</label>
+                    <p-calendar #dataNascimentoNovo="ngModel"
+                                name="dataNascimentoNovo"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control {{ (dataNascimentoNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                [maxDate]="maxDate"
+                                [defaultDate]="maxDate"
+                                placeholder="Data de Nascimento"
+                                [(ngModel)]="pessoa.dataNascimento"
+                                required></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Estado Civil*:</label>
+                    <select #estadoCivilNovo="ngModel" name="estadoCivilNovo" [(ngModel)]="pessoa.estadoCivil"
+                            class="form-control {{ (estadoCivilNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="null">Selecione...</option>
+                        <option [ngValue]="estadoCivil.SOLTEIRO">Solteiro</option>
+                        <option [ngValue]="estadoCivil.CASADO">Casado</option>
+                        <option [ngValue]="estadoCivil.SEPARADO">Separado</option>
+                        <option [ngValue]="estadoCivil.DIVORCIADO">Divorciado</option>
+                        <option [ngValue]="estadoCivil.UNIAO_ESTAVEL">União Estável</option>
+                        <option [ngValue]="estadoCivil.VIUVO">Viúvo</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Atividade Econômica*:</label>
+                    <input #atividadeEconomicaNovo="ngModel" name="atividadeEconomicaNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.atividadeEconomica" type="text"
+                        class="form-control {{ (atividadeEconomicaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Atividade Econômica" required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Profissão:</label>
+                    <input #profissaoNovo="ngModel" (keyup)="formatInput($event)" name="profissaoNovo" [(ngModel)]="pessoa.profissao" type="text"
+                        class="form-control"
+                        placeholder="Profissão" />
+                </div>
+                
+            </span>
+
+            <span class="row" *ngIf="tipoPessoa.JURIDICA === pessoa.tipo">
+                <div class="form-group col-xl-6">
+                    <label>Razão Social*:</label>
+                    <input #razaoSocialNovo="ngModel" name="razaoSocialNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.razaoSocial" type="text"
+                        class="form-control {{ (razaoSocialNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Razão Social" required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Nome Fantasia*:</label>
+                    <input #nomeFantasiaNovo="ngModel" name="nomeFantasiaNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.nomeFantasia" type="text"
+                        class="form-control {{ (nomeFantasiaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Nome Fantasia" required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>CNPJ*:</label>
+                    <input #cnpjNovo="ngModel" name="cnpjNovo" [(ngModel)]="pessoa.documento" type="text" maxlength="18"
+                        class="form-control {{ (cnpjNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="CNPJ" required appCnpjFormat />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Data de Criação*:</label>
+                    <p-calendar #dataCriacaoNovo="ngModel"
+                                name="dataCriacaoNovo"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control {{ (dataCriacaoNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                [maxDate]="maxDate"
+                                placeholder="Data de Criação"
+                                [(ngModel)]="pessoa.dataNascimento"
+                                [defaultDate]="maxDate"
+                                required></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Inscrição Estadual:</label>
+                    <input name="inscricaoEstadualNovo" [(ngModel)]="pessoa.inscricaoEstadual" type="number"
+                        class="form-control" placeholder="Inscrição Estadual" />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Inscrição Municipal:</label>
+                    <input name="inscricaoMunicipalNovo" [(ngModel)]="pessoa.inscricaoMunicipal" type="number"
+                        class="form-control" placeholder="Inscrição Municipal" />
+                </div>
+            </span>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="pessoaNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

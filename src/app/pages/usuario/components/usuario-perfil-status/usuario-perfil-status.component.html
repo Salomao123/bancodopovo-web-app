@@ -1,0 +1,25 @@
+<form #usuarioPerfilStatusForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+        id="modalStatusUsuarioPerfil" 
+        titulo="{{ ((usuarioPerfil) && (status.ATIVO === usuarioPerfil.status)) ? 'Inativar Perfil' : 'Ativar Perfil' }}"
+        (fechar)="usuarioPerfilStatusForm.resetForm(); modal.close();"
+        modalVinculada="modalUsuarioPerfil" [showModalVinculadaOnClose]="true">
+        <app-modal-body *ngIf="usuarioPerfil">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label *ngIf="status.INATIVO === usuarioPerfil.status">
+                        Deseja realmente ativar o registro?
+                    </label>
+                    <label *ngIf="status.ATIVO === usuarioPerfil.status">
+                        Deseja realmente excluir/inativar o registro?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="usuarioPerfilStatusForm.resetForm(); modal.close();">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+

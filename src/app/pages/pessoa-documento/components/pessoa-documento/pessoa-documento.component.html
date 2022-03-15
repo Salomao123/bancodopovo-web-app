@@ -1,0 +1,1873 @@
+<app-card>
+
+	<!-- The Modal -->
+	<div id="myModal" class="modalImg">
+		<!-- The Close Button -->
+		<span class="closeImg" onclick="$('.modalImg').css('display', 'none');" style="cursor: pointer;">&times;</span>
+
+		<!-- Modal Content (The Image) -->
+		<img class="modalImg-content" id="img01" />
+
+		<!-- Modal Caption (Image Text) -->
+		<div id="captionImg"></div>
+	</div>
+
+    <app-card-header titulo="Documentos (Anexos de {{ pessoa.tipo == 1 ? ' Pessoa Fi&#769;sica)' : ' Pessoa Juri&#769;dica)'}}">
+        <button class="btn btn-sm btn-outline-primary" routerLink="/pages/pessoa">Voltar</button>
+    </app-card-header>
+    <form class="kt-form">
+
+		<style>
+		.hovereffect {
+		  width: 100%;
+		  height: 100%;
+		  float: left;
+		  overflow: hidden;
+		  position: relative;
+		  text-align: center;
+		  cursor: default;
+		}
+
+		.hovereffect .overlay {
+		  width: 100%;
+		  height: 100%;
+		  position: absolute;
+		  overflow: hidden;
+		  top: 0;
+		  left: 0;
+		}
+
+		.hovereffect img {
+		  display: block;
+		  position: relative;
+		  -webkit-transition: all 0.4s ease-in;
+		  transition: all 0.4s ease-in;
+		}
+
+		.hovereffect:hover img {
+		  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" /><feGaussianBlur stdDeviation="3" /></filter></svg>#filter');
+		  filter: grayscale(1) blur(3px);
+		  -webkit-filter: grayscale(1) blur(3px);
+		  -webkit-transform: scale(1.2);
+		  -ms-transform: scale(1.2);
+		  transform: scale(1.2);
+		}
+
+		.hovereffect h2 {
+		  text-transform: uppercase;
+		  text-align: center;
+		  position: relative;
+		  font-size: 17px;
+		  padding: 10px;
+		  background: rgba(0, 0, 0, 0.6);
+		}
+
+		.hovereffect a.info {
+		  display: inline-block;
+		  text-decoration: none;
+		  padding: 7px 14px;
+		  border: 3px solid black;
+		  color: black;
+		  margin: 50px 0 0 0;
+		  background-color: transparent;
+		  font-weight: bold;
+		}
+
+		.hovereffect a.info:hover {
+		  box-shadow: 0 0 5px #fff;
+		}
+
+		.hovereffect a.info, .hovereffect h2 {
+		  -webkit-transform: scale(0.7);
+		  -ms-transform: scale(0.7);
+		  transform: scale(0.7);
+		  -webkit-transition: all 0.4s ease-in;
+		  transition: all 0.4s ease-in;
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  text-transform: uppercase;
+		}
+
+		.hovereffect h2 {
+			color: #fff;
+		}
+
+		.hovereffect:hover a.info, .hovereffect:hover h2 {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: scale(1);
+		  -ms-transform: scale(1);
+		  transform: scale(1);
+		}
+
+
+		.hovereffect2 {
+		  width: 100%;
+		  height: 100%;
+		  float: left;
+		  overflow: hidden;
+		  position: relative;
+		  text-align: center;
+		  cursor: default;
+		}
+
+		.hovereffect2 .overlay {
+		  width: 100%;
+		  height: 100%;
+		  position: absolute;
+		  overflow: hidden;
+		  top: 0;
+		  left: 0;
+		}
+
+		.hovereffect2:hover img {
+		  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" /><feGaussianBlur stdDeviation="3" /></filter></svg>#filter');
+		  filter: grayscale(1) blur(3px);
+		  -webkit-filter: grayscale(1) blur(3px);
+		  -webkit-transform: scale(0.8);
+		  -ms-transform: scale(0.8);
+		  transform: scale(0.8);
+		}
+
+		.hovereffect2 h2 {
+		  text-transform: uppercase;
+		  color: #fff;
+		  text-align: center;
+		  font-size: 17px;
+		  font-weight: bold;
+		  text-shadow: 2px 2px black;
+		}
+
+		.hovereffect2:hover h2 {
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  -webkit-transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+		  transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+		}
+
+		.hovereffect2 a.info {
+		  display: inline-block;
+		  text-decoration: none;
+		  padding: 7px 14px;
+		  text-transform: uppercase;
+		  color: red;
+		  border: 1px solid red;
+		  margin: 50px 0 0 0;
+		  background-color: transparent;
+		}
+
+		.hovereffect2 a.info:hover {
+		  box-shadow: 0 0 5px red;
+		}
+
+		.hovereffect2 hr {
+		  width: 40%;
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  border: 1px solid red;
+		}
+
+		.hovereffect2  hr:nth-child(3) {
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,90deg) scale3d(0,0,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,90deg) scale3d(0,0,1);
+		}
+
+		.hovereffect2  hr:nth-child(4) {
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,180deg) scale3d(0,0,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1, 180deg) scale3d(0,0,1);
+		}
+
+		.hovereffect2 h2, .hovereffect2 hr {
+		  position: absolute;
+		  top: 40%;
+		  left: 50%;
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  -webkit-transform: translate3d(-50%,-50%,0);
+		  transform: translate3d(-50%,-50%,0);
+		  -webkit-transform-origin: 50%;
+		  -ms-transform-origin: 50%;
+		  transform-origin: 50%;
+		  background-color: transparent;
+		  margin: 0px;
+		}
+
+		.set1, .set2 {
+		  left: 50%;
+		  position: absolute;
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  -webkit-transform: translate3d(-50%,-50%,0);
+		  transform: translate3d(-50%,-50%,0);
+		  -webkit-transform-origin: 50%;
+		  -ms-transform-origin: 50%;
+		  transform-origin: 50%;
+		  background-color: transparent;
+		  margin: 0px;
+		  padding: 0px;
+		}
+
+		.set1 {
+		  top: 30%;
+		}
+
+		.set2 {
+		  top: 50%;
+		}
+
+		.hovereffect2 p {
+		  width: 30%;
+		  text-transform: none;
+		  font-size: 15px;
+		  line-height: 2;
+		}
+
+		.hovereffect2 p a {
+		  color: red;
+		}
+
+		.hovereffect2 p a:hover,
+		.hovereffect2 p a:focus {
+		  opacity: 0.6;
+		  filter: alpha(opacity=60);
+		}
+
+		.hovereffect2  a i {
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  padding: 20px;
+		  font-size: 20px;
+		}
+
+		.set1 a:first-child i {
+		  -webkit-transform: translate3d(-60px,-60px,0);
+		  transform: translate3d(-60px,-60px,0);
+		}
+
+		.set1 a:nth-child(2) i {
+		  -webkit-transform: translate3d(60px,-60px,0);
+		  transform: translate3d(60px,-60px,0);
+		}
+
+		.set2 a:first-child i {
+		  -webkit-transform: translate3d(-60px,60px,0);
+		  transform: translate3d(-60px,60px,0);
+		}
+
+		.set2 a:nth-child(2) i {
+		  -webkit-transform: translate3d(60px,60px,0);
+		  transform: translate3d(60px,60px,0);
+		}
+
+		.hovereffect2:hover hr:nth-child(3) {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-90deg) scale3d(1,1,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-90deg) scale3d(1,1,1);
+		}
+
+		.hovereffect2:hover hr:nth-child(4) {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-180deg) scale3d(1,1,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-180deg) scale3d(1,1,1);
+		}
+
+		.hovereffect2:hover .set1 i:empty, .hovereffect2:hover .set2 i:empty {
+		  -webkit-transform: translate3d(0,0,0);
+		  transform: translate3d(0,0,0);
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		}
+
+
+		.hovereffect3 {
+		  width: 100%;
+		  height: 100%;
+		  float: left;
+		  overflow: hidden;
+		  position: relative;
+		  text-align: center;
+		  cursor: default;
+		}
+
+		.hovereffect3 .overlay {
+		  width: 100%;
+		  height: 100%;
+		  position: absolute;
+		  overflow: hidden;
+		  top: 0;
+		  left: 0;
+		}
+
+		.hovereffect3 img {
+		  display: block;
+		  position: relative;
+		  -webkit-transition: all 0.4s ease-in;
+		  transition: all 0.4s ease-in;
+		}
+
+		.hovereffect3:hover img {
+		  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" /><feGaussianBlur stdDeviation="3" /></filter></svg>#filter');
+		  filter: grayscale(1) blur(3px);
+		  -webkit-filter: grayscale(1) blur(3px);
+		  -webkit-transform: scale(0.8);
+		  -ms-transform: scale(0.8);
+		  transform: scale(0.8);
+		}
+
+		.hovereffect3 h2 {
+		  text-transform: uppercase;
+		  text-align: center;
+		  position: relative;
+		  font-size: 14px;
+		  padding: 5px;
+		  background: rgba(0, 0, 0, 0.6);
+		}
+
+		.hovereffect3 a.info {
+		  display: inline-block;
+		  text-decoration: none;
+		  padding: 3px 7px;
+		  border: 2px solid black;
+		  color: black;
+		  margin: 30px 0 0 0;
+		  background-color: transparent;
+		  font-weight: bold;
+		}
+
+		.hovereffect3 a.info:hover {
+		  box-shadow: 0 0 5px black;
+		}
+
+		.hovereffect3 a.info, .hovereffect3 h2 {
+		  -webkit-transform: scale(0.7);
+		  -ms-transform: scale(0.7);
+		  transform: scale(0.7);
+		  -webkit-transition: all 0.4s ease-in;
+		  transition: all 0.4s ease-in;
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  text-transform: uppercase;
+		}
+
+		.hovereffect3 h2 {
+			color: #fff;
+		}
+
+		.hovereffect3:hover a.info, .hovereffect:hover h2 {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: scale(1);
+		  -ms-transform: scale(1);
+		  transform: scale(1);
+		}
+
+
+		.hovereffect4 {
+		  width: 100%;
+		  height: 100%;
+		  float: left;
+		  overflow: hidden;
+		  position: relative;
+		  text-align: center;
+		  cursor: default;
+		}
+
+		.hovereffect4 .overlay {
+		  width: 100%;
+		  height: 100%;
+		  position: absolute;
+		  overflow: hidden;
+		  top: 0;
+		  left: 0;
+		}
+
+		.hovereffect4:hover img {
+		  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" /><feGaussianBlur stdDeviation="3" /></filter></svg>#filter');
+		  filter: grayscale(1) blur(3px);
+		  -webkit-filter: grayscale(1) blur(3px);
+		  -webkit-transform: scale(0.8);
+		  -ms-transform: scale(0.8);
+		  transform: scale(0.8);
+		}
+
+		.hovereffect4 h2 {
+		  text-transform: uppercase;
+		  color: #fff;
+		  text-align: center;
+		  font-size: 16px;
+		  font-weight: bold;
+		  text-shadow: 2px 2px black;
+		}
+
+		.hovereffect4:hover h2 {
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  -webkit-transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+		  transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+		}
+
+		.hovereffect4 a.info {
+		  display: inline-block;
+		  text-decoration: none;
+		  padding: 7px 14px;
+		  text-transform: uppercase;
+		  color: red;
+		  border: 1px solid red;
+		  margin: 20px 0 0 0;
+		  background-color: transparent;
+		}
+
+		.hovereffect4 a.info:hover {
+		  box-shadow: 0 0 5px red;
+		}
+
+		.hovereffect4 hr {
+		  width: 40%;
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  border: 1px solid red;
+		}
+
+		.hovereffect4  hr:nth-child(3) {
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,90deg) scale3d(0,0,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,90deg) scale3d(0,0,1);
+		}
+
+		.hovereffect4  hr:nth-child(4) {
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,180deg) scale3d(0,0,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1, 180deg) scale3d(0,0,1);
+		}
+
+		.hovereffect4 h2, .hovereffect4 hr {
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  -webkit-transform: translate3d(-50%,-50%,0);
+		  transform: translate3d(-50%,-50%,0);
+		  -webkit-transform-origin: 50%;
+		  -ms-transform-origin: 50%;
+		  transform-origin: 50%;
+		  background-color: transparent;
+		  margin: 0px;
+		}
+
+		.hovereffect4 h2 {
+			top: 80%;
+		}
+
+		.set3, .set4 {
+		  left: 42%;
+		  position: absolute;
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  -webkit-transform: translate3d(-50%,-50%,0);
+		  transform: translate3d(-50%,-50%,0);
+		  -webkit-transform-origin: 50%;
+		  -ms-transform-origin: 50%;
+		  transform-origin: 50%;
+		  background-color: transparent;
+		  margin: 7px;
+		  padding: 0px;
+		}
+
+		.set3 {
+		  top: 36%;
+		}
+
+		.set4 {
+		  top: 55%;
+		}
+
+		.hovereffect4 p {
+		  width: 50%;
+		  text-transform: none;
+		  font-size: 14px;
+		  line-height: 2;
+		}
+
+		.hovereffect4 p a {
+		  color: red;
+		}
+
+		.hovereffect4 p a:hover,
+		.hovereffect4 p a:focus {
+		  opacity: 0.6;
+		  filter: alpha(opacity=60);
+		}
+
+		.hovereffect4  a i {
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  padding: 7px;
+		  font-size: 15px;
+		}
+
+		.set3 a:first-child i {
+		  -webkit-transform: translate3d(-60px,-60px,0);
+		  transform: translate3d(-60px,-60px,0);
+		}
+
+		.set3 a:nth-child(2) i {
+		  -webkit-transform: translate3d(60px,-60px,0);
+		  transform: translate3d(60px,-60px,0);
+		}
+
+		.set4 a:first-child i {
+		  -webkit-transform: translate3d(-60px,60px,0);
+		  transform: translate3d(-60px,60px,0);
+		}
+
+		.set4 a:nth-child(2) i {
+		  -webkit-transform: translate3d(60px,60px,0);
+		  transform: translate3d(60px,60px,0);
+		}
+
+		.hovereffect4:hover hr:nth-child(3) {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-90deg) scale3d(1,1,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-90deg) scale3d(1,1,1);
+		}
+
+		.hovereffect4:hover hr:nth-child(4) {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-180deg) scale3d(1,1,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-180deg) scale3d(1,1,1);
+		}
+
+		.hovereffect4:hover .set3 i:empty, .hovereffect4:hover .set4 i:empty {
+		  -webkit-transform: translate3d(0,0,0);
+		  transform: translate3d(0,0,0);
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		}
+
+
+		.hovereffect5 {
+		  width: 100%;
+		  height: 100%;
+		  float: left;
+		  overflow: hidden;
+		  position: relative;
+		  text-align: center;
+		  cursor: default;
+		}
+
+		.hovereffect5 .overlay {
+		  width: 100%;
+		  height: 100%;
+		  position: absolute;
+		  overflow: hidden;
+		  top: 0;
+		  left: 0;
+		}
+
+		.hovereffect5:hover img {
+		  filter: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg"><filter id="filter"><feColorMatrix type="matrix" color-interpolation-filters="sRGB" values="0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0.2126 0.7152 0.0722 0 0 0 0 0 1 0" /><feGaussianBlur stdDeviation="3" /></filter></svg>#filter');
+		  filter: grayscale(1) blur(3px);
+		  -webkit-filter: grayscale(1) blur(3px);
+		  -webkit-transform: scale(0.8);
+		  -ms-transform: scale(0.8);
+		  transform: scale(0.8);
+		}
+
+		.hovereffect5 h2 {
+		  text-transform: uppercase;
+		  color: #fff;
+		  text-align: center;
+		  font-size: 16px;
+		  font-weight: bold;
+		  text-shadow: 2px 2px black;
+		}
+
+		.hovereffect5:hover h2 {
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  -webkit-transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+		  transform: translate3d(-50%,-50%,0) scale3d(0.8,0.8,1);
+		}
+
+		.hovereffect5 a.info {
+		  display: inline-block;
+		  text-decoration: none;
+		  padding: 7px 14px;
+		  text-transform: uppercase;
+		  color: red;
+		  border: 1px solid red;
+		  margin: 20px 0 0 0;
+		  background-color: transparent;
+		}
+
+		.hovereffect5 a.info:hover {
+		  box-shadow: 0 0 5px red;
+		}
+
+		.hovereffect5 hr {
+		  width: 40%;
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  border: 1px solid red;
+		}
+
+		.hovereffect5  hr:nth-child(3) {
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,90deg) scale3d(0,0,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,90deg) scale3d(0,0,1);
+		}
+
+		.hovereffect5  hr:nth-child(4) {
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,180deg) scale3d(0,0,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1, 180deg) scale3d(0,0,1);
+		}
+
+		.hovereffect5 h2, .hovereffect5 hr {
+		  position: absolute;
+		  top: 40%;
+		  left: 50%;
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  -webkit-transform: translate3d(-50%,-50%,0);
+		  transform: translate3d(-50%,-50%,0);
+		  -webkit-transform-origin: 50%;
+		  -ms-transform-origin: 50%;
+		  transform-origin: 50%;
+		  background-color: transparent;
+		  margin: 0px;
+		}
+
+		.hovereffect5 h2 {
+			top: 40%;
+		}
+
+		.set5, .set6 {
+		  left: 46%;
+		  position: absolute;
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  -webkit-transform: translate3d(-50%,-50%,0);
+		  transform: translate3d(-50%,-50%,0);
+		  -webkit-transform-origin: 50%;
+		  -ms-transform-origin: 50%;
+		  transform-origin: 50%;
+		  background-color: transparent;
+		  margin: 8px;
+		  padding: 0px;
+		}
+
+		.set5 {
+		  top: 31%;
+		}
+
+		.set6 {
+		  top: 44%;
+		}
+
+		.hovereffect5 p {
+		  width: 50%;
+		  text-transform: none;
+		  font-size: 14px;
+		  line-height: 2;
+		}
+
+		.hovereffect5 p a {
+		  color: red;
+		}
+
+		.hovereffect5 p a:hover,
+		.hovereffect5 p a:focus {
+		  opacity: 0.6;
+		  filter: alpha(opacity=60);
+		}
+
+		.hovereffect5  a i {
+		  opacity: 0;
+		  filter: alpha(opacity=0);
+		  -webkit-transition: opacity 0.35s, -webkit-transform 0.35s;
+		  transition: opacity 0.35s, transform 0.35s;
+		  padding: 5px;
+		  font-size: 17px;
+		}
+
+		.set5 a:first-child i {
+		  -webkit-transform: translate3d(-60px,-60px,0);
+		  transform: translate3d(-60px,-60px,0);
+		}
+
+		.set5 a:nth-child(2) i {
+		  -webkit-transform: translate3d(60px,-60px,0);
+		  transform: translate3d(60px,-60px,0);
+		  margin-left: 20px;
+		}
+
+		.set6 a:first-child i {
+		  -webkit-transform: translate3d(-60px,60px,0);
+		  transform: translate3d(-60px,60px,0);
+		}
+
+		.set6 a:nth-child(2) i {
+		  -webkit-transform: translate3d(60px,60px,0);
+		  transform: translate3d(60px,60px,0);
+		  margin-left: 20px;
+		}
+
+		.hovereffect5:hover hr:nth-child(3) {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-90deg) scale3d(1,1,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-90deg) scale3d(1,1,1);
+		}
+
+		.hovereffect5:hover hr:nth-child(4) {
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		  -webkit-transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-180deg) scale3d(1,1,1);
+		  transform: translate3d(-50%,-50%,0) rotate3d(0,0,1,-180deg) scale3d(1,1,1);
+		}
+
+		.hovereffect5:hover .set5 i:empty, .hovereffect5:hover .set6 i:empty {
+		  -webkit-transform: translate3d(0,0,0);
+		  transform: translate3d(0,0,0);
+		  opacity: 1;
+		  filter: alpha(opacity=100);
+		}
+
+		/* Style the Image Used to Trigger the Modal */
+		#myImg {
+		  border-radius: 5px;
+		  cursor: pointer;
+		  transition: 0.3s;
+		}
+
+		#myImg:hover {opacity: 0.7;}
+
+		/* The Modal (background) */
+		.modalImg {
+		  display: none; /* Hidden by default */
+		  position: fixed; /* Stay in place */
+		  z-index: 99999; /* Sit on top */
+		  padding-top: 100px; /* Location of the box */
+		  left: 0;
+		  top: 0;
+		  width: 100%; /* Full width */
+		  height: 100%; /* Full height */
+		  overflow: auto; /* Enable scroll if needed */
+		  background-color: rgb(0,0,0); /* Fallback color */
+		  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+		}
+
+		/* Modal Content (Image) */
+		.modalImg-content {
+		  margin: auto;
+		  display: block;
+		  width: 80%;
+		  max-width: 700px;
+		}
+
+		/* Caption of Modal Image (Image Text) - Same Width as the Image */
+		#captionImg {
+		  margin: auto;
+		  display: block;
+		  width: 80%;
+		  max-width: 700px;
+		  text-align: center;
+		  color: #ccc;
+		  padding: 10px 0;
+		  height: 150px;
+		}
+
+		/* Add Animation - Zoom in the Modal */
+		.modal-contentImg, #captionImg {
+		  animation-name: zoom;
+		  animation-duration: 0.6s;
+		}
+
+		@keyframes zoom {
+		  from {transform:scale(0)}
+		  to {transform:scale(1)}
+		}
+
+		/* The Close Button */
+		.closeImg {
+		  position: absolute;
+		  top: 15px;
+		  right: 35px;
+		  color: #f1f1f1;
+		  font-size: 40px;
+		  font-weight: bold;
+		  transition: 0.3s;
+		}
+
+		.closeImg:hover,
+		.closeImg:focus {
+		  color: #bbb;
+		  text-decoration: none;
+		  cursor: pointer;
+		}
+
+		/* 100% Image Width on Smaller Screens */
+		@media only screen and (max-width: 700px){
+		  .modalImg-content {
+			width: 100%;
+		  }
+		}
+		</style>
+
+        <app-card-body>
+
+            <div>
+
+			  	<ul class="nav nav-tabs" id="myClassicTabOrange" role="tablist">
+			    	<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+			      		<a class="nav-link active show" id="identificacao-tab" data-toggle="tab" href="#identificacao"
+			        		role="tab" aria-controls="identificacao" aria-selected="true"><i class="fa fa-id-card fa-2x pb-2"
+			          		aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Documentos de<br />Identifica&ccedil;a&#771;o</a>
+		    		</li>
+			    	<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+			      		<a class="nav-link" id="comprovantes-tab" data-toggle="tab" href="#comprovantes"
+			        		role="tab" aria-controls="comprovantes" aria-selected="false"><i class="fa fa-envelope-open fa-2x pb-2"
+			          		aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Comprovantes<br />Gerais</a>
+			    	</li>
+			    	<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+			      		<a class="nav-link" id="financeiro-tab" data-toggle="tab" href="#financeiro"
+			        		role="tab" aria-controls="financeiro" aria-selected="false"><i class="fa fa-dollar fa-2x pb-2"
+			          		aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Documentos<br />Financeiros</a>
+		    		</li>
+		    		<li *ngIf="pessoa.tipo == 2" class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+			      		<a class="nav-link" id="certidoes-tab" data-toggle="tab" href="#certidoes"
+			        		role="tab" aria-controls="certidoes" aria-selected="false"><i class="fa fa-file fa-2x pb-2"
+			          		aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Certidões e<br />Alvarás</a>
+					</li>
+					<li *ngIf="pessoa.tipo == 2" class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+						<a class="nav-link" id="outros-documentos-tab" data-toggle="tab" href="#outros-documentos"
+						  role="tab" aria-controls="outros-documentos" aria-selected="false"><i class="fa fa-file-pdf fa-2x pb-2"
+							aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Outros <br />Documentos</a>
+				  </li>
+		  		</ul>
+			
+			  	<div class="tab-content" id="myClassicTabContentOrange">
+			    	<div class="tab-pane fade active show" id="identificacao" role="tabpanel" 
+			    		aria-labelledby="identificacao-tab"
+			    		style="padding: 15px;">
+				      	<div class="row">
+							<div class="form-group col-xl-2">
+								<div style="margin-left: 58px; margin-bottom: 30px;">
+
+									<div class="hovereffect4" *ngIf="image3x4">
+										<img id="imgFoto3x4" alt="3x4" *ngIf="image3x4" src="{{ image3x4 }}" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+										<div class="overlay">
+											<h2>A&ccedil;o&#771;es</h2>
+											<p class="set3">
+												<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgFoto3x4')">
+													<i title="Zoom" class="fa fa-search-plus"></i>
+												</a>
+												<a href="javascript:void(0);" (click)="excluirFoto3x4()">
+													<i title="Excluir" class="fa fa-times"></i>
+												</a>
+											</p>
+											<hr>
+											<hr>
+											<p class="set4">
+												<a href="javascript:void(0);" onclick="$('#upload3x4').click()">
+													<i title="Alterar" class="fa fa-pencil-square-o"></i>
+												</a>
+												<a href="javascript:void(0);">
+													<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+												</a>
+											</p>
+										</div>
+									</div>
+
+									<div class="hovereffect3" style="text-align: center;" *ngIf="!image3x4">
+										<img alt="3x4" *ngIf="!image3x4" src="assets/media/images/3x4.png" class="img-fluid" style="cursor: pointer;" />
+										<div class="overlay">
+											<h2>Upload</h2>
+											<a class="info" href="javascript:void(0);" onclick="$('#upload3x4').click()">Clique para Enviar</a>
+										</div>
+									</div>
+									<input id="upload3x4" type="file" style="display: none;" (change)="selectFile3x4($event)" class="form-control" accept="image/*">
+								</div>
+								<label style="font-weight: bold">Nome: </label><br /> {{ pessoa.nome }} {{ pessoa.nomeFantasia }}<br /><br />
+								<label *ngIf="pessoa.tipo == 1" style="font-weight: bold">Data de Nascimento: </label>
+								<label *ngIf="pessoa.tipo == 2" style="font-weight: bold">Data de Criação: </label>
+								<br /> {{ pessoa.dataNascimento | date: 'dd/MM/yyyy' }}<br /><br />
+								<label style="font-weight: bold">Nº do Documento: </label><br /> {{ pessoa.documento }}<br/><br />
+								<label *ngIf="pessoa.tipo == 1" style="font-weight: bold">Estado Civil</label><br />
+								<span *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.SOLTEIRO">Solteiro</span>
+								<span *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.CASADO">Casado</span>
+								<span *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.SEPARADO">Separado</span>
+								<span *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.DIVORCIADO">Divorciado</span>
+								<span *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.UNIAO_ESTAVEL">União Estável</span>
+								<span *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.VIUVO">Viúvo</span>
+								<span *ngIf="pessoa.tipo == 1 && (!pessoa.estadoCivil || pessoa.estadoCivil == null)">Não Informado</span>
+							</div>
+
+							<div class="form-group col-xl-2">
+							</div>
+
+							<div class="form-group col-xl-4"  style="text-align: center;">
+								<h3>Ti&#769;tulo de Eleitor</h3><br />
+
+								<label>Frente:</label><br />
+								<div class="hovereffect2" *ngIf="imageTituloEleitor">
+									<img id="imgTituloEleitorFrente" alt="Ti&#769;tulo de Eleitor (Frente)" *ngIf="imageTituloEleitor" src="{{ imageTituloEleitor }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set1">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgTituloEleitorFrente')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirTituloEleitorFrente()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set2">
+											<a href="javascript:void(0);" onclick="$('#uploadTituloEleitor').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageTituloEleitor">
+									<img alt="Ti&#769;tulo de Eleitor (Frente)" *ngIf="!imageTituloEleitor" src="assets/media/images/titulo_eleitor_frente.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadTituloEleitor').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadTituloEleitor" type="file" style="display: none;" (change)="selectFileTituloEleitor($event)" class="form-control" accept="image/*">
+							</div>
+
+			                <div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Documento com Foto</h3><br />
+								<label>Frente:</label><br />
+
+								<div class="hovereffect2" *ngIf="imageDocumentoFoto">
+									<img id="imgDocumentoFotoFrente" alt="Documento com Foto (Frente)" *ngIf="imageDocumentoFoto" src="{{ imageDocumentoFoto }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set1">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgDocumentoFotoFrente')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirDocumentoFotoFrente()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set2">
+											<a href="javascript:void(0);" onclick="$('#uploadDocumentoFoto').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageDocumentoFoto">
+									<img alt="Documento com Foto (Frente)" *ngIf="!imageDocumentoFoto" src="assets/media/images/id_frente.png" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadDocumentoFoto').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadDocumentoFoto" type="file" style="display: none;" (change)="selectFile($event)" class="form-control" accept="image/*">
+							</div>
+							
+			            </div>
+						<div class="row">
+
+							<div class="form-group col-xl-3">
+
+								<h3>CPF</h3><br />
+								<div class="hovereffect5" *ngIf="imageCPF">
+									<img id="imgCPF" alt="CPF" *ngIf="imageCPF" src="{{ imageCPF }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgCPF')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirCPF()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadCPF').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageCPF">
+									<img alt="CPF" *ngIf="!imageCPF" src="assets/media/images/cpf.png" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadCPF').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadCPF" type="file" style="display: none;" (change)="selectFileCPF($event)" class="form-control" accept="image/*">
+
+							</div>
+
+							<div class="form-group col-xl-1">
+							</div>
+
+							<div class="form-group col-xl-4"  style="text-align: center;">
+								<label>Verso:</label><br />
+
+								<div class="hovereffect2" *ngIf="imageTituloEleitorVerso">
+									<img id="imgTituloEleitorVerso" alt="Ti&#769;tulo de Eleitor (Verso)" *ngIf="imageTituloEleitorVerso" src="{{ imageTituloEleitorVerso }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set1">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgTituloEleitorVerso')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirTituloEleitorVerso()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set2">
+											<a href="javascript:void(0);" onclick="$('#uploadTituloEleitorVerso').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageTituloEleitorVerso">
+									<img alt="Ti&#769;tulo de Eleitor (Verso)" *ngIf="!imageTituloEleitorVerso" src="assets/media/images/titulo_eleitor_verso.png" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadTituloEleitorVerso').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadTituloEleitorVerso" type="file" style="display: none;" (change)="selectFileTituloEleitorVerso($event)" class="form-control" accept="image/*">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<label>Verso:</label><br />
+
+								<div class="hovereffect2" *ngIf="imageDocumentoFotoVerso">
+									<img id="imgDocumentoVerso" alt="Documento com Foto (Verso)" *ngIf="imageDocumentoFotoVerso" src="{{ imageDocumentoFotoVerso }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set1">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgDocumentoVerso')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirDocumentoFotoVerso()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set2">
+											<a href="javascript:void(0);" onclick="$('#uploadDocumentoFotoVerso').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageDocumentoFotoVerso">
+									<img alt="Documento com Foto (Verso)" *ngIf="!imageDocumentoFotoVerso" src="assets/media/images/id_verso.png" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadDocumentoFotoVerso').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadDocumentoFotoVerso" type="file" style="display: none;" (change)="selectFileVerso($event)" class="form-control" accept="image/*">
+							</div>
+
+							<div *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.CASADO" class="form-group col-xl-4">
+							</div>
+
+							<div *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.CASADO" class="form-group col-xl-4"  style="text-align: center;">
+								<h3>Certidão de Casamento</h3><br />
+								<label>Frente:</label><br />
+
+								<div class="hovereffect2" *ngIf="imageCertidaoCasamentoFrente">
+									<img id="imgCertidaoCasamentoFrente" alt="Certidão de Casamento (Frente)" *ngIf="imageCertidaoCasamentoFrente" src="{{ imageCertidaoCasamentoFrente }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set1">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgCertidaoCasamentoFrente')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirCertidaoCasamentoFrente()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set2">
+											<a href="javascript:void(0);" onclick="$('#uploadCertidaoCasamentoFrente').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageCertidaoCasamentoFrente">
+									<img alt="Certidão de Casamento (Frente)" *ngIf="!imageCertidaoCasamentoFrente" src="assets/media/images/documento.png" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadCertidaoCasamentoFrente').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadCertidaoCasamentoFrente" type="file" style="display: none;" (change)="selectFileCertidaoCasamentoFrente($event)" class="form-control" accept="image/*">
+							</div>
+
+							<div *ngIf="pessoa.tipo == 1 && pessoa.estadoCivil == estadoCivil.CASADO" class="form-group col-xl-4" style="text-align: center;">
+								<h3>Certidão de Casamento</h3><br />
+								<label>Verso:</label><br />
+
+								<div class="hovereffect2" *ngIf="imageCertidaoCasamentoVerso">
+									<img id="imgCertidaoCasamentoVerso" alt="Certidão de Casamento (Verso)" *ngIf="imageCertidaoCasamentoVerso" src="{{ imageCertidaoCasamentoVerso }}" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set1">
+											<a href="javascript:void(0);" (click)="abrirModalImgZoom('imgCertidaoCasamentoVerso')">
+												<i title="Zoom" class="fa fa-search-plus"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirCertidaoCasamentoVerso()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set2">
+											<a href="javascript:void(0);" onclick="$('#uploadCertidaoCasamentoVerso').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageCertidaoCasamentoVerso">
+									<img alt="Certidão de Casamento (Verso)" *ngIf="!imageCertidaoCasamentoVerso" src="assets/media/images/documento.png" class="img-fluid" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadCertidaoCasamentoVerso').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadCertidaoCasamentoVerso" type="file" style="display: none;" (change)="selectFileCertidaoCasamentoVerso($event)" class="form-control" accept="image/*">
+							</div>
+
+						</div>
+						<div class="row">
+
+							<div class="form-group col-xl-12">
+								<hr />
+							</div>
+
+						</div>
+			    	</div>
+				    <div class="tab-pane fade" id="comprovantes" role="tabpanel" 
+				    	aria-labelledby="comprovantes-tab"
+				    	style="padding: 15px;">
+
+						<div class="row">
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								
+								<h3>Comprovante de Reside&#770;ncia</h3><br />
+								<label>Frente:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageComprovanteResidencia">
+									<img id="imageComprovanteResidencia" alt="Comprovante de Reside&#770;ncia (Frente)" *ngIf="imageComprovanteResidencia" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageComprovanteResidencia)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirComprovanteResidenciaFrente()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadComprovanteResidencia').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageComprovanteResidencia">
+									<img alt="Comprovante de Reside&#770;ncia (Frente)" *ngIf="!imageComprovanteResidencia" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadComprovanteResidencia').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadComprovanteResidencia" type="file" style="display: none;" (change)="selectFileComprovanteResidencia($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Comprovante de Reside&#770;ncia</h3><br />
+								<label>Verso:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageComprovanteResidenciaVerso">
+									<img id="imageComprovanteResidenciaVerso" alt="Comprovante de Reside&#770;ncia (Verso)" *ngIf="imageComprovanteResidenciaVerso" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageComprovanteResidenciaVerso)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirComprovanteResidenciaVerso()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadComprovanteResidenciaVerso').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageComprovanteResidenciaVerso">
+									<img alt="Comprovante de Reside&#770;ncia (Verso)" *ngIf="!imageComprovanteResidenciaVerso" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadComprovanteResidenciaVerso').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadComprovanteResidenciaVerso" type="file" style="display: none;" (change)="selectFileComprovanteResidenciaVerso($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-1" style="clear: both; text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								
+								<h3>Comprovante de Renda</h3><br />
+								<label>Comprovante 1:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageComprovanteRenda">
+									<img id="imageComprovanteRenda" alt="Comprovante de Renda (1)" *ngIf="imageComprovanteRenda" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageComprovanteRenda)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirComprovanteRenda()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadComprovanteRenda').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageComprovanteRenda">
+									<img alt="Comprovante de Renda (1)" *ngIf="!imageComprovanteRenda" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadComprovanteRenda').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadComprovanteRenda" type="file" style="display: none;" (change)="selectFileComprovanteRenda($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Comprovante de Renda</h3><br />
+								<label>Comprovante 2:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageComprovanteRenda2">
+									<img id="imageComprovanteRenda2" alt="Comprovante de Renda (2)" *ngIf="imageComprovanteRenda2" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageComprovanteRenda2)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirComprovanteRenda2()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadComprovanteRenda2').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageComprovanteRenda2">
+									<img alt="Comprovante de Renda (2)" *ngIf="!imageComprovanteRenda2" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadComprovanteRenda2').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadComprovanteRenda2" type="file" style="display: none;" (change)="selectFileComprovanteRenda2($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+						</div>
+				    	
+				    </div>
+				    <div class="tab-pane fade" id="financeiro" role="tabpanel" 
+				    	aria-labelledby="financeiro-tab"
+				    	style="padding: 15px;">
+
+						<div class="row">
+
+							<div class="form-group col-xl-1" style="clear: both; text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Extrato de Conta Banca&#769;ria</h3><br />
+								<label>Extrato:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageExtratoBancario">
+									<img id="imageExtratoBancario" alt="Extrato de Conta Banca&#769;ria" *ngIf="imageExtratoBancario" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageExtratoBancario)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirExtratoBancario()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadExtratoBancario').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageExtratoBancario">
+									<img alt="Extrato de Conta Banca&#769;ria" *ngIf="!imageExtratoBancario" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; cursor: pointer; height: 450px; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadExtratoBancario').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadExtratoBancario" type="file" style="display: none;" (change)="selectFileExtratoBancario($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Carta&#771;o de Banco</h3><br />
+								<label>Frente Apenas:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageCartaoBanco">
+									<img id="imageCartaoBanco" alt="Carta&#771;o de Banco" *ngIf="imageCartaoBanco" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageCartaoBanco)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirCartaoBanco()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadCartaoBanco').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageCartaoBanco">
+									<img alt="Carta&#771;o de Banco" *ngIf="!imageCartaoBanco" src="assets/media/images/cartao.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadCartaoBanco').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadCartaoBanco" type="file" style="display: none;" (change)="selectFileCartaoBanco($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div *ngIf='pessoa.tipo == 2' class="form-group col-xl-1" style="clear: both; text-align: center;">
+							</div>
+
+							<div *ngIf='pessoa.tipo == 2' class="form-group col-xl-4" style="text-align: center;">
+								<h3>Extrato de Conta Banca&#769;ria (PJ)</h3><br />
+								<label>Extrato:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageExtratoBancarioPj">
+									<img id="imageExtratoBancarioPj" alt="Extrato de Conta Banca&#769;ria (PJ)" *ngIf="imageExtratoBancarioPj" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageExtratoBancarioPj)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirExtratoBancarioPj()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadExtratoBancarioPj').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageExtratoBancarioPj">
+									<img alt="Extrato de Conta Banca&#769;ria (PJ)" *ngIf="!imageExtratoBancarioPj" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; cursor: pointer; height: 450px; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadExtratoBancarioPj').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadExtratoBancarioPj" type="file" style="display: none;" (change)="selectFileExtratoBancarioPj($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div *ngIf='pessoa.tipo == 2' class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div *ngIf='pessoa.tipo == 2' class="form-group col-xl-4" style="text-align: center;">
+								<h3>Carta&#771;o de Banco (PJ)</h3><br />
+								<label>Frente Apenas:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageCartaoBancoPj">
+									<img id="imageCartaoBancoPj" alt="Carta&#771;o de Banco (PJ)" *ngIf="imageCartaoBancoPj" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageCartaoBancoPj)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirCartaoBancoPj()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadCartaoBancoPj').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageCartaoBancoPj">
+									<img alt="Carta&#771;o de Banco (PJ)" *ngIf="!imageCartaoBancoPj" src="assets/media/images/cartao.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadCartaoBancoPj').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadCartaoBancoPj" type="file" style="display: none;" (change)="selectFileCartaoBancoPj($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div *ngIf='pessoa.tipo == 2' class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+						</div>
+				    	
+					</div>
+					
+				    <div *ngIf="pessoa.tipo == 2" class="tab-pane fade" id="certidoes" role="tabpanel" 
+				    	aria-labelledby="certidoes-tab"
+				    	style="padding: 15px;">
+						
+						<div class="row">
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								
+								<h3>Cartão CNPJ</h3><br />
+								<label>Apenas Frente:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageCartaoCNPJ">
+									<img id="imageCartaoCNPJ" alt="Cartão CNPJ" *ngIf="imageCartaoCNPJ" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageCartaoCNPJ)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirCartaoCNPJ()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadCartaoCNPJ').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageCartaoCNPJ">
+									<img alt="Cartão CNPJ" *ngIf="!imageCartaoCNPJ" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadCartaoCNPJ').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadCartaoCNPJ" type="file" style="display: none;" (change)="selectFileCartaoCNPJ($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Alvará de Funcionamento</h3><br />
+								<label>Apenas Frente:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageAlvaraFuncionamento">
+									<img id="imageAlvaraFuncionamento" alt="Alvará de Funcionamento" *ngIf="imageAlvaraFuncionamento" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageAlvaraFuncionamento)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirAlvaraFuncionamento()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadAlvaraFuncionamento').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageAlvaraFuncionamento">
+									<img alt="Alvará de Funcionamento" *ngIf="!imageAlvaraFuncionamento" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadAlvaraFuncionamento').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadAlvaraFuncionamento" type="file" style="display: none;" (change)="selectFileAlvaraFuncionamento($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								
+								<h3>Licença</h3><br />
+								<label>Meio Ambiente:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageLicencaMeioAmbiente">
+									<img id="imageLicencaMeioAmbiente" alt="Licença - Meio Ambiente" *ngIf="imageLicencaMeioAmbiente" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageLicencaMeioAmbiente)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirLicencaMeioAmbiente()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadLicencaMeioAmbiente').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageLicencaMeioAmbiente">
+									<img alt="Licença - Meio Ambiente" *ngIf="!imageLicencaMeioAmbiente" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadLicencaMeioAmbiente').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadLicencaMeioAmbiente" type="file" style="display: none;" (change)="selectFileLicencaMeioAmbiente($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Licença</h3><br />
+								<label>Vigilância Sanitária:</label><br />
+
+								<div class="hovereffect5" *ngIf="imageLicencaVigilanciaSanitaria">
+									<img id="imageLicencaVigilanciaSanitaria" alt="Licença - Vigilância Sanitária" *ngIf="imageLicencaVigilanciaSanitaria" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageLicencaVigilanciaSanitaria)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirLicencaVigilanciaSanitaria()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadLicencaVigilanciaSanitaria').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageLicencaVigilanciaSanitaria">
+									<img alt="Licença - Vigilância Sanitária" *ngIf="!imageLicencaVigilanciaSanitaria" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadLicencaVigilanciaSanitaria').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadLicencaVigilanciaSanitaria" type="file" style="display: none;" (change)="selectFileLicencaVigilanciaSanitaria($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+						</div>
+
+					</div>
+					
+					<div *ngIf="pessoa.tipo == 2" class="tab-pane fade" id="outros-documentos" role="tabpanel" 
+				    	aria-labelledby="outros-documentos-tab"
+				    	style="padding: 15px;">
+						
+						<div class="row">
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								
+								<h3>Contrato Social</h3><br />
+								<label>Contrato Social (PJ):</label><br />
+
+								<div class="hovereffect5" *ngIf="imageContratoSocial">
+									<img id="imageContratoSocial" alt="Contrato Social" *ngIf="imageContratoSocial" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageContratoSocial)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirContratoSocial()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadCartaoCNPJ').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageContratoSocial">
+									<img alt="Contrato Social" *ngIf="!imageContratoSocial" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadContratoSocial').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadContratoSocial" type="file" style="display: none;" (change)="selectFileContratoSocial($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-2" style="text-align: center;">
+							</div>
+
+							<div class="form-group col-xl-4" style="text-align: center;">
+								<h3>Faturamento</h3><br />
+								<label>Faturamento (6 meses):</label><br />
+
+								<div class="hovereffect5" *ngIf="imageFaturamento">
+									<img id="imageFaturamento" alt="Faturamento" *ngIf="imageFaturamento" src="assets/media/images/pdf.png" class="img-fluid img" style="cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>A&ccedil;o&#771;es</h2>
+										<p class="set5">
+											<a href="javascript:void(0);" (click)="download(imageFaturamento)">
+												<i title="Download" class="fa fa-download"></i>
+											</a>
+											<a href="javascript:void(0);" (click)="excluirFaturamento()">
+												<i title="Excluir" class="fa fa-times"></i>
+											</a>
+										</p>
+										<hr>
+										<hr>
+										<p class="set6">
+											<a href="javascript:void(0);" onclick="$('#uploadFaturamento').click()">
+												<i title="Alterar" class="fa fa-pencil-square-o"></i>
+											</a>
+											<a href="javascript:void(0);">
+												<i title="Informa&ccedil;o&#771;es" class="fa fa-info"></i>
+											</a>
+										</p>
+									</div>
+								</div>
+
+								<div class="hovereffect" style="text-align: center;" *ngIf="!imageFaturamento">
+									<img alt="Faturamento" *ngIf="!imageFaturamento" src="assets/media/images/documento.png" class="img-fluid" style="padding: 10px; height: 450px; cursor: pointer; border: 6px dashed grey;" />
+									<div class="overlay">
+										<h2>Upload</h2>
+										<a class="info" href="javascript:void(0);" onclick="$('#uploadFaturamento').click()">Clique para Enviar</a>
+									</div>
+								</div>
+								<input id="uploadFaturamento" type="file" style="display: none;" (change)="selectFileFaturamento($event)" class="form-control" accept="application/pdf">
+
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center;">
+							</div>							
+
+						</div>
+
+					</div>
+				    
+			  	</div>
+			</div>
+
+        </app-card-body>
+    </form>
+</app-card>

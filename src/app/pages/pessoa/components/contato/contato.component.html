@@ -1,0 +1,90 @@
+<form #contatoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalContato" 
+            titulo="Contatos"
+            sizeClass="modal-lg"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="pessoa">
+            <div class="row">
+                <div class="form-group col-xl-3">
+                    <label>Tipo*:</label>
+                    <select #tipoNovo="ngModel" name="tipoNovo" [(ngModel)]="contato.tipo"
+                        class="form-control {{ (tipoNovo.invalid && contatoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="tipoContato.EMAIL">E-mail</option>
+                        <option [ngValue]="tipoContato.TELEFONE">Telefone</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-9" *ngIf="tipoContato.TELEFONE === contato.tipo">
+                    <label>Telefone*:</label>
+                    <input type="text" #telefoneNovo="ngModel" name="telefoneNovo" [(ngModel)]="contato.telefone"
+                        class="form-control {{ (telefoneNovo.invalid && contatoForm.submitted) ? 'is-invalid' : '' }}"
+                        maxlength="15" appTelefoneFormat required />
+                </div>
+
+                <div class="form-group col-xl-9" *ngIf="tipoContato.EMAIL === contato.tipo">
+                    <label>E-mail*:</label>
+                    <input type="email" #emailNovo="ngModel" name="emailNovo" [(ngModel)]="contato.email"
+                        class="form-control {{ (emailNovo.invalid && contatoForm.submitted) ? 'is-invalid' : '' }}" required />
+                </div>
+
+                <div class="col-xl-12 text-right pb-4">
+                    <button type="submit" class="btn btn-primary"  [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.TELEFONE, acaoEnum.INCLUIR) | async)">Adicionar Contato</button>
+                </div>
+            </div>
+
+            <p-table #contatosTable
+                    [value]="registros$ | async"
+                    [totalRecords]="totalRegistros$ | async"
+                    (onLazyLoad)="loadRegistros($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered"
+                    *ngIf="totalRegistros$ | async">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Status</th>
+                    <th>Contato</th>
+                    <th>Data de Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === registro.status">Inativo</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === registro.status">Ativo</span>
+                    </td>
+                    <td>{{ (tipoContato.EMAIL === registro.tipo) ? registro.email : registro.telefone }}</td>
+                    <td>{{ registro.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                    <a *ngIf="status.ATIVO === registro.status && (permiteFuncionalidadeAcao(funcionalidadeEnum.TELEFONE, acaoEnum.INATIVAR) | async)"
+                        style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                        title="Excluir/Inativar"
+                        (click)="contatoStatus.carregar(registro)"><i class="fa fa-times"></i></a>
+                    
+                    <a *ngIf="status.INATIVO === registro.status && (permiteFuncionalidadeAcao(funcionalidadeEnum.TELEFONE, acaoEnum.ATIVAR) | async)"
+                        style="margin-right: 10px; color: green; cursor: pointer;" 
+                        title="Ativar"
+                        (click)="contatoStatus.carregar(registro)"><i class="fa fa-check"></i></a>
+                    </td>
+                </tr>
+                </ng-template>
+            </p-table>
+        </app-modal-body>
+
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+
+<app-contato-status #contatoStatus></app-contato-status>
+    

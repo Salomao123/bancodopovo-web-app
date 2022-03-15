@@ -1,0 +1,34 @@
+export class ParametroBoleto {
+    id: number;
+    version: number;
+    banco: number;
+    tipoDocumento: number;
+    documento: number;
+    convenio: number;
+    carteira: number;
+    variacao: number;
+    agencia: number;
+    agenciaDv: string;
+    conta: number;
+    contaDv: string;
+    nome: string;
+    codigoCarteira: number;
+    formaCadastro: number;
+    tipoDocCobranca: number;
+    emissaoBloqueto: number;
+    identificacaoDistribuicao: number;
+    especieTitulo: number;
+    codJuros: number;
+    valorJuros: number;
+    codMulta: number;
+    valorMulta: number;
+    codDesconto: number;
+    codProtesto: number;
+    diasProtesto: number;
+    codBaixa: number;
+    diasBaixa: number;
+    numeroContrato: number;
+    identificacaoTituloAceito: string;
+    mensagem: string;
+    sequencialBoleto: number;
+}

@@ -1,0 +1,125 @@
+<form #convenioForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalConvenio" 
+            titulo="Convênios"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="empresa">
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Consignatária*:</label>
+                    <select #consignatariaNovo="ngModel" name="consignatariaNovo" [(ngModel)]="empresaConsignatariaSelecionada"
+                        class="form-control {{ (consignatariaNovo.invalid && convenioForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let consignataria of (empresasConsignatarias$ | async)"
+                            [ngValue]="consignataria.id">{{ consignataria.pessoa.nomeFantasia }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Idenficação Convênio*:</label>
+                    <input #identificacaoNovo="ngModel" name="identificacaoNovo" [(ngModel)]="convenio.identificacaoConvenio" type="text"
+                        class="form-control {{ (identificacaoNovo.invalid && convenioForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Idenficação Convênio" required />
+                </div>
+                
+                <div class="form-group col-xl-6">
+                    <label>Data Inicial da Vigência*:</label>
+                    <p-calendar #vigenciaInicioNovo="ngModel"
+                                name="vigenciaInicioNovo"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control {{ (vigenciaInicioNovo.invalid && convenioForm.submitted) ? 'is-invalid' : '' }}"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data Inicial da Vigência"
+                                [(ngModel)]="convenio.dataVigenciaInicio"
+                                appDateFormat
+                                required></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Data Final da Vigência*:</label>
+                    <p-calendar #vigenciaFinalNovo="ngModel"
+                                name="vigenciaFinalNovo"
+                                styleClass="w-100"
+                                [locale]="pt"
+                                inputStyleClass="form-control {{ (vigenciaFinalNovo.invalid && convenioForm.submitted) ? 'is-invalid' : '' }}"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data Final da Vigência"
+                                [(ngModel)]="convenio.dataVigenciaFinal"
+                                appDateFormat
+                                required></p-calendar>
+                </div>
+
+                <div class="col-xl-12 text-right pb-4">
+                    <button type="submit" class="btn btn-primary">Adicionar Convênio</button>
+                </div>
+            </div>
+
+            <p-table #conveniosTable
+                    [value]="registros$ | async"
+                    [totalRecords]="totalRegistros$ | async"
+                    (onLazyLoad)="loadRegistros($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered"
+                    *ngIf="totalRegistros$ | async">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Situação</th>
+                    <th>Identificação</th>
+                    <th>Consignatária</th>
+                    <th>Vigência Inicial</th>
+                    <th>Vigência Final</th>
+                    <th>Ações</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="situacao.REPROVADO === registro.situacao">Reprovado</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="situacao.APROVADO === registro.situacao">Aprovado</span>
+                    <span class="kt-badge  kt-badge--warning kt-badge--inline kt-badge--pill" *ngIf="situacao.PENDENTE === registro.situacao">Pendente</span>
+                    <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.EXPIRADO === registro.situacao">Expirado</span>
+                    <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.CANCELADO === registro.situacao">Cancelado</span>
+                    </td>
+                    <td>{{ registro.identificacaoConvenio }}</td>
+                    <td>{{ registro.empresaConsignataria.pessoa.nomeFantasia }}</td>
+                    <td>{{ registro.dataVigenciaInicio | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>{{ registro.dataVigenciaFinal | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                        <a *ngIf="situacao.APROVADO === registro.situacao"
+                            style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                            title="Cancelar" 
+                            (click)="convenioStatus.carregar(registro, situacao.CANCELADO, 'Cancelar Convênio', 'Deseja realmente cancelar o registro?')"><i class="fa fa-times"></i></a>
+                        
+                        <a *ngIf="situacao.CANCELADO === registro.situacao"
+                            style="margin-right: 10px; color: green; cursor: pointer;" 
+                            title="Reativar" 
+                            (click)="convenioStatus.carregar(registro, situacao.APROVADO, 'Reativar Convênio', 'Deseja realmente reativar o registro?')"><i class="fa fa-check"></i></a>
+
+                        <a *ngIf="situacao.PENDENTE === registro.situacao"
+                            style="margin-right: 10px; color: green; cursor: pointer;" 
+                            title="Aprovar" 
+                            (click)="convenioStatus.carregar(registro, situacao.APROVADO, 'Aprovar Convênio', 'Deseja realmente aprovar o registro?')"><i class="fa fa-check"></i></a>
+                    </td>
+                </tr>
+                </ng-template>
+            </p-table>
+        </app-modal-body>
+    </app-modal>
+</form>
+
+<app-convenio-status #convenioStatus></app-convenio-status>

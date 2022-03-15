@@ -1,0 +1,64 @@
+<app-card>
+    <app-card-header titulo="Consignações"></app-card-header>
+    <app-card-body>
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" *ngFor="let emp of (consignados$ | async); let i = index">
+                <a [ngClass]="(i === 0) ? 'nav-link active' : 'nav-link'" data-toggle="tab" (click)="realizarPesquisa(emp)">Mat: {{ emp.consignado.matricula }}</a>
+            </li>
+        </ul>
+
+        <p-table #consignacoesTable
+                [value]="propostas$ | async"
+                [paginator]="true"
+                [rows]="5"
+                [rowsPerPageOptions]="[5,10,15]"
+                styleClass="table-responsive"
+                tableStyleClass="table table-striped table-bordered"
+                *ngIf="propostas$ | async">
+            
+            <ng-template pTemplate="header">
+            <tr>
+                <th>#</th>
+                <th>Situação</th>
+                <th>Ident. Contrato</th>
+                <th>Serviço</th>
+                <th>Prazo</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Data de Inclusão</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-registro let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="situacao.ATIVA === registro.situacao">Vigente</span>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="situacao.CANCELADA === registro.situacao">Cancelada</span>
+                    <span class="kt-badge  kt-badge--warning kt-badge--inline kt-badge--pill" *ngIf="situacao.RENOVADA === registro.situacao">Renovada</span>
+                    <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.ENCERRADA === registro.situacao">Encerrada</span>
+                    <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.SUSPENSA === registro.situacao">Suspensa</span>
+                </td>
+                <td>{{ registro.identificacaoContrato }}</td>
+                <td>{{ registro.servicoConsignacao.descricao }}</td>
+                <td>{{ registro.parcelas }}</td>
+                <td>{{ registro.mesAnoInicio }}</td>
+                <td>{{ registro.mesAnoFim }}</td>
+                <td>{{ registro.dataCadastro | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>{{ registro.valorParcela | currency:'BRL' }}</td>
+                <td>
+                    <a title="Detalhar/Editar"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="detalhar(registro)">
+                        <i class="fa fa-search"></i>
+                    </a>
+                </td>
+            </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>    
+</app-card>
+
+<app-extrato-parcelas #extratoParcelas></app-extrato-parcelas>

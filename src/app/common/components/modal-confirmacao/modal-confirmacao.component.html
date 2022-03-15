@@ -1,0 +1,9 @@
+<app-modal [id]="id" [titulo]="titulo" [sizeClass]="sizeClass" #modal (fechar)="execCancelamento()" [modalVinculada]="modalVinculada">
+    <app-modal-body>
+        {{ mensagem }}
+    </app-modal-body>
+    <app-modal-footer>
+        <button type="button" class="btn btn-secondary" (click)="execCancelamento()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="execConfirmacao()">Confirmar</button>
+    </app-modal-footer>
+</app-modal>

@@ -1,0 +1,32 @@
+<form #emprestimosNovoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalAdicionarEmprestimo" 
+            titulo="Adicionar Empre&#769;stimo"
+            sizeClass="modal-lg"
+            (fechar)="emprestimosNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="emprestimo">
+            
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Tipo de Pessoa*:</label>
+                    <select required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Status*:</label>
+                    <select required>
+                    	<option [ngValue]="undefined">Selecione...</option>
+                    </select>
+                </div>
+            </div>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="emprestimosNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

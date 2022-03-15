@@ -1,0 +1,45 @@
+<form #consignacaoRenovacaoForm="ngForm" (ngSubmit)="salvar()" >
+    <app-modal #modal 
+            id="modalRenovacao" 
+            titulo="Renovação de Contrato"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="proposta">
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Margem Consignável (inclui valores liberados):</label>
+                    <input class="form-control" value="{{ margemDisponivel | currency:'BRL' }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Novo Valor Parcela*:</label>
+                    <input #valorNovo="ngModel" name="valorNovo" [(ngModel)]="valorFormatado"
+                        class="form-control {{ (valorNovo.invalid && consignacaoRenovacaoForm.submitted) ? 'is-invalid' : '' }}" required appMoedaFormat/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Novo Prazo (Meses)*:</label>
+                    <input #novoParcela="ngModel" name="novoParcela" [(ngModel)]="proposta.parcelas"
+                        class="form-control {{ (novoParcela.invalid && consignacaoRenovacaoForm.submitted) ? 'is-invalid' : '' }}" required appNumeroFormat/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Identificação do Novo Contrato*: </label>
+                    <input #novoIdentificacao="ngModel" name="novoIdentificacao" [(ngModel)]="proposta.identificacaoContrato"
+                        class="form-control {{ (novoIdentificacao.invalid && consignacaoRenovacaoForm.submitted) ? 'is-invalid' : '' }}" required />
+                </div>
+
+                <div class="form-group col-xl-12">
+                    <input type="file" (change)="selectFile($event)">
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+
+    <app-modal-confirmacao #confirmacao id="modalConfirmacaoRenovacao" mensagem="Confirmar renovação dos contratos de consignação?" 
+        (confirmar)="confirmar()" modalVinculada="modalRenovacao"></app-modal-confirmacao>
+</form>

@@ -1,0 +1,93 @@
+<form #perfilFuncionalidadeForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalPerfilFuncionalidade" 
+            titulo="Vincular Funcionalidades"
+            sizeClass="modal-lg"
+            (fechar)="fechar()">
+        <app-modal-body>
+            <div class="row">
+                <div class="form-group col-xl-12">
+                    <label>Funcionalidade*:</label>
+                    <select #funcionalidadeNovo="ngModel" name="funcionalidadeNovo" [(ngModel)]="idFuncionalidade"
+                        class="form-control {{ (funcionalidadeNovo.invalid && perfilFuncionalidadeForm.submitted) ? 'is-invalid' : '' }}"
+                        (change)="changeFuncionalidade()" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let funcionalidade of (funcionalidades$ | async)" 
+                            [ngValue]="funcionalidade.id">
+                            {{ funcionalidade.nome }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-12">
+                    <label>Ações*: </label>
+                    <div *ngIf="(!idFuncionalidade)"> Selecione uma funcionalidade para listar as ações disponíveis.</div>
+                    <div *ngIf="(idFuncionalidade) && ((acoesNaoVinculadas$ | async).length === 0)"> Todas as ações dessa funcionalidade já foram vinculadas ao perfil.</div>
+                    <div class="kt-checkbox-list">
+                        <label class="kt-checkbox" *ngFor="let acao of (acoesNaoVinculadas$ | async); let i = index">
+                            <input type="checkbox" (change)="changeAcoes(acao.id, $event.target.checked)" name="acaoNovo_{{i}}" />{{ acao.nome }}<span></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row text-right">
+                <div class="w-100 p-4">
+                    <button type="submit" class="btn btn-primary">Vincular Funcionalidades</button>
+                </div>
+            </div>
+
+            <p-table #perfisFuncionalidadesTable
+                    [value]="perfisFuncionalidadesAcoes$ | async"
+                    [totalRecords]="totalRecords$ | async"
+                    (onLazyLoad)="loadPerfis($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered"
+                    *ngIf="totalRecords$ | async">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Status</th>
+                    <th pSortableColumn="nome">Funcionalidade <p-sortIcon field="nome"></p-sortIcon></th>
+                    <th pSortableColumn="descricao">Ação <p-sortIcon field="descricao"></p-sortIcon></th>
+                    <th>Data de Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-perfil let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === perfil.status">Inativo</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === perfil.status">Ativo</span>
+                    </td>
+                    <td>{{ perfil.funcionalidadeAcao.funcionalidade.nome }}</td>
+                    <td>{{ perfil.funcionalidadeAcao.acao.nome }}</td>
+                    <td>{{ perfil.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                    <a *ngIf="status.ATIVO === perfil.status"
+                        style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                        title="Excluir/Inativar"
+                        (click)="perfilFuncionalidadeStatus.carregar(perfil)"><i class="fa fa-times"></i></a>
+                    
+                    <a *ngIf="status.INATIVO === perfil.status"
+                        style="margin-right: 10px; color: green; cursor: pointer;" 
+                        title="Ativar"
+                        (click)="perfilFuncionalidadeStatus.carregar(perfil)"><i class="fa fa-check"></i></a>
+                    </td>
+                </tr>
+                </ng-template>
+            </p-table>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+
+<app-perfil-funcionalidade-status #perfilFuncionalidadeStatus></app-perfil-funcionalidade-status>

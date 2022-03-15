@@ -1,0 +1,90 @@
+<form #representanteForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalRepresentante" 
+            titulo="Representantes"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="empresaConsignataria">
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Pessoa*:</label>
+                    <select #pessoaNovo="ngModel" name="pessoaNovo" [(ngModel)]="idPessoaSelecionada"
+                        class="form-control {{ (pessoaNovo.invalid && representanteForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let pessoa of (pessoasFisicas$ | async)"
+                            [ngValue]="pessoa.id">{{ pessoa.nome }}</option>
+                    </select>
+                </div>
+                <div class="form-group col-xl-6">
+                    <label>Cargo*:</label>
+                    <input type="text" #cargoNovo="ngModel" name="cargoNovo" [(ngModel)]="representante.cargo"
+                        class="form-control {{ (cargoNovo.invalid && representanteForm.submitted) ? 'is-invalid' : '' }}" required
+                        maxlength="25" />
+                </div>
+
+                <div class="col-xl-12 text-right pb-4">
+                    <button type="submit" class="btn btn-primary">Adicionar Representante</button>
+                </div>
+            </div>
+
+            <p-table #representantesTable
+                    [value]="registros$ | async"
+                    [totalRecords]="totalRegistros$ | async"
+                    (onLazyLoad)="loadRegistros($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered"
+                    *ngIf="totalRegistros$ | async">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Status</th>
+                    <th>Nome</th>
+                    <th>Documento</th>
+                    <th>Cargo</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Data de Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === registro.status">Inativo</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === registro.status">Ativo</span>
+                    </td>
+                    <td>{{ registro.pessoa.nome }}</td>
+                    <td>{{ registro.pessoa.documento }}</td>
+                    <td>{{ registro.cargo }}</td>
+                    <td>{{ montarContatoEmail(registro) }}</td>
+                    <td>{{ montarContatoTelefone(registro) }}</td>
+                    <td>{{ registro.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                    <a *ngIf="status.ATIVO === registro.status"
+                        style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                        title="Excluir/Inativar"
+                        (click)="reresentanteStatus.carregar(registro)"><i class="fa fa-times"></i></a>
+                    
+                    <a *ngIf="status.INATIVO === registro.status"
+                        style="margin-right: 10px; color: green; cursor: pointer;" 
+                        title="Ativar"
+                        (click)="reresentanteStatus.carregar(registro)"><i class="fa fa-check"></i></a>
+                    </td>
+                </tr>
+                </ng-template>
+            </p-table>
+        </app-modal-body>
+
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+
+<app-representante-status #reresentanteStatus></app-representante-status>

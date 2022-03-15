@@ -1,0 +1,20 @@
+<form #usuarioSenhaForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+        id="modalUsuarioSenha" 
+        titulo="Enviar E-mail de Cadastro"
+        (fechar)="usuarioSenhaForm.resetForm()">
+        <app-modal-body *ngIf="usuario">
+            <div class="row">
+                <div class="col-xl-12">
+                    Deseja enviar e-mail para que o usuário {{ usuario.pessoa.nome }} cadastre a senha?
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="usuarioSenhaForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Enviar E-mail</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+
+

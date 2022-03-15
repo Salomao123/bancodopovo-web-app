@@ -1,0 +1,78 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Solicitações"></app-card-header>
+    <form class="kt-form" >
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-12">
+                    <label>Situação:</label>
+                    <div class="input-group">
+                        <select name="status" class="form-control" [(ngModel)]="filtro.situacao">
+                            <option [ngValue]="situacao.SOLICITADO">Solicitado</option>
+                            <option [ngValue]="situacao.APROVADO">Aprovado</option>
+                            <option [ngValue]="situacao.REPROVADO">Rejeitado</option>
+                        </select>
+
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" (click)="pesquisar()">Consultar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-card-body>
+    </form>
+</app-card>
+
+<app-card *ngIf="totalRegistros$ | async">
+    <app-card-header titulo="Solicitações de consulta"></app-card-header>
+    <app-card-body>
+        <p-table #margensTable
+                    [value]="registros$ | async"
+                    [totalRecords]="totalRegistros$ | async"
+                    (onLazyLoad)="loadRegistros($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+                <tr>
+                <th>#</th>
+                <th>Situação</th>
+                <th>Solicitante</th>
+                <th>Consignatária</th>
+                <th>Data de Solicitação</th>
+                <th>Ações</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="situacao.REPROVADO === registro.situacao">Rejeitado</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="situacao.APROVADO === registro.situacao">Aprovado</span>
+                    <span class="kt-badge  kt-badge--warning kt-badge--inline kt-badge--pill" *ngIf="situacao.SOLICITADO === registro.situacao">Solicitado</span>
+                </td>
+                <td>{{ registro.usuarioSolicitante.pessoa.nome }}</td>
+                <td>{{ registro.empresaConsignataria.pessoa.nomeFantasia }}</td>
+                <td>{{ registro.dataSolicitacao | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>
+                    <a *ngIf="situacao.SOLICITADO === registro.situacao"
+                        style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                        title="Reprovar Solicitação"
+                        (click)="visualizacaoMargemSituacao.carregar(registro.id, situacao.REPROVADO)"><i class="fa fa-times"></i></a>
+                    
+                    <a *ngIf="situacao.SOLICITADO === registro.situacao"
+                        style="margin-right: 10px; color: green; cursor: pointer;" 
+                        title="Aprovar Solicitação"
+                        (click)="visualizacaoMargemSituacao.carregar(registro.id, situacao.APROVADO)"><i class="fa fa-check"></i></a>
+
+                </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<app-visualizacao-margem-situacao #visualizacaoMargemSituacao></app-visualizacao-margem-situacao>

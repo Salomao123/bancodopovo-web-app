@@ -1,0 +1,2456 @@
+<app-card>
+    <app-card-header titulo="Adicionar Levantamento Socioecono&#770;mico">
+        <button class="btn btn-sm btn-outline-primary" routerLink="/pages/levantamentos">Voltar</button>
+    </app-card-header>
+    <form class="kt-form" #levantamentoNovoForm="ngForm" (ngSubmit)="finalizar()" >
+
+		<style type="text/css" scoped>
+			@page { margin: 10px 0px 0px 30px; } 
+			
+			.divImpressao { visibility: visible;  } 
+			.tituloImpressao { font-weight: bold; text-align: center; width: 100%; padding-bottom: 30px; } 
+			.center { text-align: center; } 
+			.divDadosGerais { width: 100%;  } 
+			label { font-weight: bold; clear: both; } 
+			span { clear: both; width: 100%; } 
+			h4 { font-size: 20px; padding-left: 10px; padding-top: 0px !important; } 
+			h3 { font-size: 20px; } 
+			li { list-style-type: none; } 
+			small { display: none; } 
+			input,select { clear: both; margin-top: 5px; margin-bottom: 10px; width: 90%; padding: 10px; font-size: 15px } 
+		</style>
+		
+        <app-card-body>
+			<div>
+
+				<ul class="nav nav-tabs" id="myClassicTabOrange" role="tablist">
+					<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+						<a class="nav-link active show" id="profile-tab-classic-orange" data-toggle="tab" href="#profile-classic-orange"
+							role="tab" aria-controls="profile-classic-orange" aria-selected="true"><i class="fa fa-briefcase fa-2x pb-2"
+							aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Dados do<br />Empreendedor(a)</a>
+					</li>
+					<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+						<a class="nav-link" id="follow-tab-classic-orange" data-toggle="tab" href="#follow-classic-orange"
+							role="tab" aria-controls="follow-classic-orange" aria-selected="false"><i class="fa fa-building fa-2x pb-2"
+							aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Empreendimento<br />(Dados)</a>
+					</li>
+					<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+						<a class="nav-link" id="contact-tab-classic-orange" data-toggle="tab" href="#contact-classic-orange"
+							role="tab" aria-controls="contact-classic-orange" aria-selected="false"><i class="fa fa-dollar fa-2x pb-2"
+							aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Empreendimento<br />(Financeiro)</a>
+					</li>
+					<li class="nav-item" style="text-align: center; margin-right: 15px; width: 150px;">
+						<a class="nav-link" id="awesome-tab-classic-orange" data-toggle="tab" href="#press-classic-orange"
+							role="tab" aria-controls="awesome-classic-orange" aria-selected="false"><i class="fa fa-microphone fa-2x pb-2"
+							aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Apresenta&ccedil;a&#771;o ao<br />Comite&#770;</a>
+					</li>
+					<li class="nav-item" style="text-align: center; width: 150px;">
+						<a class="nav-link" id="awesome-tab-classic-orange" data-toggle="tab" href="#awesome-classic-orange"
+							role="tab" aria-controls="awesome-classic-orange" aria-selected="false"><i class="fa fa-gavel fa-2x pb-2"
+							aria-hidden="true" style="margin-bottom: 10px; margin-top: 10px;"></i><br>Parecer<br />Final</a>
+					</li>
+				</ul>
+			
+			  	<div class="tab-content" id="myClassicTabContentOrange">
+			    	<div class="tab-pane fade active show" id="profile-classic-orange" role="tabpanel" 
+			    		aria-labelledby="profile-tab-classic-orange"
+			    		style="padding: 15px;">
+				      	<div class="row">
+
+							<div class="form-group col-xl-12">
+								<h2>Beneficiário</h2>
+	                			<hr />
+	                		</div>
+
+							<div class="form-group col-xl-1">
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center; padding-top: 25px;">
+								<img id="imgFoto3x4" alt="3x4" *ngIf="pessoa && pessoa.img3x4" src="{{ pessoa.img3x4 }}" class="img-fluid" style="border: 6px dashed grey;" />
+								<img alt="3x4" *ngIf="!pessoa || !pessoa.img3x4" src="assets/media/images/3x4.png" class="img-fluid" />
+							</div>
+
+							<div class="form-group col-xl-1">
+							</div>
+
+			                <div class="form-group col-xl-3" >
+								<!--
+								<label>Tipo de Pessoa*:</label>
+								<select [disabled]="(pessoa && pessoa.id) || (levantamento && levantamento.id)" name="tipoPessoa" [(ngModel)]="tipo"
+									class="form-control">
+									<option [ngValue]="undefined">Selecione...</option>
+									<option [ngValue]="tipoPessoa.FISICA">Pessoa Física</option>
+									<option [ngValue]="tipoPessoa.JURIDICA">Pessoa Jurídica</option>
+								</select>
+
+								<br />
+								-->
+								<label *ngIf="tipo && tipoPessoa && tipo == tipoPessoa.JURIDICA">CNPJ*:</label>
+			                    <input *ngIf="levantamento && levantamento.id && tipo && tipo == tipoPessoa.JURIDICA" [disabled]="levantamento && levantamento.id" name="cnpj" type="text" [(ngModel)]="pessoa.documento" maxlength="18" class="form-control" placeholder="CNPJ" />
+
+			                    <label *ngIf="tipo && tipoPessoa && tipo == tipoPessoa.FISICA">CPF*:</label>
+			                    <input *ngIf="levantamento && levantamento.id && tipo && tipo == tipoPessoa.FISICA" [disabled]="levantamento && levantamento.id" name="cpf" type="text" [(ngModel)]="pessoa.documento" maxlength="14" class="form-control" placeholder="CPF" />
+
+								<mat-form-field *ngIf="!levantamento || levantamento == null || !levantamento.id || levantamento.id == null" class="example-full-width" style="display: block !important;">
+									<input matInput
+										   placeholder="Beneficiário"
+										   aria-label="Beneficiário"
+										   [matAutocomplete]="auto"
+										   [formControl]="pessoaCtrl"
+										   style="padding: 5px !important; margin-bottom: 5px !important; width: 100% !important;">
+									<mat-autocomplete #auto="matAutocomplete" style="z-index: 999999; width: 400px;" (optionSelected)="carregarPessoa($event)">
+									  	<mat-option *ngFor="let p of pessoasFiltered | async" [value]="p.documento" style="height: 80px;">
+											<span style="line-height: 20px !important;">{{p.nome}}{{p.nomeFantasia}}</span>
+											<small style="line-height: 20px !important; color: black !important; display: block !important;">{{p.documento}}</small>
+											<hr />
+										</mat-option>
+									</mat-autocomplete>
+								</mat-form-field>
+							
+							</div>		
+							
+							<div class="form-group col-xl-1">
+							</div>
+			
+			                <div class="form-group col-xl-3" *ngIf="pessoa && pessoa.id">
+			                    <label>Nome: </label> {{pessoa.nome}}{{pessoa.nomeFantasia}}<br />
+			                    <label>Estado Civil: </label> {{ descricaoEstadoCivil(pessoa) }}<br />
+			                    <label>Data de Nascimento: </label> {{pessoa.dataNascimento | date:'dd/MM/yyyy'}}<br />
+								<label>Situação do Nome (Serasa): </label> {{ descricaoSituacaoNome(pessoa) }}<br />
+								<label>Score (Nome): </label> {{pessoa.scoreNome}}<br />
+								<label>Data Última Consulta do Nome: </label> {{pessoa.dataUltimaConsultaSerasa | date:'dd/MM/yyyy'}}
+							</div>
+							<div class="form-group col-xl-2" style="text-align: center;">
+								<span *ngIf="pessoa && pessoa.id && pessoa.tipo == 1" style="font-size: 80px; font-weight: bold;">PF</span>
+								<span *ngIf="pessoa && pessoa.id && pessoa.tipo == 2" style="font-size: 80px; font-weight: bold;">PJ</span>
+							</div>
+			                <br />
+							<br />
+							
+							<div class="form-group col-xl-12">
+								<h2>Avalista</h2>
+	                			<hr />
+							</div>
+
+							<div class="form-group col-xl-1">
+							</div>
+
+							<div class="form-group col-xl-1" style="text-align: center; padding-top: 25px;">
+								<img id="imgFoto3x4Avalista" alt="3x4" *ngIf="avalista && avalista.img3x4" src="{{ avalista.img3x4 }}" class="img-fluid" style="border: 6px dashed grey;" />
+								<img alt="3x4Avalista" *ngIf="!avalista || !avalista.img3x4" src="assets/media/images/3x4.png" class="img-fluid" />
+							</div>
+
+							<div class="form-group col-xl-1">
+							</div>
+
+			                <div class="form-group col-xl-3" >
+								<!--
+								<label>Tipo de Pessoa*:</label>
+								<select [disabled]="(avalista && avalista.id) || (levantamento && levantamento.id)" name="tipoPessoaAvalista" [(ngModel)]="tipoAvalista"
+									class="form-control">
+									<option [ngValue]="undefined">Selecione...</option>
+									<option [ngValue]="tipoPessoa.FISICA">Pessoa Física</option>
+									<option [ngValue]="tipoPessoa.JURIDICA">Pessoa Jurídica</option>
+								</select>
+
+								<br />
+								-->
+								<label *ngIf="tipoAvalista && tipoAvalista == tipoPessoa.JURIDICA">CNPJ*:</label>
+			                    <input *ngIf="levantamento && levantamento.id && tipoAvalista && tipoAvalista == tipoPessoa.JURIDICA" [disabled]="levantamento && levantamento.id" name="cnpjAvalista" [(ngModel)]="avalista.documento" type="text" maxlength="18" class="form-control" placeholder="CNPJ" />
+
+			                    <label *ngIf="tipoAvalista && tipoAvalista == tipoPessoa.FISICA">CPF*:</label>
+			                    <input *ngIf="levantamento && levantamento.id && tipoAvalista && tipoAvalista == tipoPessoa.FISICA" [disabled]="levantamento && levantamento.id" name="cpfAvalista" [(ngModel)]="avalista.documento" type="text" maxlength="14" class="form-control" placeholder="CPF" />
+
+								<mat-form-field *ngIf="!levantamento || levantamento == null || !levantamento.id || levantamento.id == null" class="example-full-width" style="display: block !important;">
+									<input matInput
+										   placeholder="Avalista"
+										   aria-label="Avalista"
+										   [matAutocomplete]="auto2"
+										   [formControl]="avalistaCtrl"
+										   style="padding: 5px !important; margin-bottom: 5px !important; width: 100% !important;">
+									<mat-autocomplete (optionSelected)="carregarAvalista($event)" #auto2="matAutocomplete" style="z-index: 999999; width: 400px;">
+									  	<mat-option *ngFor="let p of avalistasFiltered | async" [value]="p.documento" style="height: 80px;">
+											<span style="line-height: 20px !important;">{{p.nome}}{{p.nomeFantasia}}</span>
+											<small style="line-height: 20px !important; color: black !important; display: block !important;">{{p.documento}}</small>
+											<hr />
+										</mat-option>
+									</mat-autocomplete>
+								</mat-form-field>
+							</div>		
+							
+							<div class="form-group col-xl-1">
+							</div>
+			
+			                <div class="form-group col-xl-3" *ngIf="avalista && avalista.id">
+			                    <label>Nome: </label> {{avalista.nome}}{{avalista.nomeFantasia}}<br />
+			                    <label>Estado Civil: </label> {{ descricaoEstadoCivil(avalista) }}<br />
+			                    <label>Data de Nascimento: </label> {{avalista.dataNascimento | date:'dd/MM/yyyy'}}<br />
+								<label>Situação do Nome (Serasa): </label> {{ descricaoSituacaoNome(avalista) }}<br />
+								<label>Score (Nome): </label> {{avalista.scoreNome}}<br />
+								<label>Data Última Consulta do Nome: </label> {{avalista.dataUltimaConsultaSerasa | date:'dd/MM/yyyy'}}
+							</div>
+							<div class="form-group col-xl-2" style="text-align: center;">
+								<span *ngIf="avalista && avalista.id && pessoa.tipo == 1" style="font-size: 80px; font-weight: bold;">PF</span>
+								<span *ngIf="avalista && avalista.id && pessoa.tipo == 2" style="font-size: 80px; font-weight: bold;">PJ</span>
+							</div>
+							
+							<br />
+			                <div class="form-group col-xl-12">
+	                			<hr />
+	                		</div>
+							<br />
+	                		
+	                		<div id="accordion1" class="col-md-12">
+							  	<div class="card">
+							    	<div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+							      		<h4 class="mb-0">
+							          		<i class="fa fa-dollar" style="margin-left: 6px; margin-right: 10px; width: 14px;"></i> Renda Familiar Mensal
+							      		</h4>
+							    	</div>
+							
+							    	<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion1">
+								      	<div class="card-body">
+								        	<div class="row">
+						                		<div class="form-group col-xl-4">
+								                    <label>Nome do Familiar*:</label>
+							                     	<input [disabled]="desabilitado()" maxlength="500" [(ngModel)]="levantamentoRendaFamiliar.nome" name="nomeFamiliar" type="text" class="form-control" placeholder="Nome do Familiar" />
+								                </div>
+								                <div class="form-group col-xl-3">
+								                    <label>Fonte da Renda*:</label>
+							                     	<input [disabled]="desabilitado()" maxlength="500" [(ngModel)]="levantamentoRendaFamiliar.fonteRenda" name="fonteFamiliar" type="text" class="form-control" placeholder="Fonte da Renda" />
+								                </div>
+								                <div class="form-group col-xl-3">
+								                    <label>Renda Mensal (R$)*:</label>
+							                     	<input [disabled]="desabilitado()" appMoedaFormat maxlength="13" [(ngModel)]="levantamentoRendaFamiliar.rendaMensalFormatada" name="rendaFamiliar" type="text" class="form-control" placeholder="Renda Mensal (R$)" />
+								                </div>
+								                <div class="form-group col-xl-2" style="text-align: right;">
+								                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarRendaFamiliar()">+ Renda Familiar</button>
+								                </div>
+								            </div>
+					                		<br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Familiares</h4>
+					                			<hr />
+					                		</div>
+					                		<br />
+					                		<div class="row">
+
+												<div class="col-md-12">
+													<p-table #rendaFamiliarTable
+														[value]="rendaFamiliar"
+														[paginator]="false"
+														[lazy]="false"
+														styleClass="table-responsive"
+														tableStyleClass="table table-striped table-bordered">
+														
+														<ng-template pTemplate="header">
+															<tr>
+															<th>#</th>
+															<th>Nome do Familiar</th>
+															<th>Fonte de Renda</th>
+															<th>Renda Mensal (R$)</th>
+															<th>A&ccedil;o&#771;es</th>
+															</tr>
+														</ng-template>
+														<ng-template pTemplate="body" let-renda let-i="rowIndex">
+															<tr>
+															<td>{{ i + 1 }}</td>
+															<td>{{ renda.nome }}</td>
+															<td>{{ renda.fonteRenda }}</td>
+															<td>{{ converterMoeda(renda.rendaMensal) }}</td>
+															<td>
+																<a title="Remover"
+																	style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																	(click)="removerRendaFamiliar(i)"
+																	*ngIf="!desabilitado() && (permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async)">
+																<i class="fa fa-times"></i>
+																</a>
+															</td>
+															</tr>
+														</ng-template>
+													</p-table>
+												</div>
+								        	</div>
+								      	</div>
+							    	</div>
+							  	</div>
+							  	<div class="card">
+							    	<div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="cursor: pointer;">
+							      		<h4 class="mb-0">
+							          		<i class="fa fa-users" style="margin-right: 10px; width: 20px;"></i>  Gastos Familiares Mensais
+							      		</h4>
+							    	</div>
+								    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion1">
+								      	<div class="card-body">
+								      		<div class="row">
+						                		<div class="form-group col-xl-4">
+								                    <label>Tipo de Gasto*:</label>
+							                     	<select [disabled]="desabilitado()" [(ngModel)]="levantamentoGastoFamiliar.tipo" name="status" class="form-control">
+								                        <option [ngValue]="undefined">Selecione...</option>
+								                        <option [ngValue]="1">Alimenta&ccedil;a&#771;o / Higiene / Limpeza</option>
+								                        <option [ngValue]="2">Sau&#769;de (reme&#769;dios / me&#769;dicos / plano de sau&#769;de)</option>
+								                    	<option [ngValue]="3">Educa&ccedil;a&#771;o</option>
+								                    	<option [ngValue]="4">Aluguel / condomi&#769;nio/ presta&ccedil;a&#771;o da casa pro&#769;pria</option>
+								                    	<option [ngValue]="5">A&#769;gua / luz / telefone / Ga&#769;s / Internet</option>
+								                    	<option [ngValue]="6">Transporte</option>
+								                    	<option [ngValue]="7">Lazer</option>
+								                    	<option [ngValue]="8">Outro</option>
+								                    </select>
+								                </div>
+								                <div class="form-group col-xl-3">
+								                    <label>Descri&ccedil;a&#771;o (opcional):</label>
+							                     	<input [(ngModel)]="levantamentoGastoFamiliar.descricao" maxlength="500" [disabled]="desabilitado()" name="fonteFamiliar" type="text" class="form-control" placeholder="Descri&ccedil;a&#771;o (opcional)" />
+								                </div>
+								                <div class="form-group col-xl-3">
+								                    <label>Valor do Gasto (R$)*:</label>
+							                     	<input [(ngModel)]="levantamentoGastoFamiliar.valorFormatado" appMoedaFormat maxlength="13" [disabled]="desabilitado()" name="rendaFamiliar" type="text" class="form-control" placeholder="Valor do Gasto (R$)" />
+								                </div>
+								                <div class="form-group col-xl-2" style="text-align: right;">
+								                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarGastoFamiliar()">+ Gasto Familiar</button>
+								                </div>
+								            </div>
+					                		<br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Gasto Familiares</h4>
+					                			<hr />
+					                		</div>
+					                		<br />
+					                		<div class="row">
+						                		<div class="col-md-12">
+													<p-table #gastoFamiliarTable
+														[value]="gastoFamiliar"
+														[paginator]="false"
+														[lazy]="false"
+														styleClass="table-responsive"
+														tableStyleClass="table table-striped table-bordered">
+														
+														<ng-template pTemplate="header">
+															<tr>
+															<th>#</th>
+															<th>Tipo</th>
+															<th>Descri&ccedil;a&#771;o</th>
+															<th>Valor (R$)</th>
+															<th>A&ccedil;o&#771;es</th>
+															</tr>
+														</ng-template>
+														<ng-template pTemplate="body" let-gasto let-i="rowIndex">
+															<tr>
+															<td>{{ i + 1 }}</td>
+															<td>{{ getDescricaoTipo(gasto.tipo) }}</td>
+															<td>{{ gasto.descricao }}</td>
+															<td>{{ converterMoeda(gasto.valor) }}</td>
+															<td>
+																<a title="Remover"
+																	style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																	(click)="removerGastoFamiliar(i)"
+																	*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+																<i class="fa fa-times"></i>
+																</a>
+															</td>
+															</tr>
+														</ng-template>
+													</p-table>
+												</div>
+								        	</div>
+								        </div>
+								    </div>
+							  	</div>
+							  	<div class="card">
+							    	<div class="card-header collapsed" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="cursor: pointer;">
+							      		<h4 class="mb-0">
+						          			<i class="fa fa-graduation-cap" style="margin-right: 10px; width: 20px;"></i> Experie&#770;ncia Profissional / Qualifica&ccedil;a&#771;o Te&#769;cnica
+							      		</h4>
+							    	</div>
+							    	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion1">
+								      	<div class="card-body">
+								      		<div class="row">
+						                		<div class="form-group col-xl-6">
+								                    <label>Grau de Forma&ccedil;a&#771;o Escolar*:</label>
+							                     	<select [(ngModel)]="levantamento.grau" [disabled]="desabilitado()" name="status" class="form-control">
+								                        <option [ngValue]="undefined">Selecione...</option>
+								                        <option [ngValue]="1">Fundamental</option>
+								                        <option [ngValue]="2">Me&#769;dio</option>
+								                    	<option [ngValue]="3">Superior</option>
+								                    </select>
+								                </div>
+								                <div class="form-group col-xl-6">
+								                    <label>Curso Superior:</label>
+							                     	<input maxlength="500" [(ngModel)]="levantamento.cursoSuperior" [disabled]="desabilitado() || levantamento.grau != 3" name="cursoSuperior" type="text" disabled class="form-control" placeholder="Curso Superior" />
+								                </div>
+							                </div>
+							                
+							                <br />
+					                		
+					                		<div class="row">
+						                		<div class="form-group col-xl-4">
+								                    <label>Local de Trabalho:</label>
+							                     	<input maxlength="500" [(ngModel)]="levantamentoExperienciaProfissional.localTrabalho" [disabled]="desabilitado()" name="localTrabalho" type="text" class="form-control" placeholder="Local de Trabalho" />
+								                </div>
+								                <div class="form-group col-xl-3">
+								                    <label>Tempo (em meses):</label>
+							                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamentoExperienciaProfissional.meses" [disabled]="desabilitado()" name="tempoMeses" type="text" class="form-control" placeholder="Tempo (em meses)" />
+								                </div>
+								                <div class="form-group col-xl-3">
+								                    <label>Fun&ccedil;a&#771;o:</label>
+							                     	<input maxlength="500" [(ngModel)]="levantamentoExperienciaProfissional.funcao" [disabled]="desabilitado()" name="Funacao" type="text" class="form-control" placeholder="Fun&ccedil;a&#771;o" />
+								                </div>
+								                <div class="form-group col-xl-2" style="text-align: right;">
+								                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarExperienciaProfissional()">+ Experie&#770;ncia</button>
+								                </div>
+								            </div>
+					                		<br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Experie&#770;ncias</h4>
+					                			<hr />
+											</div>
+											<br />
+					                		<div class="row">
+						                		<div class="col-md-12">
+													<p-table #experienciaProfissionalTable
+														[value]="experienciaProfissional"
+														[paginator]="false"
+														[lazy]="false"
+														styleClass="table-responsive"
+														tableStyleClass="table table-striped table-bordered">
+														
+														<ng-template pTemplate="header">
+															<tr>
+															<th>#</th>
+															<th>Local</th>
+															<th>Tempo (Meses)</th>
+															<th>Fun&ccedil;a&#771;o</th>
+															<th>A&ccedil;o&#771;es</th>
+															</tr>
+														</ng-template>
+														<ng-template pTemplate="body" let-experiencia let-i="rowIndex">
+															<tr>
+															<td>{{ i + 1 }}</td>
+															<td>{{ experiencia.localTrabalho }}</td>
+															<td>{{ experiencia.meses }}</td>
+															<td>{{ experiencia.funcao }}</td>
+															<td>
+																<a title="Remover"
+																	style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																	(click)="removerExperienciaProfissional(i)"
+																	*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+																<i class="fa fa-times"></i>
+																</a>
+															</td>
+															</tr>
+														</ng-template>
+													</p-table>
+												</div>
+								        	</div>
+					                		<br />
+					                		<div class="row">
+						                		<div class="form-group col-xl-5">
+								                    <label>Curso Profissionalizante:</label>
+							                     	<input maxlength="500" [(ngModel)]="levantamentoCurso.nome" [disabled]="desabilitado()" name="fonteFamiliar" type="text" class="form-control" placeholder="Curso Profissionalizante" />
+								                </div>
+								                <div class="form-group col-xl-5">
+								                    <label>Institui&ccedil;a&#771;o de Ensino:</label>
+							                     	<input maxlength="500" [(ngModel)]="levantamentoCurso.instituicao" [disabled]="desabilitado()" name="fonteFamiliar" type="text" class="form-control" placeholder="Institui&ccedil;a&#771;o de Ensino" />
+								                </div>
+								                <div class="form-group col-xl-2" style="text-align: right;">
+								                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarCurso()">+ Curso Profissionalizante</button>
+								                </div>
+								            </div>
+					                		<br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Cursos</h4>
+					                			<hr />
+											</div>
+											<br />
+					                		<div class="row">
+						                		<div class="col-md-12">
+													<p-table #cursoTable
+														[value]="curso"
+														[paginator]="false"
+														[lazy]="false"
+														styleClass="table-responsive"
+														tableStyleClass="table table-striped table-bordered">
+														
+														<ng-template pTemplate="header">
+															<tr>
+															<th>#</th>
+															<th>Curso Profissionalizante</th>
+															<th>Institui&ccedil;a&#771;o de Ensino</th>
+															<th>A&ccedil;o&#771;es</th>
+															</tr>
+														</ng-template>
+														<ng-template pTemplate="body" let-curso let-i="rowIndex">
+															<tr>
+															<td>{{ i + 1 }}</td>
+															<td>{{ curso.nome }}</td>
+															<td>{{ curso.instituicao }}</td>
+															<td>
+																<a title="Remover"
+																	style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																	(click)="removerCurso(i)"
+																	*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+																<i class="fa fa-times"></i>
+																</a>
+															</td>
+															</tr>
+														</ng-template>
+													</p-table>
+												</div>
+								        	</div>
+								        </div>
+							    	</div>
+							  	</div>
+							</div>
+							
+			            </div>
+			    	</div>
+				    <div class="tab-pane fade" id="follow-classic-orange" role="tabpanel" 
+				    	aria-labelledby="follow-tab-classic-orange"
+				    	style="padding: 15px;">
+				    	
+				    	<div id="accordion2" class="col-md-12">
+				    	
+						  	<div class="card">
+						    	<div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-briefcase" style="margin-right: 10px; width: 20px;"></i> Caracteri&#769;sticas do Nego&#769;cio
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+								      		<div class="form-group col-xl-6">
+							                    <label>Tipo de Nego&#769;cio:</label>
+						                     	<select [(ngModel)]="levantamento.tipoNegocio" [disabled]="desabilitado()" name="tipoNegocio" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Indu&#769;stria</option>
+							                        <option [ngValue]="2">Come&#769;rcio</option>
+							                    	<option [ngValue]="3">Servi&ccedil;os</option>
+							                    </select>
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Ponto:</label>
+						                     	<select [(ngModel)]="levantamento.ponto" [disabled]="desabilitado()" name="ponto" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Fixo</option>
+							                        <option [ngValue]="2">Serv. a&#768; domici&#769;lio</option>
+							                    	<option [ngValue]="3">Feirante</option>
+							                    	<option [ngValue]="4">Outro</option>
+							                    </select>
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Local:</label>
+						                     	<select [(ngModel)]="levantamento.local" [disabled]="desabilitado()" name="local" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Pro&#769;prio</option>
+							                        <option [ngValue]="2">Alugado</option>
+							                    	<option [ngValue]="3">Tempora&#769;rio</option>
+							                    	<option [ngValue]="4">Contrato ate&#769;:</option>
+							                    </select>
+							                </div>
+							                <div class="form-group col-xl-6">
+												<label>Data Te&#769;rmino:</label>
+												<p-calendar
+													name="dataTermino"
+													[(ngModel)]="levantamento.dataTermino"
+													[locale]="pt"
+													[disabled]="desabilitado()"
+													styleClass="w-100"
+													inputStyleClass="form-control"
+													monthNavigator="true"
+													yearNavigator="true"
+													dateFormat="dd/mm/yy"
+													yearRange="1900:2100"
+													showTime="true" 
+													hourFormat="24"
+													placeholder="Data Te&#769;rmino"></p-calendar>
+							                </div>
+							                <br />
+							                
+							                <br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Feirante</h4>
+					                			<hr />
+					                		</div>
+					                		<div class="form-group col-xl-4">
+							                    <label>Atividade:</label>
+						                     	<select [(ngModel)]="levantamento.atividade" [disabled]="desabilitado()" name="atividade" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Informal</option>
+							                        <option [ngValue]="2">MEI</option>
+							                    	<option [ngValue]="3">EPP</option>
+							                    	<option [ngValue]="4">Limitada</option>
+							                    	<option [ngValue]="5">EIRELI</option>
+							                    	<option [ngValue]="6">ME</option>
+							                    </select>
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Experie&#770;ncia (em meses):</label>
+						                     	<input maxlength="4" appNumeroFormat [(ngModel)]="levantamento.experienciaMeses" [disabled]="desabilitado()" name="experienciaMeses" type="text" class="form-control" placeholder="Experie&#770;ncia (em meses)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Independe&#770;ncia na Atividade (meses):</label>
+						                     	<input maxlength="4" appNumeroFormat [(ngModel)]="levantamento.independenciaAtividadeMeses" [disabled]="desabilitado()" name="independenciaAtividadeMeses" type="text" class="form-control" placeholder="Independ&#770;ncia na Atividade (meses)" />
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-book" style="margin-right: 10px; width: 20px;"></i> Histo&#769;rico do Empreendimento
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+								      		<div class="form-group col-xl-12">
+							                    <label>Histo&#769;rico:</label>
+						                     	<textarea maxlength="1000" name="historicoEmpreendimento" [(ngModel)]="levantamento.historicoEmpreendimento" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-quote-left" style="margin-right: 10px; width: 20px;"></i> Notas Explicativas da Situa&ccedil;a&#771;o Patrimonial
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-12">
+					                			<h4>Empre&#769;stimo/Financiamento</h4>
+					                			<hr />
+											</div>
+											<div class="form-group col-xl-4">
+							                    <label>Credor:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.credor" [disabled]="desabilitado()" name="credor" type="text" class="form-control" placeholder="Credor" />
+											</div>
+											<div class="form-group col-xl-4">
+												<label>Valor da Presta&ccedil;a&#771;o (R$):</label>
+												 <input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.valorPrestacaoFormatado" [disabled]="desabilitado()" name="valorPrestacao" type="text" class="form-control" placeholder="Valor da Presta&ccedil;a&#771;o (R$)" />
+											</div>
+											<div class="form-group col-xl-4">
+							                    <label>Nº Presta&ccedil;a&#771;o:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamento.numeroPrestacao" [disabled]="desabilitado()" name="numeroPrestacao" type="text" class="form-control" placeholder="Nº Presta&ccedil;a&#771;o" />
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Possui Di&#769;vida?</label>
+												<select [(ngModel)]="levantamento.possuiDivida" [disabled]="desabilitado()" name="possuiDivida" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											<div class="form-group col-xl-4">
+												<label>Valor da Di&#769;vida (R$):</label>
+												 <input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.valorDividaFormatada" [disabled]="desabilitado() || (!levantamento || !levantamento.possuiDivida || levantamento.possuiDivida == 2)" name="valorDivida" type="text" class="form-control" placeholder="Valor da Di&#769;vida (R$)" />
+											</div>
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-shopping-bag" style="margin-right: 10px; width: 20px;"></i> Histo&#769;rico de Vendas
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-3">
+							                    <label>Me&#770;s/Ano:</label>
+						                     	<input maxlength="7" appMesAnoFormat [(ngModel)]="levantamentoHistoricoVendas.mesAno" [disabled]="desabilitado()" name="mesAno" type="text" class="form-control" placeholder="Me&#770;s/Ano" />
+							                </div>
+							                <div class="form-group col-xl-3">
+							                    <label>Valor (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamentoHistoricoVendas.valorFormatado" [disabled]="desabilitado()" name="valorMesAno" type="text" class="form-control" placeholder="Valor (R$)" />
+											</div>
+											<div class="form-group col-xl-3">
+												<label>Conceito da Venda</label>
+												<select [(ngModel)]="levantamentoHistoricoVendas.conceitoVenda" [disabled]="desabilitado()" name="conceitoVenda" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Muito bom</option>
+													<option [ngValue]="2">Bom</option>
+													<option [ngValue]="3">Regular</option>
+							                        <option [ngValue]="4">Fraco</option>
+							                    </select>
+											</div>
+											<div class="form-group col-xl-3" style="text-align: right;">
+							                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarHistoricoVendas()">Adicionar</button>
+							                </div>
+							                <br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Histo&#769;rico de Vendas</h4>
+					                			<hr />
+					                		</div>
+											<br />
+											<div class="col-md-12">
+												<p-table #historicoVendasTable
+													[value]="historicoVendas"
+													[paginator]="false"
+													[lazy]="false"
+													styleClass="table-responsive"
+													tableStyleClass="table table-striped table-bordered">
+													
+													<ng-template pTemplate="header">
+														<tr>
+														<th>#</th>
+														<th>Me&#770;s/Ano</th>
+														<th>Valor (R$)</th>
+														<th>Conceito da Venda</th>
+														<th>A&ccedil;o&#771;es</th>
+														</tr>
+													</ng-template>
+													<ng-template pTemplate="body" let-historicoVendas let-i="rowIndex">
+														<tr>
+														<td>{{ i + 1 }}</td>
+														<td>{{ historicoVendas.mesAno }}</td>
+														<td>{{ converterMoeda(historicoVendas.valor) }}</td>
+														<td>{{ getDescricaoConceitoVenda(historicoVendas.conceitoVenda) }}</td>
+														<td>
+															<a title="Remover"
+																style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																(click)="removerHistoricoVendas(i)"
+																*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+															<i class="fa fa-times"></i>
+															</a>
+														</td>
+														</tr>
+													</ng-template>
+												</p-table>
+											</div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingFive" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-thumbs-up" style="margin-right: 10px; width: 20px;"></i> Condi&ccedil;o&#771;es de Comercializa&ccedil;a&#771;o
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-12">
+					                			<h4>Compra</h4>
+					                			<hr />
+											</div>
+											<div class="form-group col-xl-6">
+							                    <label>A&#768; Vista (%):</label>
+						                     	<input maxlength="3" appNumeroFormat [(ngModel)]="levantamento.percentualCompraVista" [disabled]="desabilitado()" name="percentualCompraVista" type="text" class="form-control" placeholder="A&#768; Vista (%)" />
+											</div>
+											<div class="form-group col-xl-6">
+							                    <label>A&#768; Prazo (%):</label>
+						                     	<input maxlength="3" appNumeroFormat [(ngModel)]="levantamento.percentualCompraPrazo" [disabled]="desabilitado()" name="percentualCompraPrazo" type="text" class="form-control" placeholder="A&#768; Prazo (%)" />
+											</div>
+
+											<div class="form-group col-xl-12">
+					                			<h4>Opera&ccedil;o&#771;es a&#768; Prazo</h4>
+					                			<hr />
+											</div>
+											<div class="form-group col-xl-4">
+							                    <label>Taxa de Juros (%):</label>
+						                     	<input maxlength="3" appNumeroFormat [(ngModel)]="levantamento.operacaoTaxaJuros" [disabled]="desabilitado()" name="qtdCarteiraAssinada" type="text" class="form-control" placeholder="Taxa de Juros (%)" />
+											</div>
+											<div class="form-group col-xl-6">
+							                    <label>Dias de Prazo:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamento.operacaoDiasPrazo" [disabled]="desabilitado()" name="operacaoDiasPrazo" type="text" class="form-control" placeholder="Dias de Prazo" />
+											</div>
+											<div class="form-group col-xl-6">
+							                    <label>Documenta&ccedil;a&#771;o:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.operacaoDocumentacao" [disabled]="desabilitado()" name="operacaoDocumentacao" type="text" class="form-control" placeholder="Documenta&ccedil;a&#771;o" />
+											</div>
+
+											<div class="form-group col-xl-12">
+					                			<h4>Prejui&#769;zos</h4>
+					                			<hr />
+											</div>
+											<div class="form-group col-xl-4">
+							                    <label>Prejui&#769;zos:</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.prejuizosFormatado" [disabled]="desabilitado()" name="prejuizos" type="text" class="form-control" placeholder="Prejui&#769;zos" />
+											</div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingSix" data-toggle="collapse" data-target="#collapseSix" aria-expanded="true" aria-controls="collapseSix" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-star" style="margin-right: 10px; width: 20px;"></i> Principais Clientes
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-4">
+							                    <label>Nome:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamentoCliente.nome" [disabled]="desabilitado()" name="nomeCliente" type="text" class="form-control" placeholder="Nome" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Porcentagem (%):</label>
+						                     	<input maxlength="3" appNumeroFormat [(ngModel)]="levantamentoCliente.porcentagem" [disabled]="desabilitado()" name="porcentagemCliente" type="text" class="form-control" placeholder="Porcentagem (%)" />
+											</div>
+											<div class="form-group col-xl-4" style="text-align: right;">
+							                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarCliente()">Adicionar</button>
+							                </div>
+							                
+							                <br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Principais Clientes</h4>
+					                			<hr />
+					                		</div>
+											<br />
+											<div class="col-md-12">
+												<p-table #clienteTable
+													[value]="cliente"
+													[paginator]="false"
+													[lazy]="false"
+													styleClass="table-responsive"
+													tableStyleClass="table table-striped table-bordered">
+													
+													<ng-template pTemplate="header">
+														<tr>
+														<th>#</th>
+														<th>Nome</th>
+														<th>Porcentagem (%)</th>
+														<th>A&ccedil;o&#771;es</th>
+														</tr>
+													</ng-template>
+													<ng-template pTemplate="body" let-cliente let-i="rowIndex">
+														<tr>
+														<td>{{ i + 1 }}</td>
+														<td>{{ cliente.nome }}</td>
+														<td>{{ cliente.porcentagem }}</td>
+														<td>
+															<a title="Remover"
+																style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																(click)="removerCliente(i)"
+																*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+															<i class="fa fa-times"></i>
+															</a>
+														</td>
+														</tr>
+													</ng-template>
+												</p-table>
+											</div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingSeven" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="true" aria-controls="collapseSeven" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-truck" style="margin-right: 10px; width: 20px;"></i> Principais Fornecedores
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-3">
+							                    <label>Nome:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamentoFornecedor.nome" [disabled]="desabilitado()" name="mercadoriaReceita" type="text" class="form-control" placeholder="Nome" />
+							                </div>
+							                <div class="form-group col-xl-3">
+							                    <label>Tipo de Produto:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamentoFornecedor.tipoProduto" [disabled]="desabilitado()" name="unidadeReceita" type="text" class="form-control" placeholder="Tipo de Produto" />
+							                </div>
+							                <div class="form-group col-xl-3">
+							                    <label>Freque&#770;ncia de Compras:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamentoFornecedor.frequenciaCompras" [disabled]="desabilitado()" name="precoReceita" type="text" class="form-control" placeholder="Freque&#770;ncia de Compras" />
+							                </div>
+							                <div class="form-group col-xl-3" style="text-align: right;">
+							                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarFornecedor()">Adicionar</button>
+							                </div>
+							                
+							                <br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Principais Fornecedores</h4>
+					                			<hr />
+					                		</div>
+											<br />
+											<div class="col-md-12">
+												<p-table #fornecedorTable
+													[value]="fornecedor"
+													[paginator]="false"
+													[lazy]="false"
+													styleClass="table-responsive"
+													tableStyleClass="table table-striped table-bordered">
+													
+													<ng-template pTemplate="header">
+														<tr>
+														<th>#</th>
+														<th>Nome</th>
+														<th>Tipo de Produto</th>
+														<th>Frequencia</th>
+														<th>A&ccedil;o&#771;es</th>
+														</tr>
+													</ng-template>
+													<ng-template pTemplate="body" let-fornecedor let-i="rowIndex">
+														<tr>
+														<td>{{ i + 1 }}</td>
+														<td>{{ fornecedor.nome }}</td>
+														<td>{{ fornecedor.tipoProduto }}</td>
+														<td>{{ fornecedor.frequenciaCompras }}</td>
+														<td>
+															<a title="Remover"
+																style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																(click)="removerFornecedor(i)"
+																*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+															<i class="fa fa-times"></i>
+															</a>
+														</td>
+														</tr>
+													</ng-template>
+												</p-table>
+											</div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingEight" data-toggle="collapse" data-target="#collapseEight" aria-expanded="true" aria-controls="collapseEight" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-puzzle-piece" style="margin-right: 10px; width: 20px;"></i> Considera&ccedil;o&#771;es sobre a Concorre&#770;ncia
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-12">
+							                    <label>Considera&ccedil;o&#771;es sobre a Concorre&#770;ncia:</label>
+						                     	<textarea maxlength="1000" name="considerecoesConcorrencia" [(ngModel)]="levantamento.considerecoesConcorrencia" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingNine" data-toggle="collapse" data-target="#collapseNine" aria-expanded="true" aria-controls="collapseNine" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-users" style="margin-right: 10px; width: 20px;"></i> Quadro de Pessoal
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+											<div class="form-group col-xl-12">
+					                			<h4>Familiares</h4>
+					                			<hr />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Qtd. c/ Carteira Assinada:</label>
+						                     	<input [disabled]="desabilitado()" maxlength="5" appNumeroFormat [(ngModel)]="levantamento.qtdFamiliarComCarteiraAssinada" name="qtdCarteiraAssinada" type="text" class="form-control" placeholder="Qtd. c/ Carteira Assinada" />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Sala&#769;rio Total c/ Carteira Assinada:</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.salarioFamiliarComCarteiraAssinadaFormatado" [disabled]="desabilitado()" name="salarioCarteiraAssinada" type="text" class="form-control" placeholder="Sala&#769;rio Total c/ Carteira Assinada" />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Qtd. s/ Carteira Assinada:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamento.qtdFamiliarSemCarteiraAssinada" [disabled]="desabilitado()" name="qtdSemCarteiraAssinada" type="text" class="form-control" placeholder="Qtd. s/ Carteira Assinada" />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Sala&#769;rio Total s/ Carteira Assinada:</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.salarioFamiliarSemCarteiraAssinadaFormatado" [disabled]="desabilitado()" name="salarioSemCarteiraAssinada" type="text" class="form-control" placeholder="Sala&#769;rio Total s/ Carteira Assinada" />
+							                </div>
+
+											<div class="form-group col-xl-12">
+					                			<h4>Na&#771;o Familiares</h4>
+					                			<hr />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Qtd. c/ Carteira Assinada:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamento.qtdNaoFamiliarComCarteiraAssinada" [disabled]="desabilitado()" name="qtdNaoFamiliarCarteiraAssinada" type="text" class="form-control" placeholder="Qtd. c/ Carteira Assinada" />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Sala&#769;rio Total c/ Carteira Assinada:</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.salarioNaoFamiliarComCarteiraAssinadaFormatado" [disabled]="desabilitado()" name="salarioNaoFamiliarCarteiraAssinada" type="text" class="form-control" placeholder="Sala&#769;rio Total c/ Carteira Assinada" />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Qtd. s/ Carteira Assinada:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamento.qtdNaoFamiliarSemCarteiraAssinada" [disabled]="desabilitado()" name="qtdNaoFamiliarSemCarteiraAssinada" type="text" class="form-control" placeholder="Qtd. s/ Carteira Assinada" />
+											</div>
+											<div class="form-group col-xl-3">
+							                    <label>Sala&#769;rio Total s/ Carteira Assinada:</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.salarioNaoFamiliarSemCarteiraAssinadaFormatado" [disabled]="desabilitado()" name="salarioNaoFamiliarSemCarteiraAssinada" type="text" class="form-control" placeholder="Sala&#769;rio Total s/ Carteira Assinada" />
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingTen" data-toggle="collapse" data-target="#collapseTen" aria-expanded="true" aria-controls="collapseTen" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-tasks" style="margin-right: 10px; width: 20px;"></i> Registros e Controles da Empresa
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordion2">
+							      	<div class="card-body">
+								      	<div class="row">
+
+											<div class="form-group col-xl-12">
+					                			<h4>Tipos de Controle</h4>
+					                			<hr />
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Possui Controles Formais?</label>
+												<select [(ngModel)]="levantamento.tipoControleFormal" [disabled]="desabilitado()" name="tipoControleFormal" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Possui Livro Caixa?</label>
+												<select [(ngModel)]="levantamento.tipoControleLivroCaixa" [disabled]="desabilitado()" name="tipoControleLivroCaixa" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Possui Controle de Estoque?</label>
+												<select [(ngModel)]="levantamento.tipoControleEstoque" [disabled]="desabilitado()" name="tipoControleEstoque" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Controle de Contas a receber?</label>
+												<select [(ngModel)]="levantamento.tipoControleReceber" [disabled]="desabilitado()" name="tipoControleReceber" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Controle de Receitas e despesas?</label>
+												<select [(ngModel)]="levantamento.tipoControleReceitas" [disabled]="desabilitado()" name="tipoControleReceitas" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Controle de Contas a pagar?</label>
+												<select [(ngModel)]="levantamento.tipoControlePagar" [disabled]="desabilitado()" name="tipoControlePagar" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+											</div>
+											
+											<div class="form-group col-xl-4">
+												<label>Controle no Caderno?</label>
+												<select [(ngModel)]="levantamento.tipoControleCaderno" [disabled]="desabilitado()" name="tipoControleCaderno" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Sim</option>
+							                        <option [ngValue]="2">Não</option>
+							                    </select>
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-12">
+							                    <label>Sistema de Organiza&ccedil;a&#771;o (Processos, defini&ccedil;o&#771;es e fun&ccedil;o&#771;es...):</label>
+						                     	<textarea maxlength="1000" name="sistemaOrganizacao" [(ngModel)]="levantamento.sistemaOrganizacao" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+						</div>
+				    	
+				    </div>
+				    <div class="tab-pane fade" id="contact-classic-orange" role="tabpanel" 
+				    	aria-labelledby="contact-tab-classic-orange"
+				    	style="padding: 15px;">
+				    	
+				    	<div id="accordion3" class="col-md-12">
+				    	
+						  	<div class="card">
+						    	<div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-dollar" style="margin-left: 6px; margin-right: 10px; width: 14px;"></i> Receitas Operacionais Mensais
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion3">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+								      		<div class="form-group col-xl-12">
+							                    <label>Capacidade Instalada Mensal:</label>
+						                     	<textarea maxlength="500" name="capacidadeInstaladaMensal" [(ngModel)]="levantamento.capacidadeInstaladaMensal" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+								      		<br />
+								      	
+								      		<div class="form-group col-xl-4">
+							                    <label>Produto / Mercadoria / Servi&ccedil;os:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamentoReceita.mercadoria" [disabled]="desabilitado()" name="mercadoriaReceita" type="text" class="form-control" placeholder="Produto / Mercadoria / Servi&ccedil;os" />
+							                </div>
+							                <div class="form-group col-xl-2">
+							                    <label>Unidade:</label>
+						                     	<input maxlength="100" [(ngModel)]="levantamentoReceita.unidade" [disabled]="desabilitado()" name="unidadeReceita" type="text" class="form-control" placeholder="Unidade" />
+							                </div>
+							                <div class="form-group col-xl-2">
+							                    <label>Pre&ccedil;o Un. (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamentoReceita.precoFormatado" [disabled]="desabilitado()" name="precoReceita" type="text" class="form-control" placeholder="Pre&ccedil;o Un. (R$)" />
+							                </div>
+							                <div class="form-group col-xl-2">
+							                    <label>Qtd.:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamentoReceita.qtd" [disabled]="desabilitado()" name="qtdReceita" type="text" class="form-control" placeholder="Qtd." />
+							                </div>
+							                <div class="form-group col-xl-2" style="text-align: right;">
+							                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarReceita()">Adicionar</button>
+							                </div>
+							                
+							                <br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Receitas</h4>
+					                			<hr />
+					                		</div>
+											<br />
+											<div class="col-md-12">
+												<p-table #receitaTable
+													[value]="receita"
+													[paginator]="false"
+													[lazy]="false"
+													styleClass="table-responsive"
+													tableStyleClass="table table-striped table-bordered">
+													
+													<ng-template pTemplate="header">
+														<tr>
+														<th>#</th>
+														<th>Mercadoria / Produto / Servi&ccedil;os</th>
+														<th>Unidade</th>
+														<th>Pre&ccedil;o</th>
+														<th>Qtd.</th>
+														<th>A&ccedil;o&#771;es</th>
+														</tr>
+													</ng-template>
+													<ng-template pTemplate="body" let-receita let-i="rowIndex">
+														<tr>
+														<td>{{ i + 1 }}</td>
+														<td>{{ receita.mercadoria }}</td>
+														<td>{{ receita.unidade }}</td>
+														<td>{{ converterMoeda(receita.preco) }}</td>
+														<td>{{ receita.qtd }}</td>
+														<td>
+															<a title="Remover"
+																style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																(click)="removerReceita(i)"
+																*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+															<i class="fa fa-times"></i>
+															</a>
+														</td>
+														</tr>
+													</ng-template>
+												</p-table>
+											</div>
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-gift" style="margin-right: 10px; width: 20px;"></i> Custo de Mate&#769;rias-primas / Mercadorias / Embalagens / Servi&ccedil;os
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion3">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+								      		<div class="form-group col-xl-4">
+							                    <label>Produto / Mercadoria / Servi&ccedil;os:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamentoCusto.mercadoria" [disabled]="desabilitado()" name="mercadoriaCusto" type="text" class="form-control" placeholder="Produto / Mercadoria / Servi&ccedil;os" />
+							                </div>
+							                <div class="form-group col-xl-2">
+							                    <label>Unidade:</label>
+						                     	<input maxlength="100" [(ngModel)]="levantamentoCusto.unidade" [disabled]="desabilitado()" name="unidadeCusto" type="text" class="form-control" placeholder="Unidade" />
+							                </div>
+							                <div class="form-group col-xl-2">
+							                    <label>Pre&ccedil;o Un. (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamentoCusto.precoFormatado" [disabled]="desabilitado()" name="precoCusto" type="text" class="form-control" placeholder="Pre&ccedil;o Un. (R$)" />
+							                </div>
+							                <div class="form-group col-xl-2">
+							                    <label>Qtd.:</label>
+						                     	<input maxlength="5" appNumeroFormat [(ngModel)]="levantamentoCusto.qtd" [disabled]="desabilitado()" name="qtdCusto" type="text" class="form-control" placeholder="Qtd." />
+							                </div>
+							                <div class="form-group col-xl-2" style="text-align: right;">
+							                    <button [disabled]="desabilitado()" type="button" class="btn btn-success" style="margin-top: 26px;" (click)="adicionarCusto()">Adicionar</button>
+							                </div>
+							                
+							                <br />
+					                		<div class="form-group col-xl-12">
+					                			<h4>Custos</h4>
+					                			<hr />
+					                		</div>
+											<br />
+											<div class="col-md-12">
+												<p-table #custoTable
+													[value]="custo"
+													[paginator]="false"
+													[lazy]="false"
+													styleClass="table-responsive"
+													tableStyleClass="table table-striped table-bordered">
+													
+													<ng-template pTemplate="header">
+														<tr>
+														<th>#</th>
+														<th>Mercadoria / Produto / Servi&ccedil;os</th>
+														<th>Unidade</th>
+														<th>Pre&ccedil;o</th>
+														<th>Qtd.</th>
+														<th>A&ccedil;o&#771;es</th>
+														</tr>
+													</ng-template>
+													<ng-template pTemplate="body" let-custo let-i="rowIndex">
+														<tr>
+														<td>{{ i + 1 }}</td>
+														<td>{{ custo.mercadoria }}</td>
+														<td>{{ custo.unidade }}</td>
+														<td>{{ converterMoeda(custo.preco) }}</td>
+														<td>{{ custo.qtd }}</td>
+														<td>
+															<a title="Remover"
+																style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+																(click)="removerCusto(i)"
+																*ngIf="!desabilitado() && permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+															<i class="fa fa-times"></i>
+															</a>
+														</td>
+														</tr>
+													</ng-template>
+												</p-table>
+											</div>
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-shopping-cart" style="margin-right: 10px; width: 20px;"></i> Outros Custos Varia&#769;veis
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion3">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+							                <div class="form-group col-xl-6">
+							                    <label>Imposto:</label>
+						                     	<select [(ngModel)]="levantamento.imposto" [disabled]="desabilitado()" name="imposto" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Indu&#769;stria</option>
+							                        <option [ngValue]="2">Come&#769;rcio</option>
+							                    	<option [ngValue]="3">Servi&ccedil;os</option>
+							                    </select>
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Gasto de transporte sem vendas (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.gastoTransporteSemVendasFormatado" [disabled]="desabilitado()" name="gastoTransporteSemVendas" type="text" class="form-control" placeholder="Gasto de transporte sem vendas (R$)" (blur)="carregarOutrosGastos()" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Comissa&#771;o de vendas (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.comissaoVendasFormatada" [disabled]="desabilitado()" name="comissaoVendas" type="text" class="form-control" placeholder="Comissa&#771;o de vendas (R$)" (blur)="carregarOutrosGastos()" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Outros (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.outrosGastosFormatado" [disabled]="desabilitado()" name="outrosGastos" type="text" class="form-control" placeholder="Outros (R$)" (blur)="carregarOutrosGastos()" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+												<label>Total: </label><br />
+												{{ levantamento.totalGastosFormatado }}
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-credit-card" style="margin-right: 10px; width: 20px;"></i> Custos Fixos Mensais
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion3">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+								      		<div class="form-group col-xl-6">
+							                    <label>Aluguel + taxa de condomi&#769;nio (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.aluguelTaxaCondominioFormatado" [disabled]="desabilitado()" name="aluguelTaxaCondominio" type="text" class="form-control" placeholder="Aluguel + taxa de condomi&#769;nio (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Ma&#771;o de obra com custos trabalhistas (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.maoObraTrabalhistaFormatada" [disabled]="desabilitado()" name="maoObraTrabalhista" type="text" class="form-control" placeholder="Ma&#771;o de obra com custos trabalhistas (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Ma&#771;o de obra - encargos sociais trabalhistas (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.maoObraTrabalhistaEncargosFormatada" [disabled]="desabilitado()" name="maoObraTrabalhistaEncargos" type="text" class="form-control" placeholder="Ma&#771;o de obra - encargos sociais trabalhistas (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Ma&#771;o de obra sem custo trabalhistas (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.maoObraSemCustoTrabalhistaFormatada" [disabled]="desabilitado()" name="maoObraSemCustoTrabalhista" type="text" class="form-control" placeholder="Ma&#771;o de obra sem custo trabalhistas (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>A&#769;gua / Luz / Telefone (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.aguaLuzTelefoneFormatado" [disabled]="desabilitado()" name="aguaLuzTelefone" type="text" class="form-control" placeholder="A&#769;gua / Luz / Telefone (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Vei&#769;culo / Transporte (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.veiculoTransporteFormatado" [disabled]="desabilitado()" name="veiculoTransporte" type="text" class="form-control" placeholder="Vei&#769;culo / Transporte (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Contador (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.contadorFormatado" [disabled]="desabilitado()" name="contador" type="text" class="form-control" placeholder="Contador (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Retiradas (pro&#769;-labore) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.prolaboreFormatado" [disabled]="desabilitado()" name="prolabore" type="text" class="form-control" placeholder="Retiradas (pro&#769;-labore) (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Manuten&ccedil;a&#771;o / Limpeza (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.manutencaoFormatado" [disabled]="desabilitado()" name="manutencao" type="text" class="form-control" placeholder="Manuten&ccedil;a&#771;o / Limpeza (R$)" (blur)="carregarOutrosCustos()" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Subtotal: {{levantamento.subtotalCustosFormatado}}</label><br />
+							                    <label>Reservas de Emerge&#770;ncias (5%): {{levantamento.reservaEmergenciaFormatada}}</label><br />
+							                    <label>Total: {{levantamento.totalCustosFormatado}}</label><br />
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+							<div class="card">
+						    	<div class="card-header" id="headingFive" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-balance-scale" style="margin-right: 10px; width: 20px;"></i> Garantias Fidejusso&#769;rias
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion3">
+							      	<div class="card-body">
+								      	<div class="row">
+								      	
+								      		<div class="form-group col-xl-6">
+							                    <label>Avalista:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamento.avalista" [disabled]="desabilitado()" name="avalista" type="text" class="form-control" placeholder="Avalista" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Admissa&#771;o:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamento.admissao" [disabled]="desabilitado()" name="admissao" type="text" class="form-control" placeholder="Admissa&#771;o" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Tipo de Renda:</label>
+						                     	<select [(ngModel)]="levantamento.tipoRenda" [disabled]="desabilitado()" name="tipoRenda" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="2">INSS</option>
+							                        <option [ngValue]="3">Contracheque</option>
+							                    	<option [ngValue]="4">IRPF</option>
+							                    	<option [ngValue]="5">Outros</option>
+							                    </select>
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Outro Tipo de Renda:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamento.outroTipoRenda" [disabled]="desabilitado()" name="outroTipoRenda" disabled type="text" class="form-control" placeholder="Outro Tipo de Renda" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Renda Li&#769;quida Mensal Avalista(s):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.rendaAvalistaMensalFormatada" [disabled]="desabilitado()" name="rendaAvalistaMensal" type="text" class="form-control" placeholder="Renda Li&#769;quida Mensal Avalista(s)" />
+							                </div>
+								      	
+								      	</div>
+								    </div>
+								</div>
+							</div>
+							
+						</div>
+				    	
+				    </div>
+				    <div class="tab-pane fade" id="press-classic-orange" role="tabpanel" 
+				    	aria-labelledby="press-tab-classic-orange"
+				    	style="padding: 15px;">
+				    	
+				    	<div id="accordion4" class="col-md-12">
+						  	<div class="card">
+						    	<div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-bar-chart" style="margin-right: 10px; width: 20px;"></i> Demonstrativo de Resultado Final
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion4">
+							      	<div class="card-body">
+								      	<div class="row">
+								      		
+								      		<div class="form-group col-xl-4">
+							                    <label>Receitas Operacionais (G) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.receitasOperacionaisDemonstrativoFormatada" [disabled]="desabilitado()" name="receitasOperacionaisDemonstrativo" type="text" class="form-control" placeholder="Receitas Operacionais (G) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Custos Varia&#769;veis (H+I) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.custosVariaveisDemonstrativoFormatada" [disabled]="desabilitado()" name="custosVariaveisDemonstrativo" type="text" class="form-control" placeholder="Custos Varia&#769;veis (H+I) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Margem de Contribui&ccedil;a&#771;o (1-2) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.margemContribuicaoDemonstrativoFormatada" [disabled]="desabilitado()" name="margemContribuicaoDemonstrativo" type="text" class="form-control" placeholder="Margem de Contribui&ccedil;a&#771;o (1-2) (R$)" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-4">
+							                    <label>Custos Fixos (J):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.custosFixosDemonstrativoFormatada" [disabled]="desabilitado()" name="custosFixosDemonstrativo" type="text" class="form-control" placeholder="Custos Fixos (J) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Resultado Operacional (3-4) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.resultadoOperacionalDemonstrativoFormatado" [disabled]="desabilitado()" name="resultadoOperacionalDemonstrativo" type="text" class="form-control" placeholder="Resultado Operacional (3-4) (R$)" />
+							                </div>
+								      		
+								      	</div>
+								    </div>
+								</div>
+								
+								<div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-check-square" style="margin-right: 10px; width: 20px;"></i> Capacidade de Pagamento
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion4">
+							      	<div class="card-body">
+								      	<div class="row">
+								      		
+								      		<div class="form-group col-xl-6">
+							                    <label>Resultado Operacional (O) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.resultadoOperacionalCapacidadeFormatado" [disabled]="desabilitado()" name="resultadoOperacionalCapacidade" type="text" class="form-control" placeholder="Resultado Operacional (O) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Amortiza&ccedil;a&#771;o de Dividas existentes da empresa (presta&ccedil;a&#771;o mensal) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.amortizacaoDividaCapacidadeFormatada" [disabled]="desabilitado()" name="amotizacaoDividaCapacidade" type="text" class="form-control" placeholder="Amortiza&ccedil;a&#771;o de Dividas existentes da empresa (presta&ccedil;a&#771;o mensal) (R$)" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-3">
+							                    <label>Disponibilidade (P) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.disponibilidadeCapacidadeFormatada" [disabled]="desabilitado()" name="disponibilidadeCapacidade" type="text" class="form-control" placeholder="Disponibilidade  (P) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-5">
+							                    <label>Capacidade de pagamento mensal do nego&#769;cio (80% do item P):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.pagamentoMensalCapacidadeFormatado" [disabled]="desabilitado()" name="pagamentoMensalCapacidade" type="text" class="form-control" placeholder="Capacidade de pagamento mensal do nego&#769;cio (80% do item P) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Presta&ccedil;a&#771;o empre&#769;stimo pretendido (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.prestacaoEmprestimoCapacidadeFormatada" [disabled]="desabilitado()" name="prestacaoEmprestimoCapacidade" type="text" class="form-control" placeholder="Presta&ccedil;a&#771;o empre&#769;stimo pretendido (R$)" />
+							                </div>
+								      		
+								      	</div>
+								    </div>
+								</div>
+								
+								<div class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-line-chart" style="margin-right: 10px; width: 20px;"></i> Indicadores econo&#770;mico-financeiros
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion4">
+							      	<div class="card-body">
+								      	<div class="row">
+								      		
+								      		<div class="form-group col-xl-4">
+							                    <label>Saldo familiar li&#769;quido mensal (E) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.saldoFamiliarMensalFormatado" [disabled]="desabilitado()" name="saldoFamiliarMensal" type="text" class="form-control" placeholder="Saldo familiar li&#769;quido mensal (E) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Cre&#769;dito ma&#769;ximo compati&#769;vel c/ garantias reais (M) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.creditoMaximoCompativelFormatado" [disabled]="desabilitado()" name="creditoMaximoCompativel" type="text" class="form-control" placeholder="Cre&#769;dito ma&#769;ximo compati&#769;vel c/ garantias reais (M) (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Capacidade de pagamento mensal do avalista (N) (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.capacidadePagamentoAvalistaFormatada" [disabled]="desabilitado()" name="capacidadePagamentoAvalista" type="text" class="form-control" placeholder="Capacidade de pagamento mensal do avalista (N) (R$)" />
+							                </div>
+								      		
+								      	</div>
+								    </div>
+								</div>
+								
+								<div class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-tags" style="margin-right: 10px; width: 20px;"></i> Dados Gerais
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion4">
+							      	<div class="card-body">
+								      	<div class="row">
+								      		
+								      		<div class="form-group col-xl-4">
+							                    <label>Atendimento aos cre&#769;ditos do programa:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.atendimentoCreditoPrograma" [disabled]="desabilitado()" name="atendimentoCreditoPrograma" type="text" class="form-control" placeholder="Atendimento aos cre&#769;ditos do programa" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Dados cadastrais:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamento.dadosCadastrais" [disabled]="desabilitado()" name="dadosCadastrais" type="text" class="form-control" placeholder="Dados cadastrais" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Garantias:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.garantias" [disabled]="desabilitado()" name="garantias" type="text" class="form-control" placeholder="Garantias" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-4">
+							                    <label>Histo&#769;ricos na Institui&ccedil;a&#771;o:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.historicosInstituicao" [disabled]="desabilitado()" name="historicosInstituicao" type="text" class="form-control" placeholder="Histo&#769;ricos na Institui&ccedil;a&#771;o" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Documenta&ccedil;a&#771;o:</label>
+						                     	<input maxlength="500" [(ngModel)]="levantamento.documentacao" [disabled]="desabilitado()" name="documentacao" type="text" class="form-control" placeholder="Documenta&ccedil;a&#771;o" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>So&#769;cios:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.socios" [disabled]="desabilitado()" name="socios" type="text" class="form-control" placeholder="So&#769;cios" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-12">
+							                    <label>Observa&ccedil;o&#771;es:</label>
+						                     	<textarea maxlength="1000" name="observacoesDadosGerais" [(ngModel)]="levantamento.observacoesDadosGerais" [disabled]="desabilitado()" class="form-control" rows="2"></textarea>
+							                </div>
+								      		
+								      	</div>
+								    </div>
+								</div>
+							</div>
+						</div>
+				    	
+				    </div>
+				    <div class="tab-pane fade" id="awesome-classic-orange" role="tabpanel" 
+				    	aria-labelledby="awesome-tab-classic-orange"
+				    	style="padding: 15px;">
+				      	
+				      	<div id="accordion5" class="col-md-12">
+						  	<div class="card">
+						    	<div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-gavel" style="margin-right: 10px; width: 20px;"></i> Parecer do Agente de Cre&#769;dito
+						      		</h4>
+						    	</div>
+						
+						    	<div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion5">
+							      	<div class="card-body">
+								      	<div class="row">
+								      		<div class="form-group col-xl-6">
+							                    <label>Capital Solicitado:</label>
+						                     	<textarea maxlength="1000" name="capitalSoclicitadoParecerAgente" [(ngModel)]="levantamento.capitalSoclicitadoParecerAgente" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Condi&ccedil;o&#771;es do Nego&#769;cio:</label>
+						                     	<textarea maxlength="1000" name="condicoesNegocioParecerAgente" [(ngModel)]="levantamento.condicoesNegocioParecerAgente" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Capacidade de Pagamento:</label>
+						                     	<textarea maxlength="1000" name="capacidadePagamentoParecerAgente" [(ngModel)]="levantamento.capacidadePagamentoParecerAgente" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Finalidade do Cre&#769;dito:</label>
+						                     	<textarea maxlength="1000" name="finalidadeCreditoParecerAgente" [(ngModel)]="levantamento.finalidadeCreditoParecerAgente" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+											</div>
+											<br />
+
+											<div class="form-group col-xl-4">
+												<label>Linha de Cre&#769;dito*</label>
+												<select (ngModelChange)="setLinhaCredito($event)" [(ngModel)]="levantamento.idLinhaCredito" [disabled]="desabilitado()" #linhaCreditoLenvatamento="ngModel" name="linhaCreditoLenvatamento" class="form-control {{ (linhaCreditoLenvatamento.invalid && levantamentoNovoForm.submitted) ? 'is-invalid' : '' }}" required >
+							                        <option [ngValue]="undefined">Selecione...</option>
+                      								<option *ngFor="let linha of linhasCredito" [value]="linha.id">{{linha.nome}}</option>
+							                    </select>
+											</div>
+											<div class="form-group col-xl-4">
+												<label *ngIf="levantamento.linhaCredito">Taxas: de {{levantamento.linhaCredito.taxaMinimaFormatada}}% a {{levantamento.linhaCredito.taxaMaximaFormatada}}%</label><br />
+												<label *ngIf="levantamento.linhaCredito">Valores Permitidos: de R$ {{levantamento.linhaCredito.valorMinimoFormatado}} a R$ {{levantamento.linhaCredito.valorMaximoFormatado}}</label><br />
+												<label *ngIf="levantamento.linhaCredito">Parcelas Permitidas: entre {{levantamento.linhaCredito.parcelasMinima}} e {{levantamento.linhaCredito.parcelasMaxima}}</label><br />
+												<label *ngIf="levantamento.linhaCredito && levantamento.linhaCredito.carenciaDias">Carência: {{levantamento.linhaCredito.carenciaDias}} meses</label>
+											</div>
+											<div class="form-group col-xl-4">
+							                    <label>Taxa de Juros (%)*:</label>
+						                     	<input appMoedaFormat maxlength="5" (blur)="verificarTaxaJuros()" [(ngModel)]="levantamento.taxaJurosParecerAgenteFormatado" [disabled]="desabilitado() || !levantamento.linhaCredito" #taxaJurosParecerAgente="ngModel" name="taxaJurosParecerAgente" type="text" class="form-control {{ (taxaJurosParecerAgente.invalid && levantamentoNovoForm.submitted) ? 'is-invalid' : '' }}" placeholder="Taxa de Juros (%)" required />
+							                </div>
+
+							                <br />
+							                <div class="form-group col-xl-4">
+							                    <label>Cre&#769;dito Sugerido (R$)*:</label>
+						                     	<input appMoedaFormat maxlength="13" (blur)="verificarCreditoSugerido()" [(ngModel)]="levantamento.creditoSugeridoParecerAgenteFormatado" [disabled]="desabilitado() || !levantamento.linhaCredito || !levantamento.taxaJurosParecerAgente" #creditoSugeridoParecerAgente="ngModel" name="creditoSugeridoParecerAgente" type="text" class="form-control {{ (creditoSugeridoParecerAgente.invalid && levantamentoNovoForm.submitted) ? 'is-invalid' : '' }}" placeholder="Cre&#769;dito Sugerido (R$)" required />
+											</div>
+											<div class="form-group col-xl-4">
+							                    <label>Qtd. de Parcelas*:</label>
+						                     	<input maxlength="5" appNumeroFormat (blur)="verificarQtdParcelas()" [(ngModel)]="levantamento.qtdParcelasParecerAgente" [disabled]="desabilitado() || !levantamento.linhaCredito || !levantamento.taxaJurosParecerAgente || (!levantamento.creditoSugeridoParecerAgenteFormatado || levantamento.creditoSugeridoParecerAgenteFormatado == null)" #qtdParcelasParecerAgente="ngModel" name="qtdParcelasParecerAgente" type="text" class="form-control {{ (qtdParcelasParecerAgente.invalid && levantamentoNovoForm.submitted) ? 'is-invalid' : '' }}" placeholder="Qtd. de Parcelas" required />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Valor da Parcela (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.valorParcelaParecerAgenteFormatado" [disabled]="true" name="valorParcelaParecerAgente" type="text" class="form-control" placeholder="Valor da Parcela (R$)" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-4">
+							                    <label>Taxa de Boleto (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" (blur)="verificarTaxaBoleto()" [(ngModel)]="levantamento.taxaBoletoParecerAgenteFormatado" [disabled]="desabilitado() || (!levantamento.linhaCredito || !levantamento.taxaJurosParecerAgente || !levantamento.valorParcelaParecerAgenteFormatado)" name="taxaBoletoParecerAgente" type="text" class="form-control" placeholder="Taxa de Boleto (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Valor Final da Parcela (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.valorFinalParcelaParecerAgenteFormatado" [disabled]="true" name="valorFinalParcelaParecerAgente" type="text" class="form-control" placeholder="Valor Final da Parcela (R$)" />
+							                </div>
+							                 <div class="form-group col-xl-4">
+							                    <label>Valor Total (R$):</label>
+												<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.valorTotalParecerAgenteFormatado" [disabled]="true" name="valorTotalParecerAgente" type="text" class="form-control" placeholder="Valor Total (R$)" />
+							                </div>
+		                				</div>
+			                		</div>
+			                	</div>
+			                </div>
+			            	<div class="card">
+						    	<div class="card-header collapsed" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="cursor: pointer;">
+						      		<h4 class="mb-0">
+						          		<i class="fa fa-gavel" style="margin-right: 10px; width: 20px;"></i>  Parecer do Comite&#770; de Cre&#769;dito
+						      		</h4>
+						    	</div>
+							    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion5">
+							      	<div class="card-body">
+						                <div class="row">
+								      		<div class="form-group col-xl-4">
+							                    <label>Cre&#769;dito Aprovado (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.creditoAprovadoParecerComiteFormatado" [disabled]="true" name="creditoAprovadoParecerComite" type="text" class="form-control" placeholder="Cre&#769;dito Aprovado (R$)" />
+							                </div>
+								      		<div class="form-group col-xl-4">
+							                    <label>Parcela Aprovada (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.parcelaAprovadaParecerComiteFormatada" [disabled]="true" name="parcelaAprovadaParecerComite" type="text" class="form-control" placeholder="Parcela Aprovada (R$)" />
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Total a Receber (R$):</label>
+						                     	<input appMoedaFormat maxlength="13" [(ngModel)]="levantamento.totalReceberParecerComiteFormatado" [disabled]="true" name="totalReceberParecerComite" type="text" class="form-control" placeholder="Total a Receber (R$)" />
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-6">
+							                    <label>Care&#770;ncia*:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.carenciaParecerComite" [disabled]="desabilitado() || (!levantamento.linhaCredito || (!levantamento.creditoSugeridoParecerAgenteFormatado || levantamento.creditoSugeridoParecerAgenteFormatado == null) || (!levantamento.qtdParcelasParecerAgente || levantamento.qtdParcelasParecerAgente == null))" #carenciaParecerComite="ngModel" name="carenciaParecerComite" type="text" class="form-control  {{ (carenciaParecerComite.invalid && levantamentoNovoForm.submitted) ? 'is-invalid' : '' }}" placeholder="Care&#770;ncia" required />
+							                </div>
+							                <div class="form-group col-xl-6">
+							                    <label>Vencimento das Parcelas (dia)*:</label>
+						                     	<input maxlength="2" appNumeroFormat [(ngModel)]="levantamento.vencimentoParcelasParecerComite" [disabled]="desabilitado() || (!levantamento.linhaCredito || (!levantamento.creditoSugeridoParecerAgenteFormatado || levantamento.creditoSugeridoParecerAgenteFormatado == null) || (!levantamento.qtdParcelasParecerAgente || levantamento.qtdParcelasParecerAgente == null))" #vencimentoParcelasParecerComite="ngModel" name="vencimentoParcelasParecerComite" type="text" class="form-control {{ (vencimentoParcelasParecerComite.invalid && levantamentoNovoForm.submitted) ? 'is-invalid' : '' }}" placeholder="Vencimento das Parcelas" required />
+							                </div>
+							                <br />
+								      		<div class="form-group col-xl-12">
+							                    <label>Cre&#769;dito Negado (Motivo):</label>
+						                     	<textarea maxlength="1000" name="creditoNegadoMotivoParecerComite" [(ngModel)]="levantamento.creditoNegadoMotivoParecerComite" [disabled]="desabilitado()" rows="2" class="form-control"></textarea>
+							                </div>
+							                <br />
+							                <div class="form-group col-xl-4">
+							                    <label>Comunicado ao Cliente (forma):</label>
+						                     	<select [(ngModel)]="levantamento.comunicadoClienteParecerComite" [disabled]="desabilitado()" name="comunicadoClienteParecerComite" class="form-control">
+							                        <option [ngValue]="undefined">Selecione...</option>
+							                        <option [ngValue]="1">Telefone Residencial</option>
+							                        <option [ngValue]="2">Celular</option>
+							                        <option [ngValue]="3">Pessoalmente</option>
+							                    	<option [ngValue]="4">Mensagem de Texto (SMS)</option>
+							                    	<option [ngValue]="5">Mensagem de Texto (WhatsApp)</option>
+							                    	<option [ngValue]="6">Mensagem de Texto (Telegram)</option>
+							                    	<option [ngValue]="7">Corresponde&#770;ncia</option>
+							                    </select>
+							                </div>
+							                <div class="form-group col-xl-4">
+							                    <label>Data do Comunicado:</label>
+												<p-calendar
+													name="dataEventoNovo"
+													[locale]="pt"
+													[(ngModel)]="levantamento.dataComunicado"
+													[disabled]="desabilitado()"
+													styleClass="w-100"
+													inputStyleClass="form-control"
+													monthNavigator="true"
+													yearNavigator="true"
+													dateFormat="dd/mm/yy"
+													yearRange="1900:2100"
+													showTime="true" 
+													hourFormat="24"
+													placeholder="Data do Comunicado"></p-calendar>
+											</div>
+							                <div class="form-group col-xl-4">
+							                    <label>Provide&#770;ncia do Cliente:</label>
+						                     	<input maxlength="1000" [(ngModel)]="levantamento.providenciaClienteParecerComite" [disabled]="desabilitado()" name="providenciaClienteParecerComite" type="text" class="form-control" placeholder="Provide&#770;ncia do Cliente" />
+							                </div>
+								      	</div>
+			      					</div>
+				      			</div>
+				      		</div>
+				      	</div>
+				    </div>
+				    
+			  	</div>
+			</div>
+        </app-card-body>
+
+        <app-card-footer>
+            <button *ngIf="(status.RASCUNHO === levantamento.status || !levantamento.status)" type="button" class="btn btn-secondary" style="margin-right: 15px;" (click)="salvarRascunho()">Salvar Rascunho</button>
+			<button *ngIf="(status.RASCUNHO === levantamento.status || !levantamento.status)" [disabled]="!(levantamento && levantamento.id)" style="margin-right: 15px;" type="submit" class="btn btn-primary">Finalizar</button>
+			<button #btnImprimir id="btnImprimir" name="btnImprimir" *ngIf="(status.FINALIZADO === levantamento.status)" [disabled]="!(levantamento && levantamento.id)" style="margin-right: 15px;" type="button" class="btn btn-secondary" (click)="reportPrint.print()">Imprimir</button>
+			<button *ngIf="(status.FINALIZADO === levantamento.status)" [disabled]="!(levantamento && levantamento.id)" style="margin-right: 15px;" type="button" class="btn btn-primary" (click)="copiarGerarRascunho()">Copiar e Gerar Rascunho</button>
+			<button *ngIf="validaPossibilidadeEmprestimo()" [disabled]="!(levantamento && levantamento.id)" type="button" class="btn btn-success" disabled (click)="gerarEmprestimo()">Gerar Empréstimo</button>
+			<button *ngIf="(status.FINALIZADO === levantamento.status) && levantamento.idEmprestimo" [disabled]="!(levantamento && levantamento.id)" type="button" class="btn btn-warning" (click)="visualizarEmprestimo()">Visualizar Empréstimo</button>
+		</app-card-footer>
+
+		<app-report-print #reportPrint [templateRelatorio]="relTeste">
+			<ng-template #relTeste>
+				<div style="width: 100%;">
+					<div id="reciboImpressao" styleClass="divImpressao" style="font-size: 12px;">
+								
+						<div class="divDadosGerais center" style="width: 100%; font-size: 25px; text-align: center;">
+							<br />BANCO DO POVO<br />
+							Levantamento Socioecono&#770;mico<br /><br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 16px; text-align: left;">
+							<label>Nome: </label>{{pessoa.nome}}<br />
+							<label>Documento: </label>{{pessoa.documento}}<br />
+							<label>Estado Civil: </label>{{descricaoEstadoCivil(pessoa)}}<br />
+							<label>Data de Nascimento: </label>{{pessoa.dataNascimento | date:'dd/MM/yyyy'}}<br />
+							<label>Situação do Nome (Serasa): </label>{{ descricaoSituacaoNome(pessoa) }}<br />
+							<label>Score (Nome): </label>{{pessoa.scoreNome}}<br />
+							<label>Data Última Consulta do Nome: </label>{{pessoa.dataUltimaConsultaSerasa | date:'dd/MM/yyyy'}}
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 22px; text-align: center;">
+							<label>Dados do Empreendedor</label>
+							<hr />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Renda Familiar</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Familiares</label>
+							<hr />
+
+							<div class="row">
+								<div class="col-md-12">
+									<p-table
+										[value]="rendaFamiliar"
+										[paginator]="false"
+										[lazy]="false"
+										styleClass="table-responsive"
+										tableStyleClass="table table-striped table-bordered">
+										
+										<ng-template pTemplate="header">
+											<tr>
+											<th style="width: 30px; text-align: left;">#</th>
+											<th style="width: 280px; text-align: left;">Nome do Familiar</th>
+											<th style="width: 230px; text-align: left;">Fonte de Renda</th>
+											<th style="width: 150px; text-align: left;">Renda Mensal (R$)</th>
+											</tr>
+										</ng-template>
+										<ng-template pTemplate="body" let-renda let-i="rowIndex">
+											<tr>
+											<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+											<td style="width: 280px; text-align: left;">{{ renda.nome }}</td>
+											<td style="width: 230px; text-align: left;">{{ renda.fonteRenda }}</td>
+											<td style="width: 150px; text-align: left;">{{ converterMoeda(renda.rendaMensal) }}</td>
+											</tr>
+										</ng-template>
+									</p-table>
+								</div>
+							</div>
+						</div>
+						<br />
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Gastos Familiares Mensais</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Gastos Familiares</label>
+							<hr />
+
+							<div class="row">
+								<div class="col-md-12">
+									<p-table
+										[value]="gastoFamiliar"
+										[paginator]="false"
+										[lazy]="false"
+										styleClass="table-responsive"
+										tableStyleClass="table table-striped table-bordered">
+										
+										<ng-template pTemplate="header">
+											<tr>
+											<th style="width: 30px; text-align: left;">#</th>
+											<th style="width: 200px; text-align: left;">Tipo</th>
+											<th style="width: 250px; text-align: left;">Descri&ccedil;a&#771;o</th>
+											<th style="width: 150px; text-align: left;">Valor (R$)</th>
+											</tr>
+										</ng-template>
+										<ng-template pTemplate="body" let-gasto let-i="rowIndex">
+											<tr>
+											<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+											<td style="width: 200px; text-align: left;">{{ getDescricaoTipo(gasto.tipo) }}</td>
+											<td style="width: 250px; text-align: left;">{{ gasto.descricao }}</td>
+											<td style="width: 150px; text-align: left;">{{ converterMoeda(gasto.valor) }}</td>
+											</tr>
+										</ng-template>
+									</p-table>
+								</div>
+							</div>
+						</div>
+						<br />
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Experie&#770;ncia Profissional / Qualifica&ccedil;a&#771;o Te&#769;cnica</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Grau de Forma&ccedil;a&#771;o Escolar: </label> {{descricaoGrauFormatacao(levantamento.grau)}}<br />
+							<label>Curso Superior: </label> {{levantamento.cursoSuperior}}
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Experie&#770;ncias</label>
+							<hr />
+
+							<div class="row">
+								<div class="col-md-12">
+									<p-table
+										[value]="experienciaProfissional"
+										[paginator]="false"
+										[lazy]="false"
+										styleClass="table-responsive"
+										tableStyleClass="table table-striped table-bordered">
+										
+										<ng-template pTemplate="header">
+											<tr>
+											<th style="width: 30px; text-align: left;">#</th>
+											<th style="width: 200px; text-align: left;">Local</th>
+											<th style="width: 200px; text-align: left;">Tempo (Meses)</th>
+											<th style="width: 200px; text-align: left;">Fun&ccedil;a&#771;o</th>
+											</tr>
+										</ng-template>
+										<ng-template pTemplate="body" let-experiencia let-i="rowIndex">
+											<tr>
+											<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+											<td style="width: 200px; text-align: left;">{{ experiencia.localTrabalho }}</td>
+											<td style="width: 200px; text-align: left;">{{ experiencia.meses }}</td>
+											<td style="width: 200px; text-align: left;">{{ experiencia.funcao }}</td>
+											</tr>
+										</ng-template>
+									</p-table>
+								</div>
+							</div>
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Cursos</label>
+							<hr />
+
+							<div class="row">
+								<div class="col-md-12">
+									<p-table
+										[value]="curso"
+										[paginator]="false"
+										[lazy]="false"
+										styleClass="table-responsive"
+										tableStyleClass="table table-striped table-bordered">
+										
+										<ng-template pTemplate="header">
+											<tr>
+											<th style="width: 30px; text-align: left;">#</th>
+											<th style="width: 400px; text-align: left;">Curso Profissionalizante</th>
+											<th style="width: 400px; text-align: left;">Institui&ccedil;a&#771;o de Ensino</th>
+											</tr>
+										</ng-template>
+										<ng-template pTemplate="body" let-curso let-i="rowIndex">
+											<tr>
+											<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+											<td style="width: 400px; text-align: left;">{{ curso.nome }}</td>
+											<td style="width: 400px; text-align: left;">{{ curso.instituicao }}</td>
+											</tr>
+										</ng-template>
+									</p-table>
+								</div>
+							</div>
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 22px; text-align: center;">
+							<label>Empreendimento (Dados)</label>
+							<hr />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Caracteri&#769;sticas do Nego&#769;cio</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Tipo de Nego&#769;cio: </label> {{descricaoTipoNegocio(levantamento.tipoNegocio)}}<br />
+							<label>Ponto: </label> {{descricaoPonto(levantamento.ponto)}}<br />
+							<label>Local: </label> {{descricaoLocal(levantamento.local)}}<br />
+							<label>Data Te&#769;rmino: </label> {{levantamento.dataTermino | date:'dd/MM/yyyy'}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Feirante</label>
+							<hr />
+
+							<label>Atividade: </label> {{descricaoAtividade(levantamento.atividade)}}<br />
+							<label>Experie&#770;ncia (em meses): </label> {{levantamento.experienciaMeses}}<br />
+							<label>Independe&#770;ncia na Atividade (meses): </label> {{levantamento.independenciaAtividadeMeses}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Histo&#769;rico do Empreendimento</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Histo&#769;rico: </label><br /> {{levantamento.historicoEmpreendimento}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Notas Explicativas da Situa&ccedil;a&#771;o Patrimonial</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Empre&#769;stimo/Financiamento</label>
+							<hr />
+
+							<label>Credor: </label> {{levantamento.credor}}<br />
+							<label>Valor da Presta&ccedil;a&#771;o (R$): </label> {{levantamento.valorPrestacaoFormatado}}<br />
+							<label>Nº Presta&ccedil;a&#771;o: </label> {{levantamento.numeroPrestacao}}<br />
+							<label>Possui Di&#769;vida? </label> {{descricaoSimNao(levantamento.possuiDivida)}}<br />
+							<label>Valor da Di&#769;vida (R$): </label> {{levantamento.valorDividaFormatada}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Histo&#769;rico de Vendas</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Me&#770;s/Ano: </label> {{levantamentoHistoricoVendas.mesAno}}<br />
+							<label>Valor (R$): </label> {{levantamentoHistoricoVendas.valorFormatado}}<br />
+							<label>Conceito da Venda: </label> {{descricaoConceitoVenda(levantamentoHistoricoVendas.conceitoVenda)}}<br />
+							<label>Possui Di&#769;vida? </label> {{descricaoSimNao(levantamento.possuiDivida)}}<br />
+							<label>Valor da Di&#769;vida (R$): </label> {{levantamento.valorDividaFormatada}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Histo&#769;rico de Vendas</label>
+							<hr />
+							
+							<div class="col-md-12">
+								<p-table
+									[value]="historicoVendas"
+									[paginator]="false"
+									[lazy]="false"
+									styleClass="table-responsive"
+									tableStyleClass="table table-striped table-bordered">
+									
+									<ng-template pTemplate="header">
+										<tr>
+										<th style="width: 30px; text-align: left;">#</th>
+										<th style="width: 100px; text-align: left;">Me&#770;s/Ano</th>
+										<th style="width: 120px; text-align: left;">Valor (R$)</th>
+										<th style="width: 200px; text-align: left;">Conceito da Venda</th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-historicoVendas let-i="rowIndex">
+										<tr>
+										<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+										<td style="width: 100px; text-align: left;">{{ historicoVendas.mesAno }}</td>
+										<td style="width: 120px; text-align: left;">{{ converterMoeda(historicoVendas.valor) }}</td>
+										<td style="width: 200px; text-align: left;">{{ getDescricaoConceitoVenda(historicoVendas.conceitoVenda) }}</td>
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Condi&ccedil;o&#771;es de Comercializa&ccedil;a&#771;o</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<h4>Compra</h4>
+							<hr />
+
+							<label>A&#768; Vista (%): </label> {{levantamento.percentualCompraVista}}<br />
+							<label>A&#768; Prazo (%): </label> {{levantamento.percentualCompraPrazo}}<br />
+
+							<h4>Opera&ccedil;o&#771;es a&#768; Prazo</h4>
+							<hr />
+
+							<label>Taxa de Juros (%): </label> {{levantamento.operacaoTaxaJuros}}<br />
+							<label>Dias de Prazo: </label> {{levantamento.operacaoDiasPrazo}}<br />
+							<label>Documenta&ccedil;a&#771;o: </label> {{levantamento.operacaoDocumentacao}}<br />
+
+							<h4>Prejui&#769;zos</h4>
+							<hr />
+
+							<label>Prejui&#769;zos: </label> {{levantamento.prejuizosFormatado}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Principais Clientes</label>
+							<hr />
+
+							<div class="col-md-12">
+								<p-table 
+									[value]="cliente"
+									[paginator]="false"
+									[lazy]="false"
+									styleClass="table-responsive"
+									tableStyleClass="table table-striped table-bordered">
+									
+									<ng-template pTemplate="header">
+										<tr>
+										<th style="width: 30px; text-align: left;">#</th>
+										<th style="width: 300px; text-align: left;">Nome</th>
+										<th style="width: 250px; text-align: left;">Porcentagem (%)</th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-cliente let-i="rowIndex">
+										<tr>
+										<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+										<td style="width: 300px; text-align: left;">{{ cliente.nome }}</td>
+										<td style="width: 250px; text-align: left;">{{ cliente.porcentagem }}</td>
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Principais Fornecedores</label>
+							<hr />
+
+							<div class="col-md-12">
+								<p-table 
+									[value]="fornecedor"
+									[paginator]="false"
+									[lazy]="false"
+									styleClass="table-responsive"
+									tableStyleClass="table table-striped table-bordered">
+									
+									<ng-template pTemplate="header">
+										<tr>
+										<th style="width: 30px; text-align: left;">#</th>
+										<th style="width: 300px; text-align: left;">Nome</th>
+										<th style="width: 180px; text-align: left;">Tipo de Produto</th>
+										<th style="width: 180px; text-align: left;">Frequencia</th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-fornecedor let-i="rowIndex">
+										<tr>
+										<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+										<td style="width: 300px; text-align: left;">{{ fornecedor.nome }}</td>
+										<td style="width: 180px; text-align: left;">{{ fornecedor.tipoProduto }}</td>
+										<td style="width: 180px; text-align: left;">{{ fornecedor.frequenciaCompras }}</td>
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+						
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Considera&ccedil;o&#771;es sobre a Concorre&#770;ncia</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Considera&ccedil;o&#771;es sobre a Concorre&#770;ncia: </label><br /> {{levantamento.considerecoesConcorrencia}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Quadro de Pessoal</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<h4>Familiares</h4>
+							<hr />
+
+							<label>Qtd. c/ Carteira Assinada: </label> {{levantamento.qtdFamiliarComCarteiraAssinada}}<br />
+							<label>Sala&#769;rio Total c/ Carteira Assinada: </label> {{levantamento.salarioFamiliarComCarteiraAssinadaFormatado}}<br />
+							<label>Qtd. s/ Carteira Assinada: </label> {{levantamento.qtdFamiliarSemCarteiraAssinada}}<br />
+							<label>Sala&#769;rio Total s/ Carteira Assinada: </label> {{levantamento.salarioFamiliarSemCarteiraAssinadaFormatado}}<br />
+
+							<h4>Na&#771;o Familiares</h4>
+							<hr />
+
+							<label>Qtd. c/ Carteira Assinada: </label> {{levantamento.qtdNaoFamiliarComCarteiraAssinada}}<br />
+							<label>Sala&#769;rio Total c/ Carteira Assinada: </label> {{levantamento.salarioNaoFamiliarComCarteiraAssinadaFormatado}}<br />
+							<label>Qtd. s/ Carteira Assinada: </label> {{levantamento.qtdNaoFamiliarSemCarteiraAssinada}}<br />
+							<label>Sala&#769;rio Total s/ Carteira Assinada: </label> {{levantamento.salarioNaoFamiliarSemCarteiraAssinadaFormatado}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Registros e Controles da Empresa</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<h4>Tipos de Controle</h4>
+							<hr />
+
+							<label>Possui Controles Formais? </label> {{descricaoSimNao(levantamento.tipoControleFormal)}}<br />
+							<label>Possui Livro Caixa? </label> {{descricaoSimNao(levantamento.tipoControleLivroCaixa)}}<br />
+							<label>Possui Controle de Estoque? </label> {{descricaoSimNao(levantamento.tipoControleEstoque)}}<br />
+							<label>Controle de Contas a receber? </label> {{descricaoSimNao(levantamento.tipoControleReceber)}}<br />
+							<label>Controle de Receitas e despesas? </label> {{descricaoSimNao(levantamento.tipoControleReceitas)}}<br />
+							<label>Controle de Contas a pagar? </label> {{descricaoSimNao(levantamento.tipoControlePagar)}}<br />
+							<label>Controle no Caderno? </label> {{descricaoSimNao(levantamento.tipoControleCaderno)}}<br />
+
+							<label>Sistema de Organiza&ccedil;a&#771;o (Processos, defini&ccedil;o&#771;es e fun&ccedil;o&#771;es...): </label><br /> {{levantamento.sistemaOrganizacao}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 22px; text-align: center;">
+							<label>Empreendimento (Financeiro)</label>
+							<hr />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Receitas Operacionais</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Capacidade Instalada Mensal: </label> <br /> {{levantamento.capacidadeInstaladaMensal}}<br />
+
+							<h4>Receitas</h4>
+							<hr />
+
+							<div class="col-md-12">
+								<p-table 
+									[value]="receita"
+									[paginator]="false"
+									[lazy]="false"
+									styleClass="table-responsive"
+									tableStyleClass="table table-striped table-bordered">
+									
+									<ng-template pTemplate="header">
+										<tr>
+										<th style="width: 30px; text-align: left;">#</th>
+										<th style="width: 350px; text-align: left;">Mercadoria / Produto / Servi&ccedil;os</th>
+										<th style="width: 180px; text-align: left;">Unidade</th>
+										<th style="width: 180px; text-align: left;">Pre&ccedil;o</th>
+										<th style="width: 50px; text-align: left;">Qtd.</th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-receita let-i="rowIndex">
+										<tr>
+										<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+										<td style="width: 350px; text-align: left;">{{ receita.mercadoria }}</td>
+										<td style="width: 180px; text-align: left;">{{ receita.unidade }}</td>
+										<td style="width: 180px; text-align: left;">{{ converterMoeda(receita.preco) }}</td>
+										<td style="width: 50px; text-align: left;">{{ receita.qtd }}</td>
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+							
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Custo de Mate&#769;rias-primas / Mercadorias / Embalagens / Servi&ccedil;os</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<h4>Custos</h4>
+							<hr />
+
+							<div class="col-md-12">
+								<p-table #custoTable
+									[value]="custo"
+									[paginator]="false"
+									[lazy]="false"
+									styleClass="table-responsive"
+									tableStyleClass="table table-striped table-bordered">
+									
+									<ng-template pTemplate="header">
+										<tr>
+										<th style="width: 30px; text-align: left;">#</th>
+										<th style="width: 350px; text-align: left;">Mercadoria / Produto / Servi&ccedil;os</th>
+										<th style="width: 180px; text-align: left;">Unidade</th>
+										<th style="width: 180px; text-align: left;">Pre&ccedil;o</th>
+										<th style="width: 50px; text-align: left;">Qtd.</th>
+										</tr>
+									</ng-template>
+									<ng-template pTemplate="body" let-custo let-i="rowIndex">
+										<tr>
+										<td style="width: 30px; text-align: left;">{{ i + 1 }}</td>
+										<td style="width: 350px; text-align: left;">{{ custo.mercadoria }}</td>
+										<td style="width: 180px; text-align: left;">{{ custo.unidade }}</td>
+										<td style="width: 180px; text-align: left;">{{ converterMoeda(custo.preco) }}</td>
+										<td style="width: 50px; text-align: left;">{{ custo.qtd }}</td>
+										</tr>
+									</ng-template>
+								</p-table>
+							</div>
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Outros Custos Varia&#769;veis</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Imposto: </label> {{descricaoImposto(levantamento.imposto)}}<br />
+							<label>Gasto de transporte sem vendas (R$): </label> {{levantamento.gastoTransporteSemVendasFormatado}}<br />
+							<label>Comissa&#771;o de vendas (R$): </label> {{levantamento.comissaoVendasFormatada}}<br />
+							<label>Outros (R$): </label> {{levantamento.outrosGastosFormatado}}<br />
+							<label>Total: </label> {{ levantamento.totalGastosFormatado }}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Custos Fixos Mensais</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Aluguel + taxa de condomi&#769;nio (R$): </label> {{levantamento.aluguelTaxaCondominioFormatado}}<br />
+							<label>Ma&#771;o de obra com custos trabalhistas (R$): </label> {{levantamento.maoObraTrabalhistaFormatada}}<br />
+							<label>Ma&#771;o de obra - encargos sociais trabalhistas (R$): </label> {{levantamento.maoObraTrabalhistaEncargosFormatada}}<br />
+							<label>Ma&#771;o de obra sem custo trabalhistas (R$): </label> {{levantamento.maoObraSemCustoTrabalhistaFormatada}}<br />
+							<label>A&#769;gua / Luz / Telefone (R$): </label> {{levantamento.aguaLuzTelefoneFormatado}}<br />
+							<label>Vei&#769;culo / Transporte (R$): </label> {{levantamento.veiculoTransporteFormatado}}<br />
+							<label>Contador (R$): </label> {{levantamento.contadorFormatado}}<br />
+							<label>Retiradas (pro&#769;-labore) (R$): </label> {{levantamento.prolaboreFormatado}}<br />
+							<label>Manuten&ccedil;a&#771;o / Limpeza (R$): </label> {{levantamento.manutencaoFormatado}}<br />
+							<label>Subtotal: {{levantamento.subtotalCustosFormatado}}</label><br />
+							<label>Reservas de Emerge&#770;ncias: {{levantamento.reservaEmergenciaFormatada}}</label><br />
+							<label>Total: {{levantamento.totalCustosFormatado}}</label><br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Garantias Fidejusso&#769;rias</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Avalista: </label><br /> {{levantamento.avalista}}<br />
+							<label>Admissa&#771;o: </label><br /> {{levantamento.admissao}}<br />
+							<label>Tipo de Renda: </label> {{descricaoTipoRenda(levantamento.tipoRenda)}}<br />
+							<label>Outro Tipo de Renda: </label><br /> {{levantamento.outroTipoRenda}}<br />
+							<label>Renda Li&#769;quida Mensal Avalista(s): </label> {{levantamento.rendaAvalistaMensalFormatada}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 22px; text-align: center;">
+							<label>Apresenta&ccedil;a&#771;o ao Comite&#770;</label>
+							<hr />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Demonstrativo de Resultado Final</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Receitas Operacionais (G) (R$): </label> {{levantamento.receitasOperacionaisDemonstrativoFormatada}}<br />
+							<label>Custos Varia&#769;veis (H+I) (R$): </label> {{levantamento.custosVariaveisDemonstrativoFormatada}}<br />
+							<label>Margem de Contribui&ccedil;a&#771;o (1-2) (R$): </label> {{levantamento.margemContribuicaoDemonstrativoFormatada}}<br />
+							<label>Custos Fixos (J): </label> {{levantamento.custosFixosDemonstrativoFormatada}}<br />
+							<label>Resultado Operacional (3-4) (R$): </label> {{levantamento.resultadoOperacionalDemonstrativoFormatado}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Capacidade de Pagamento</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Resultado Operacional (O) (R$): </label> {{levantamento.resultadoOperacionalCapacidadeFormatado}}<br />
+							<label>Amortiza&ccedil;a&#771;o de Dividas existentes da empresa (presta&ccedil;a&#771;o mensal) (R$): </label><br /> {{levantamento.amortizacaoDividaCapacidadeFormatada}}<br />
+							<label>Disponibilidade (P) (R$): </label> {{levantamento.disponibilidadeCapacidadeFormatada}}<br />
+							<label>Capacidade de pagamento mensal do nego&#769;cio (80% do item P): </label><br /> {{levantamento.pagamentoMensalCapacidadeFormatado}}<br />
+							<label>Presta&ccedil;a&#771;o empre&#769;stimo pretendido (R$): </label> {{levantamento.prestacaoEmprestimoCapacidadeFormatada}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Indicadores econo&#770;mico-financeiros</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Saldo familiar li&#769;quido mensal (E) (R$): </label> {{levantamento.saldoFamiliarMensalFormatado}}<br />
+							<label>Cre&#769;dito ma&#769;ximo compati&#769;vel c/ garantias reais (M) (R$): </label><br /> {{levantamento.creditoMaximoCompativelFormatado}}<br />
+							<label>Disponibilidade (P) (R$): </label> {{levantamento.disponibilidadeCapacidadeFormatada}}<br />
+							<label>Capacidade de pagamento mensal do avalista (N) (R$): </label><br /> {{levantamento.capacidadePagamentoAvalistaFormatada}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Dados Gerais</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Atendimento aos cre&#769;ditos do programa: </label><br /> {{levantamento.atendimentoCreditoPrograma}}<br />
+							<label>Dados cadastrais: </label><br /> {{levantamento.dadosCadastrais}}<br />
+							<label>Garantias: </label><br /> {{levantamento.garantias}}<br />
+							<label>Histo&#769;ricos na Institui&ccedil;a&#771;o: </label><br /> {{levantamento.historicosInstituicao}}<br />
+							<label>Documenta&ccedil;a&#771;o: </label><br /> {{levantamento.documentacao}}<br />
+							<label>So&#769;cios: </label><br /> {{levantamento.socios}}<br />
+							<label>Observa&ccedil;o&#771;es: </label><br /> {{levantamento.observacoesDadosGerais}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 22px; text-align: center;">
+							<label>Parecer Final</label>
+							<hr />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Parecer do Agente de Cre&#769;dito</label>
+							<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Capital Solicitado: </label><br /> {{levantamento.capitalSoclicitadoParecerAgente}}<br />
+							<label>Condi&ccedil;o&#771;es do Nego&#769;cio: </label><br /> {{levantamento.condicoesNegocioParecerAgente}}<br />
+							<label>Capacidade de Pagamento: </label><br /> {{levantamento.capacidadePagamentoParecerAgente}}<br />
+							<label>Finalidade do Cre&#769;dito: </label><br /> {{levantamento.finalidadeCreditoParecerAgente}}<br />
+							<label>Linha de Cre&#769;dito: </label><br /> {{levantamento.linhaCredito.nome}}<br />
+							<label>Taxa de Juros (%)</label><br /> {{levantamento.taxaJurosParecerAgenteFormatado}}<br />
+							<label>Cre&#769;dito Sugerido (R$): </label> {{levantamento.creditoSugeridoParecerAgenteFormatado}}<br />
+							<label>Valor da Parcela (R$): </label> {{levantamento.valorParcelaParecerAgenteFormatado}}<br />
+							<label>Taxa de Boleto (R$): </label> {{levantamento.taxaBoletoParecerAgente}}<br />
+							<label>Qtd. de Parcelas: </label> {{levantamento.qtdParcelasParecerAgente}}<br />
+							<label>Valor Final da Parcela (R$): </label> {{levantamento.valorFinalParcelaParecerAgenteFormatado}}<br />
+							<label>Valor Total (R$): {{levantamento.valorTotalParecerAgenteFormatado}}</label><br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 20px; text-align: center;">
+							<label>Parecer do Comite&#770; de Cre&#769;dito</label>
+							<br />
+						</div>
+						
+						<div class="divDadosGerais" style="width: 100%; font-size: 18px; text-align: left; margin: 30px;">
+							<label>Cre&#769;dito Aprovado (R$): </label> {{levantamento.creditoAprovadoParecerComiteFormatado}}<br />
+							<label>Parcela Aprovada (R$): </label> {{levantamento.parcelaAprovadaParecerComiteFormatada}}<br />
+							<label>Total a Receber (R$): </label> {{levantamento.totalReceberParecerComiteFormatado}}<br />
+							<label>Care&#770;ncia: </label> {{levantamento.carenciaParecerComite}}<br />
+							<label>Vencimento das Parcelas (dia): </label> {{levantamento.vencimentoParcelasParecerComite}}<br />
+							<label>Cre&#769;dito Negado (Motivo): </label> {{levantamento.creditoNegadoMotivoParecerComite}}<br />
+							<label>Comunicado ao Cliente (forma): </label> {{descricaoComunicadoCliente(levantamento.comunicadoClienteParecerComite)}}<br />
+							<label>Data do Comunicado: </label> {{levantamento.dataComunicado | date:'dd/MM/yyyy'}}<br />
+							<label>Provide&#770;ncia do Cliente: </label> {{levantamento.providenciaClienteParecerComite}}<br />
+						</div>
+
+						<div class="divDadosGerais" style="width: 100%; font-size: 22px; text-align: center;">
+							<br /><br />
+							Parauapebas - PA, _____ de __________________ de ________
+							<br /><br />
+							___________________________________________<br />
+							Assinatura
+						</div>
+					
+					</div>
+				</div>
+			</ng-template>
+		</app-report-print>
+
+    </form>
+</app-card>
+
+<app-modal #modalEmprestimo 
+    id="modalEmprestimo" 
+    titulo="Empre&#769;stimo">
+    <app-modal-body>
+        <div class="row">
+            <div class="form-group col-xl-6">
+				<label>Cre&#769;dito Aprovado (R$):</label>
+				 <input appMoedaFormat maxlength="13" [(ngModel)]="emprestimo.valorFinalFormatado" [disabled]="true" name="valorFinalEmprestimo" type="text" class="form-control" placeholder="Cre&#769;dito Aprovado (R$)" />
+			</div>
+			<div class="form-group col-xl-6">
+				<label>Taxa Anual (%):</label>
+				 <input appMoedaFormat maxlength="5" [(ngModel)]="emprestimo.taxaAnualFormatado" [disabled]="true" name="taxaMensalEmprestimo" type="text" class="form-control" placeholder="Taxa Mensal (%)" />
+			</div>
+			<div class="form-group col-xl-6">
+				<label>Nro. de Parcelas:</label>
+				 <input appNumeroFormat maxlength="5" [(ngModel)]="emprestimo.numeroParcelas" [disabled]="true" name="numeroParcelasEmprestimo" type="text" class="form-control" placeholder="Nro. de Parcelas" />
+			</div>
+			<div class="form-group col-xl-6">
+				<label>Valor da Parcela (R$):</label>
+				 <input appMoedaFormat maxlength="5" [(ngModel)]="emprestimo.valorParcelaFormatado" [disabled]="true" name="valorParcelaEmprestimo" type="text" class="form-control" placeholder="Valor da Parcela (R$)" />
+			</div>
+        </div>
+    </app-modal-body>
+    <app-modal-footer>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button *ngIf="emprestimo && !emprestimo.id" type="submit" class="btn btn-primary" (click)="salvarEmprestimo()">Gerar Empre&#769;stimo</button>
+    </app-modal-footer>
+</app-modal>

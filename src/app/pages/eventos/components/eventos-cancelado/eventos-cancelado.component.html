@@ -1,0 +1,20 @@
+<form #cancelarEventoForm="ngForm" (ngSubmit)="cancelar()">
+    <app-modal #modalCancelar 
+        id="modalCancelarEvento" 
+        titulo="Cancelar Evento"
+        (fechar)="cancelarEventoForm.resetForm()">
+        <app-modal-body *ngIf="evento">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label>
+                        Deseja realmente cancelar o evento?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancelarEventoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

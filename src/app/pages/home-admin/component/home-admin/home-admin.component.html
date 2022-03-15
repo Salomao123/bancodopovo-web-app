@@ -1,0 +1,48 @@
+<div class="row">
+
+	<div class="col-sm-12 col-md-6 col-lg-4" style="margin-bottom: 10px; text-align: center;">
+		<div class="card">
+	  		<div style="text-align: center; width: 100%; padding-top: 15px; padding-bottom: 3px;">
+	  			<i class="fa fa-calendar-check-o fa-6x"></i>
+	  		</div>
+	  		<div class="card-body">
+	    		<h5 class="card-title" style="text-align: center;"><strong>{{ qtdVisitas }}</strong> Visitas</h5>
+	   			<p class="card-text">Visitas de proponentes realizadas pelo projeto e registradas ate&#769; enta&#771;o no sistema</p>
+	   			<div style="text-align: right;">
+	   				<a *ngIf="permiteFuncionalidade(funcionalidadeEnum.VISITAS) | async" routerLink="/pages/visitas" href="#" class="btn btn-primary">Detalhar</a>
+	   			</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12 col-md-6 col-lg-4" style="margin-bottom: 10px; text-align: center;">
+		<div class="card">
+	  		<div style="text-align: center; width: 100%; padding-top: 15px; padding-bottom: 3px;">
+	  			<i class="fa fa-line-chart fa-6x"></i>
+	  		</div>
+	  		<div class="card-body">
+	    		<h5 class="card-title" style="text-align: center;"><strong>{{ qtdLenvatamentos }}</strong> Levantamentos</h5>
+	   			<p class="card-text">Levantamentos socioecono&#770;micos realizados pelo projeto e registrados ate&#769; enta&#771;o no sistema</p>
+	   			<div style="text-align: right;">
+	   				<a *ngIf="permiteFuncionalidade(funcionalidadeEnum.LEVANTAMENTOS) | async" routerLink="/pages/levantamentos" href="#" class="btn btn-primary">Detalhar</a>
+	   			</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12 col-md-6 col-lg-4" style="margin-bottom: 10px; text-align: center;">
+		<div class="card">
+	  		<div style="text-align: center; width: 100%; padding-top: 15px; padding-bottom: 3px;">
+	  			<i class="fa fa-dollar fa-6x"></i>
+	  		</div>
+	  		<div class="card-body">
+	    		<h5 class="card-title" style="text-align: center;"><strong>{{ qtdEmprestimos }}</strong> Empre&#769;stimos</h5>
+	   			<p class="card-text">Empre&#769;stimos realizados pelo projeto e registrados ate&#769; enta&#771;o no sistema</p>
+	   			<div style="text-align: right;">
+	   				<a *ngIf="permiteFuncionalidade(funcionalidadeEnum.EMPRESTIMOS) | async" routerLink="/pages/emprestimos" href="#" class="btn btn-primary">Detalhar</a>
+	   			</div>
+			</div>
+		</div>
+	</div>
+	
+</div>

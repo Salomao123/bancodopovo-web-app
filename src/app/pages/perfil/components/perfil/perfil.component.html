@@ -1,0 +1,112 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Perfil">
+        <button class="btn btn-sm btn-outline-primary" (click)="perfilNovo.adicionar()" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.PERFIL_USUARIO, acaoEnum.INCLUIR) | async)">Adicionar</button>
+    </app-card-header>
+    <form class="kt-form">
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Nome:</label>
+                    <input name="nome" [(ngModel)]="filtro.nome" type="text" class="form-control" placeholder="Nome"/>
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Data Cadastro:</label>
+                    <p-calendar name="dataCadastro"
+                                styleClass="w-100"
+                                [locale]="pt"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data cadastro"
+                                [(ngModel)]="filtro.dataCadastro"></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Status:</label>
+                    <select name="status" class="form-control" [(ngModel)]="filtro.status">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+            </div>
+        </app-card-body>
+
+        <app-card-footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="limparFiltro()">Limpar</button>
+            <button type="button" class="btn btn-primary" (click)="pesquisar()">Pesquisar</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-card *ngIf="totalRecords$ | async">
+    <app-card-header titulo="Resultado da Busca"></app-card-header>
+    <app-card-body>
+        <p-table #perfisTable
+                 [value]="perfis$ | async"
+                 [totalRecords]="totalRecords$ | async"
+                 (onLazyLoad)="loadPerfis($event)"
+                 [paginator]="true"
+                 [rows]="5"
+                 [lazy]="true"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Status</th>
+                <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon></th>
+                <th pSortableColumn="descricao">Descrição <p-sortIcon field="descricao"></p-sortIcon></th>
+                <th>Data de Cadastro</th>
+                <th>Ações</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-perfil let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === perfil.status">Inativo</span>
+                  <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === perfil.status">Ativo</span>
+                </td>
+                <td>{{ perfil.nome }}</td>
+                <td>{{ perfil.descricao }}</td>
+                <td>{{ perfil.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>
+                  <a *ngIf="status.ATIVO === perfil.status && (permiteFuncionalidadeAcao(funcionalidadeEnum.PERFIL_USUARIO, acaoEnum.INATIVAR) | async)"
+                     style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                     title="Excluir/Inativar"
+                     (click)="perfilStatus.carregar(perfil)"><i class="fa fa-times"></i></a>
+                  
+                  <a *ngIf="status.INATIVO === perfil.status && (permiteFuncionalidadeAcao(funcionalidadeEnum.PERFIL_USUARIO, acaoEnum.ATIVAR) | async)"
+                     style="margin-right: 10px; color: green; cursor: pointer;" 
+                     title="Ativar"
+                     (click)="perfilStatus.carregar(perfil)"><i class="fa fa-check"></i></a>
+
+                  <a title="Detalhar/Editar"
+                     *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.PERFIL_USUARIO, acaoEnum.ALTERAR) | async"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="perfilNovo.editar(perfil)">
+                    <i class="fa fa-search"></i>
+                  </a>
+
+                  <a title="Vincular Funcionalidades"
+                     *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.PERFIL_USUARIO, acaoEnum.VINCULAR_FUNCIONALIDADE) | async"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="perfilFuncionalidade.carregar(perfil)">
+                    <i class="fa fa-sitemap"></i>
+                  </a>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<app-perfil-novo #perfilNovo></app-perfil-novo>
+<app-perfil-status #perfilStatus></app-perfil-status>
+<app-perfil-funcionalidade #perfilFuncionalidade></app-perfil-funcionalidade>

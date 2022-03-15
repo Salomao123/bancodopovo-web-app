@@ -1,0 +1,130 @@
+<app-card>
+
+  <app-card-header titulo="Participantes do Evento">
+      <button class="btn btn-sm btn-outline-primary" routerLink="/pages/eventos">Voltar</button>
+  </app-card-header>
+  <form class="kt-form">
+
+    <app-card-body>
+          
+      <div class="row">
+        <div class="form-group col-xl-1">
+        </div>
+
+        <div class="form-group col-xl-1" style="text-align: center; padding-top: 25px;">
+          <img id="imgFoto3x4" alt="3x4" *ngIf="pessoa && pessoa.img3x4" src="{{ pessoa.img3x4 }}" class="img-fluid" style="border: 6px dashed grey;" />
+          <img alt="3x4" *ngIf="!pessoa || !pessoa.img3x4" src="assets/media/images/3x4.png" class="img-fluid" />
+        </div>
+
+        <div class="form-group col-xl-1">
+        </div>
+
+        <div class="form-group col-xl-3" >
+            <!--<label>CPF*:</label>
+            <input #documentoPessoa="ngModel" name="documentoPessoa" [(ngModel)]="pessoa.documento" type="text" maxlength="14"
+                class="form-control"
+                placeholder="CPF" appCpfFormat (blur)="carregarPessoa()" />-->
+
+            <mat-form-field class="example-full-width" style="display: block !important;">
+              <input matInput
+                    placeholder="Participante"
+                    aria-label="Participante"
+                    [matAutocomplete]="auto"
+                    [formControl]="pessoaCtrl"
+                    style="padding: 5px !important; margin-bottom: 5px !important; width: 100% !important;">
+              <mat-autocomplete #auto="matAutocomplete" style="z-index: 999999; width: 400px;" (optionSelected)="carregarPessoa($event)">
+                  <mat-option *ngFor="let p of pessoasFiltered | async" [value]="p.documento" style="height: 80px;">
+                  <span style="line-height: 20px !important;">{{p.nome}}{{p.nomeFantasia}}</span>
+                  <small style="line-height: 20px !important; color: black !important; display: block !important;">{{p.documento}}</small>
+                  <hr />
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+        </div>
+
+        <div class="form-group col-xl-1">
+        </div>
+
+        <div class="form-group col-xl-4">
+            <label>Nome:</label>
+            <input *ngIf="pessoa.nome" #nomePessoa="ngModel" name="nomePessoa" [(ngModel)]="pessoa.nome" type="text"
+                class="form-control"
+                placeholder="Nome" disabled />
+            <input *ngIf="pessoa.nomeFantasia" #nomeFantasiaPessoa="ngModel" name="nomeFantasiaPessoa" [(ngModel)]="pessoa.nomeFantasia" type="text"
+                class="form-control"
+                placeholder="Nome" disabled />
+
+            <br />
+            <label>Data de Nascimento:</label>
+            <p-calendar #dataNascimentoNovo="ngModel"
+                        name="dataNascimentoNovo"
+                        [locale]="pt"
+                        styleClass="w-100"
+                        inputStyleClass="form-control"
+                        monthNavigator="true"
+                        yearNavigator="true"
+                        dateFormat="dd/mm/yy"
+                        yearRange="1900:2100"
+                        placeholder="Data de Nascimento"
+                        [(ngModel)]="pessoa.dataNascimento"
+                        appDateFormat
+                        disabled></p-calendar>
+        </div>
+
+        <div class="form-group col-xl-1">
+        </div>
+        <br />
+        <div class="form-group col-xl-12" style="text-align: right;">
+            <hr />
+            <button type="submit" class="btn btn-primary" (click)="salvar()">Adicionar Participante</button>
+        </div>
+      </div>
+    </app-card-body>
+  </form>
+</app-card>
+            
+<app-card class="col-md-12">
+    <app-card-header titulo="Participantes"></app-card-header>
+    <app-card-body>
+        <p-table #participantesTable
+                  [value]="participantes$ | async"
+                  [totalRecords]="totalRecordsParticipante$ | async"
+                  (onLazyLoad)="loadPessoas($event)"
+                  [paginator]="true"
+                  [rows]="5"
+                  [lazy]="true"
+                  [rowsPerPageOptions]="[5,10,15]"
+                  styleClass="table-responsive"
+                  tableStyleClass="table table-striped table-bordered"
+                  *ngIf="totalRecordsParticipante$ | async">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th pSortableColumn="nome">Nome <p-sortIcon field="nome"></p-sortIcon></th>
+                <th pSortableColumn="documento">Documento <p-sortIcon field="documento"></p-sortIcon></th>
+                <th>Ações</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-participante let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <span *ngIf="participante && participante.pessoa">{{ participante.pessoa.nome }}{{ participante.pessoa.nomeFantasia }}</span>
+                </td>
+                <td> 
+                  <span *ngIf="participante && participante.pessoa">{{ participante.pessoa.documento }}</span>
+                </td>
+                <td>
+                  <a *ngIf="participante && participante.pessoa && (permiteFuncionalidadeAcao(funcionalidadeEnum.EVENTOS, acaoEnum.REMOVER_PARTICIPANTES) | async)"
+                      style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                      title="Excluir Participante" 
+                      (click)="excluir(participante)"><i class="fa fa-times"></i></a>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+      

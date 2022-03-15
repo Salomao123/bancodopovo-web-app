@@ -1,0 +1,83 @@
+<form #consignacaoEncerramentoForm="ngForm">
+    <app-modal #modal 
+            id="modalEncerramento" 
+            titulo="Encerrar Contrato"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="(proposta$ | async)">
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Consignatária:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).usuarioConsignatario.empresaConsignataria.pessoa.documento }} - {{ (proposta$ | async).usuarioConsignatario.empresaConsignataria.pessoa.nomeFantasia }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Consignado:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).empregadoConsignante.pessoa.documento }} - {{ (proposta$ | async).empregadoConsignante.pessoa.nome }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Consignado:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).empregadoConsignante.pessoa.documento }} - {{ (proposta$ | async).empregadoConsignante.pessoa.nome }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Consignante:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).empregadoConsignante.empresa.pessoa.documento }} - {{ (proposta$ | async).empregadoConsignante.empresa.pessoa.nomeFantasia }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Estrutura Organizacional:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).empregadoConsignante.profissao }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Serviço:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).servicoConsignacao.codigoDesconto }} - {{ (proposta$ | async).servicoConsignacao.descricao }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Matrícula:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).empregadoConsignante.matricula }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Identificação do Contrato:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).identificacaoContrato }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Margem Consignável Atual:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).empregadoConsignante.valorMargem | currency:'BRL' }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Margem Consignável Disponível para Alteração (valor liberado pelo contrato):</label>
+                    <input class="form-control" value="{{ ((proposta$ | async).empregadoConsignante.valorMargem) + ((proposta$ | async).valorParcela) | currency:'BRL' }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Prazo Atual:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).parcelas }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Parcela Atual:</label>
+                    <input class="form-control" value="{{ (proposta$ | async).valorParcela | currency:'BRL' }}" disabled />
+                </div>
+
+                <div class="form-group col-xl-12">
+                    <input type="file" (change)="selectFile($event)">
+                </div>
+
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+            <button type="submit" class="btn btn-primary" (click)="confirmacao.open()">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+
+    <app-modal-confirmacao #confirmacao id="modalConfirmacaoEncerramento" mensagem="Confirmar o ecerramento do contrato de consignação?"
+        *ngIf="(proposta$ | async) as proposta" (confirmar)="salvar(proposta.id)" modalVinculada="modalEncerramento"></app-modal-confirmacao>
+</form>

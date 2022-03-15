@@ -1,0 +1,143 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Levantamento Socioecono&#770;mico">
+        <button *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.INCLUIR) | async" class="btn btn-sm btn-outline-primary" routerLink="/pages/levantamento-novo">Adicionar</button>
+    </app-card-header>
+    <form class="kt-form" >
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Nome do Beneficia&#769;rio:</label>
+                    <input name="nome" type="text" class="form-control" placeholder="Nome do Beneficia&#769;rio" [(ngModel)]="filtro.nome" />
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Data Cadastro:</label>
+                    <p-calendar name="dataCadastro"
+                                styleClass="w-100"
+                                [locale]="pt"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data Cadastro"
+                                [(ngModel)]="filtro.dataCadastro"></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Status:</label>
+                    <select name="status" class="form-control" [(ngModel)]="filtro.status">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="status.RASCUNHO">Rascunho</option>
+                        <option [ngValue]="status.FINALIZADO">Finalizado</option>
+                        <option [ngValue]="status.CANCELADO">Cancelado</option>
+                    </select>
+                </div>
+            </div>
+        </app-card-body>
+
+        <app-card-footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="limparFiltro()">Limpar</button>
+            <button type="button" class="btn btn-primary" (click)="pesquisar()">Pesquisar</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-card *ngIf="totalRecords$ | async">
+    <app-card-header titulo="Resultado da Busca"></app-card-header>
+    <app-card-body>
+        <p-table #levantamentosTable
+                 [value]="levantamentos$ | async"
+                 [totalRecords]="totalRecords$ | async"
+                 (onLazyLoad)="loadLevantamentos($event)"
+                 [paginator]="true"
+                 [rows]="5"
+                 [lazy]="true"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Status</th>
+                <th>Id</th>
+                <th>Pessoa</th>
+                <th>Documento</th>
+                <th>Data de Cadastro</th>
+                <th>Ações</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-levantamento let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <span class="kt-badge  kt-badge--warning kt-badge--inline kt-badge--pill" *ngIf="status.RASCUNHO === levantamento.status">Rascunho</span>
+                  <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.FINALIZADO === levantamento.status">Finalizado</span>
+                  <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.CANCELADO === levantamento.status">Cancelado</span>
+                </td>
+                <td>{{ levantamento.id }}</td>
+                <td>
+                    <span *ngIf="levantamento.pessoa && levantamento.pessoa.nome">{{ levantamento.pessoa.nome }}</span>
+                    <span *ngIf="levantamento.pessoa && levantamento.pessoa.razaoSocial">{{ levantamento.pessoa.razaoSocial }}</span>
+                </td>
+                <td>
+                    <span *ngIf="levantamento.pessoa && levantamento.pessoa.documento">{{ levantamento.pessoa.documento }}</span>
+                </td>
+                <td>{{ levantamento.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>
+                    <a title="Detalhar/Editar"
+                        style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                        (click)="carregarLevantamento(levantamento)"
+                        *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.ALTERAR) | async">
+                        <i class="fa fa-search"></i>
+                    </a>
+
+                    <a *ngIf="(status.RASCUNHO === levantamento.status) && (permiteFuncionalidadeAcao(funcionalidadeEnum.LEVANTAMENTOS, acaoEnum.CANCELAR) | async)"
+                     style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                     title="Cancelar" 
+                     (click)="carregarLevantamentoCancelar(levantamento)"><i class="fa fa-times"></i></a>
+
+                    <a *ngIf="(status.FINALIZADO === levantamento.status)"
+                     style="margin-right: 10px; color: #6fa348; cursor: pointer;" 
+                     title="Imprimir" 
+                     (click)="carregarImpressao(levantamento)"><i class="fa fa-print"></i></a>
+
+                    <a *ngIf="(status.FINALIZADO === levantamento.status)"
+                     style="margin-right: 10px; color: #688f7d; cursor: pointer;" 
+                     title="Copiar e Gerar Rascunho" 
+                     (click)="gerarRascunho(levantamento)"><i class="fa fa-files-o"></i></a>
+
+                    <a *ngIf="(status.FINALIZADO === levantamento.status) && (!levantamento.idEmprestimo || levantamento.idEmprestimo == null) && (!levantamento.creditoNegadoMotivoParecerComite || levantamento.creditoNegadoMotivoParecerComite == null) && levantamento.creditoAprovadoParecerComite && levantamento.totalReceberParecerComite && levantamento.parcelaAprovadaParecerComite && levantamento.qtdParcelasParecerAgente && levantamento.vencimentoParcelasParecerComite && levantamento.linhaCredito"
+                     style="margin-right: 10px; color: #916b2f; cursor: pointer;" 
+                     title="Gerar Empréstimo" 
+                     (click)="gerarEmprestimo(levantamento)"><i class="fa fa-money"></i></a>
+
+                    <a *ngIf="(status.FINALIZADO === levantamento.status) && levantamento.idEmprestimo"
+                     style="margin-right: 10px; color: #916b2f; cursor: pointer;" 
+                     title="Visualizar Empréstimo" 
+                     (click)="carregarEmprestimo(levantamento)"><i class="fa fa-money"></i></a>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<app-modal #modal 
+    id="modalStatusLevantamento" 
+    titulo="Cancelar Levantamento Socioecono&#770;mico">
+    <app-modal-body *ngIf="levantamentoCancelar">
+        <div class="row">
+            <div class="col-xl-12">
+                <label>
+                  Deseja realmente cancelar o rascunho?
+                </label>
+            </div>
+        </div>
+    </app-modal-body>
+    <app-modal-footer>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        <button type="submit" class="btn btn-primary" (click)="cancelarLevantamento()">Salvar</button>
+    </app-modal-footer>
+</app-modal>

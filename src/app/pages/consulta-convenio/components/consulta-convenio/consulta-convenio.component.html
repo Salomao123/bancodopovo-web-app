@@ -1,0 +1,217 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Convênio"></app-card-header>
+    <form class="kt-form" #consultaConvenioForm="ngForm" (ngSubmit)="consultar(consultaConvenioForm)">
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-12">
+                    <label>CNPJ:</label>
+                    <div class="input-group">
+                        
+                        <input name="cnpjConsulta" #cnpjConsulta="ngModel" [(ngModel)]="cnpj" type="text" placeholder="CNPJ para consulta"
+                            class="form-control {{ (cnpjConsulta.invalid && consultaConvenioForm.submitted) ? 'is-invalid' : '' }}" 
+                            appCnpjFormat required maxlength="18"/>
+                        
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">
+                                Consultar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-card-body>
+    </form>
+</app-card>
+
+<app-card *ngIf="(convenio$ | async)">
+    <app-card-header titulo="Convênio"></app-card-header>
+    <app-card-body>
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#" data-target="#tab_identificacao">Identificação</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" data-target="#tab_serv_cons">Serviços Consignação</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" data-target="#tab_representantes">Representantes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" data-target="#tab_endereco">Endereço e Contatos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#" data-target="#tab_dados_banc">Dados bancários</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <!-- Dados de Idenficacao -->
+            <div class="tab-pane active" id="tab_identificacao">
+                <div class="row">
+                    <div class="form-group col-xl-6">
+                        <label>Identificação de Contrato:</label>
+                        <input id="identificacaoContratao" value="{{ (convenio$ | async).convenio.identificacaoConvenio }}" class="form-control" disabled />
+                    </div>
+                    <div class="form-group col-xl-6">
+                        <label>Situação:</label>
+                        <input id="situacao" value="{{ (convenio$ | async).convenio.situacao }}" class="form-control" disabled />
+                    </div>
+                    <div class="form-group col-xl-6">
+                        <label>Consignante:</label>
+                        <input id="consignante" value="{{ (convenio$ | async).convenio.empresa.pessoa.documento }} - {{ (convenio$ | async).convenio.empresa.pessoa.nomeFantasia }}" class="form-control" disabled />
+                    </div>
+                    <div class="form-group col-xl-6">
+                        <label>Consignatária:</label>
+                        <input id="consignataria" value="{{ (convenio$ | async).convenio.empresaConsignataria.pessoa.documento }} - {{ (convenio$ | async).convenio.empresaConsignataria.pessoa.nomeFantasia }}" class="form-control" disabled />
+                    </div>
+                    <div class="form-group col-xl-6">
+                        <label>Data Vigência Inicial:</label>
+                        <input id="dataVigenciaInicial" value="{{ (convenio$ | async).convenio.dataVigenciaInicio | date:'dd/MM/yyyy' }}" class="form-control" disabled />
+                    </div>
+                    <div class="form-group col-xl-6">
+                        <label>Data Vigência Final:</label>
+                        <input id="dataVigenciaFinal" value="{{ (convenio$ | async).convenio.dataVigenciaFinal  | date:'dd/MM/yyyy' }}" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane" id="tab_serv_cons">
+                <p-table #servicosTable
+                        [value]="(convenio$ | async).servicos"
+                        [rows]="5"
+                        [lazy]="true"
+                        [rowsPerPageOptions]="[5,10,15]"
+                        styleClass="table-responsive"
+                        tableStyleClass="table table-striped table-bordered">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>#</th>
+                            <th>Serviços</th>
+                            <th>Cód. Desconto</th>
+                            <th>Nome Desconto</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ registro.descricao }}</td>
+                            <td>{{ registro.codigoDesconto }}</td>
+                            <td>{{ registro.nomeDesconto }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="tab-pane" id="tab_representantes">
+                <p-table #representantesTable
+                        [value]="(convenio$ | async).representantes"
+                        [rows]="5"
+                        [lazy]="true"
+                        [rowsPerPageOptions]="[5,10,15]"
+                        styleClass="table-responsive"
+                        tableStyleClass="table table-striped table-bordered">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>#</th>
+                            <th>Documento</th>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ registro.pessoa.documento }}</td>
+                            <td>{{ registro.pessoa.nome }}</td>
+                            <td>{{ registro.cargo }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="tab-pane" id="tab_endereco">
+
+                <label>Endereços</label>
+                <p-table #enderecosTable
+                        [value]="(convenio$ | async).enderecos"
+                        [rows]="5"
+                        [lazy]="true"
+                        [rowsPerPageOptions]="[5,10,15]"
+                        styleClass="table-responsive"
+                        tableStyleClass="table table-striped table-bordered">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>#</th>
+                            <th>CEP</th>
+                            <th>Logradouro</th>
+                            <th>Número</th>
+                            <th>Bairro</th>
+                            <th>Cidade</th>
+                            <th>UF</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ registro.cep }}</td>
+                            <td>{{ registro.logradouro }}</td>
+                            <td>{{ registro.numero }}</td>
+                            <td>{{ registro.bairro }}</td>
+                            <td>{{ registro.cidade.nome }}</td>
+                            <td>{{ registro.cidade.uf.sigla }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <label>Contatos</label>
+                <p-table #contatosTable
+                        [value]="(convenio$ | async).contatos"
+                        [rows]="5"
+                        [lazy]="true"
+                        [rowsPerPageOptions]="[5,10,15]"
+                        styleClass="table-responsive"
+                        tableStyleClass="table table-striped table-bordered">
+                    
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>#</th>
+                            <th>Tipo</th>
+                            <th>Contato</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                        <tr>
+                            <td>{{ i + 1 }}</td>
+                            <td>
+                                <span *ngIf="tipoContato.EMAIL === registro.tipo">E-mail</span>
+                                <span *ngIf="tipoContato.TELEFONE === registro.tipo">Telefone</span>
+                            </td>
+                            <td>
+                                <span *ngIf="tipoContato.EMAIL === registro.tipo">{{ registro.email }}</span>
+                                <span *ngIf="tipoContato.TELEFONE === registro.tipo">{{ registro.telefone }}</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="tab-pane" id="tab_dados_banc">
+                <div class="row">
+                    <div class="form-group col-xl-6">
+                        <label>Banco:</label>
+                        <input id="banco" value="{{ (convenio$ | async).convenio.empresaConsignataria.banco.id }} - {{ (convenio$ | async).convenio.empresaConsignataria.banco.nome }}" class="form-control" disabled />
+                    </div>
+
+                    <div class="form-group col-xl-3">
+                        <label>Agência com DV:</label>
+                        <input id="agencia" value="{{ (convenio$ | async).convenio.empresaConsignataria.agencia }}" class="form-control" disabled />
+                    </div>
+
+                    <div class="form-group col-xl-3">
+                        <label>Conta com DV:</label>
+                        <input id="conta" value="{{ (convenio$ | async).convenio.empresaConsignataria.agencia }}" class="form-control" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </app-card-body>
+</app-card>

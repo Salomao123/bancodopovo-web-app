@@ -1,0 +1,19 @@
+<form #convenioStatusForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+        id="modalStatusConvenio" 
+        titulo="{{ titulo }}"
+        (fechar)="convenioStatusForm.resetForm()">
+        <app-modal-body *ngIf="convenio">
+            <div class="row">
+                <div class="col-xl-12">
+                    {{ mensagem }}
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="convenioStatusForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+    

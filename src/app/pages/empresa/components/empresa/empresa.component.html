@@ -1,0 +1,123 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Empresa">
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="empresaNovo.adicionar()">Adicionar</button>
+    </app-card-header>
+    <form class="kt-form" >
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-4">
+                    <label>Nome Fantasia:</label>
+                    <input name="nome" [(ngModel)]="filtroPessoa.nomeFantasia" type="text" class="form-control" placeholder="Nome Fantasia"/>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Razão Social:</label>
+                    <input name="razaoSocial" [(ngModel)]="filtroPessoa.razaoSocial" type="text" class="form-control" placeholder="Razão Social"/>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>CNPJ:</label>
+                    <input name="cnpj" [(ngModel)]="filtroPessoa.documento" type="text" class="form-control" placeholder="CNPJ"
+                        maxlength="18" appCnpjFormat/>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Data Cadastro:</label>
+                    <p-calendar name="dataCadastro"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data cadastro"
+                                [(ngModel)]="filtro.dataCadastro"></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Status:</label>
+                    <select name="status" class="form-control" [(ngModel)]="filtro.status">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+            </div>
+        </app-card-body>
+
+        <app-card-footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="limparFiltro()">Limpar</button>
+            <button type="button" class="btn btn-primary" (click)="pesquisar()">Pesquisar</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-card *ngIf="totalRecords$ | async">
+    <app-card-header titulo="Resultado da Busca"></app-card-header>
+    <app-card-body>
+        <p-table #empresasTable
+                 [value]="empresas$ | async"
+                 [totalRecords]="totalRecords$ | async"
+                 (onLazyLoad)="loadEmpresas($event)"
+                 [paginator]="true"
+                 [rows]="5"
+                 [lazy]="true"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Status</th>
+                <th pSortableColumn="p.nomeFantasia">Nome <p-sortIcon field="p.nomeFantasia"></p-sortIcon></th>
+                <th pSortableColumn="e.descricao">Descrição <p-sortIcon field="e.descricao"></p-sortIcon></th>
+                <th>Data de Cadastro</th>
+                <th>Ações</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-empresa let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === empresa.status">Inativo</span>
+                  <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === empresa.status">Ativo</span>
+                </td>
+                <td>
+                  <span>{{ empresa.pessoa.nomeFantasia }}</span>
+                </td>
+                <td>{{ empresa.descricao }}</td>
+                <td>{{ empresa.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>
+                  <a *ngIf="status.ATIVO === empresa.status"
+                     style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                     title="Excluir/Inativar" 
+                     (click)="empresaStatus.carregar(empresa)"><i class="fa fa-times"></i></a>
+                  
+                  <a *ngIf="status.INATIVO === empresa.status"
+                     style="margin-right: 10px; color: green; cursor: pointer;" 
+                     title="Ativar" 
+                     (click)="empresaStatus.carregar(empresa)"><i class="fa fa-check"></i></a>
+
+                  <a title="Detalhar/Edidar"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="empresaNovo.editar(empresa)">
+                    <i class="fa fa-search"></i>
+                  </a>
+
+                  <a title="Convênios com Consignatárias"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="convenio.carregar(empresa)">
+                    <i class="fa fa-list"></i>
+                  </a>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<app-empresa-novo #empresaNovo></app-empresa-novo>
+<app-empresa-status #empresaStatus></app-empresa-status>
+<app-convenio #convenio></app-convenio>

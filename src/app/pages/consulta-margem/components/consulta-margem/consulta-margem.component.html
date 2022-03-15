@@ -1,0 +1,102 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Margem"></app-card-header>
+    <form class="kt-form" #consultaMargemForm="ngForm" (ngSubmit)="consultar(consultaMargemForm)">
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-12">
+                    <label>CPF:</label>
+                    <div class="input-group">
+                        
+                        <input name="cpfConsulta" #cpfConsulta="ngModel" [(ngModel)]="cpf" type="text" placeholder="CPF para consulta"
+                            class="form-control {{ (cpfConsulta.invalid && consultaMargemForm.submitted) ? 'is-invalid' : '' }}" 
+                            appCpfFormat required maxlength="14"/>
+                        
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">
+                                Consultar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-card-body>
+    </form>
+</app-card>
+
+<app-card *ngIf="(margem$ | async)">
+    <app-card-header titulo="Resultado"></app-card-header>
+    <app-card-body>
+        <span *ngIf="!(margem$ | async).id">
+            Sem permissão para visualizar margem consignável para o CPF: {{ cpf }}. Deseja solicitar acesso as informações de margem do cliente consultado?
+            <button class="btn btn-primary" type="button" (click)="solicitar()">
+                Solicitar
+            </button>
+        </span>
+
+        <span *ngIf="situacao.SOLICITADO === (margem$ | async).situacao">
+            Solicitação de consulta de margem consignável aguardando aprovação para visualização.
+        </span>
+
+        <div *ngIf="situacao.APROVADO === (margem$ | async).situacao" style="font-size: 15px;">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" *ngFor="let emp of (margem$ | async).empregados; let i = index">
+                    <a [ngClass]="(i === 0) ? 'nav-link active' : 'nav-link'" data-toggle="tab" href="#" attr.data-target="#tab_{{ emp.id }}">Mat: {{ emp.matricula }}</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div [ngClass]="(i === 0) ? 'tab-pane active' : 'tab-pane'" *ngFor="let emp of (margem$ | async).empregados; let i = index" id="tab_{{ emp.id }}">
+                    <div class="row">
+                        <div class="col-xl-1">
+                            <strong>Documento: </strong>
+                        </div>
+                        <div class="col-xl-2">
+                            {{ (margem$ | async).pessoa.documento }}
+                        </div>
+                        
+                        <div class="col-xl-1">
+                            <strong>Nome: </strong>
+                        </div>
+                        <div class="col-xl-8">
+                            {{ (margem$ | async).pessoa.nome }}
+                        </div>
+
+                        <div class="col-xl-1">
+                            <strong>CNPJ Emp.: </strong>
+                        </div>
+                        <div class="col-xl-2">
+                            {{ emp.empresa.pessoa.documento }}
+                        </div>
+                
+                        <div class="col-xl-1">
+                            <strong>Empresa: </strong>
+                        </div>
+                        <div class="col-xl-8">
+                            {{ emp.empresa.pessoa.nomeFantasia }}
+                        </div>
+
+                        <div class="col-xl-1">
+                            <strong>Cargo: </strong>
+                        </div>
+                        <div class="col-xl-2">
+                            {{ emp.profissao }}
+                        </div>
+        
+                        <div class="col-xl-1">
+                            <strong>Margem: </strong>
+                        </div>
+                        <div class="col-xl-2">
+                            {{ emp.margem }} % - {{ emp.valorMargem | currency:'BRL' }}
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12 text-right" *ngIf="(margem$ | async).pessoa as pessoa">
+                        <button type="button" class="btn btn-primary" (click)="contratacao.carregar(pessoa, emp)"
+                            [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.CONSULTAR_MARGEM, acaoEnum.CONTRATAR_MARGEM) | async)">Contratar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <app-contratacao #contratacao></app-contratacao>
+        </div>
+    </app-card-body>
+</app-card>

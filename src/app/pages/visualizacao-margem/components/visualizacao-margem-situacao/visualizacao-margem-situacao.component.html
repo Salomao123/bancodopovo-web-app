@@ -1,0 +1,25 @@
+<form #margemSituacaoForm="ngForm" (ngSubmit)="confirmar()">
+    <app-modal #modal 
+        id="modalSituacaoMargem" 
+        titulo="{{ ((id) && (situacao.APROVADO === novaSituacao)) ? 'Aprovar Solicitação' : 'Reprovar Solicitação' }}"
+        (fechar)="margemSituacaoForm.resetForm()">
+        <app-modal-body *ngIf="id">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label *ngIf="situacao.APROVADO === novaSituacao">
+                        Confirma a aprovação da solicitação para visualização de margem consignável?
+                    </label>
+                    <label *ngIf="situacao.REPROVADO === novaSituacao">
+                        Confirma a reprovação da solicitação para visualização de margem consignável?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="margemSituacaoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+    
+    

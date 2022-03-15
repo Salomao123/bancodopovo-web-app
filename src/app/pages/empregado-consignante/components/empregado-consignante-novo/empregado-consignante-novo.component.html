@@ -1,0 +1,107 @@
+<form #empregadoConsignanteNovoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalAdicionarEmpregadoConsignante" 
+            titulo="Adicionar Consignante"
+            sizeClass="modal-lg"
+            (fechar)="empregadoConsignanteNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="empregadoConsignante">
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Empresa*:</label>
+                    <select #empresaNovo="ngModel" name="empresaNovo" [(ngModel)]="empresaSelecionada"
+                        class="form-control {{ (empresaNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let empresa of (empresas$ | async)" [ngValue]="empresa.id">{{ empresa.pessoa.nomeFantasia }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Pessoa*:</label>
+                    <select #pessoaNovo="ngModel" name="pessoaNovo" [(ngModel)]="pessoaSelecionada"
+                        class="form-control {{ (pessoaNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let pessoa of (pessoas$ | async)" [ngValue]="pessoa.id">{{ pessoa.nome }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Nome do Pai*:</label>
+                    <input #nomePaiNovo="ngModel" name="nomePaiNovo" [(ngModel)]="empregadoConsignante.nomePai"
+                        class="form-control {{ (nomePaiNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" maxlength="100" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Nome da Mãe*:</label>
+                    <input #nomeMaeNovo="ngModel" name="nomeMaeNovo" [(ngModel)]="empregadoConsignante.nomeMae"
+                        class="form-control {{ (nomeMaeNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" maxlength="100" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Estado Civil*:</label>
+                    <select #estadoCivilNovo="ngModel" name="estadoCivilNovo" [(ngModel)]="empregadoConsignante.estadoCivil"
+                        class="form-control {{ (estadoCivilNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="estadoCivil.SOLTEIRO">Solteiro (a)</option>
+                        <option [ngValue]="estadoCivil.CASADO">Casado (a)</option>
+                        <option [ngValue]="estadoCivil.SEPARADO">Separado (a)</option>
+                        <option [ngValue]="estadoCivil.DIVORCIADO">Divorciado (a)</option>
+                        <option [ngValue]="estadoCivil.VIUVO">Viúvo (a)</option>
+                    </select>
+                </div>
+
+                <div *ngIf="estadoCivil.CASADO === empregadoConsignante.estadoCivil" class="form-group col-xl-6">
+                    <label>Nome do Conjugê*:</label>
+                    <input #nomeConjugeNovo="ngModel" name="nomeConjugeNovo" [(ngModel)]="empregadoConsignante.nomeConjuge"
+                        class="form-control {{ (nomeConjugeNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" maxlength="100" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>RG*:</label>
+                    <input #rgNovo="ngModel" name="rgNovo" [(ngModel)]="empregadoConsignante.rg"
+                        class="form-control {{ (rgNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        appRgFormat maxlength="12" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Matrícula*:</label>
+                    <input #matriculaNovo="ngModel" name="matriculaNovo" [(ngModel)]="empregadoConsignante.matricula"
+                        class="form-control {{ (matriculaNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" maxlength="50" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Profissão*:</label>
+                    <input #profissaoNovo="ngModel" name="profissaoNovo" [(ngModel)]="empregadoConsignante.profissao"
+                        class="form-control {{ (profissaoNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" maxlength="100" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Salário*:</label>
+                    <input #salarioNovo="ngModel" name="salarioNovo" [(ngModel)]="salarioFormatado"
+                        class="form-control {{ (salarioNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        appMoedaFormat maxlength="13" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Margem*:</label>
+                    <input #margemNovo="ngModel" name="margemNovo" [(ngModel)]="margemFormatado"
+                        class="form-control {{ (margemNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        appMoedaFormat maxlength="5" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Status*:</label>
+                    <select #statusNovo="ngModel" name="statusNovo" [(ngModel)]="empregadoConsignante.status"
+                        class="form-control {{ (statusNovo.invalid && empregadoConsignanteNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="empregadoConsignanteNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

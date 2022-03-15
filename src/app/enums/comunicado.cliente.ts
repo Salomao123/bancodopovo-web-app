@@ -1,0 +1,10 @@
+
+export enum ComunicadoClienteEnum {
+    TELEFONE_RESIDENCIAL = 1,
+    CELULAR = 2,
+    PESSOALMENTE = 3,
+    MENSAGEM_TEXTO_SMS = 4,
+    MENSAGEM_TEXTO_WHATSAPP = 5,
+    MENSAGEM_TEXTO_TELEGRAM = 6,
+    CORRESPONDENCIA = 7
+}

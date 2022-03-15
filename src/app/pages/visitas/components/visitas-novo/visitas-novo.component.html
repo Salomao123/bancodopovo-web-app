@@ -1,0 +1,113 @@
+<form #visitasNovoForm="ngForm" (ngSubmit)="salvar()">
+    <style>
+        .cdk-overlay-container { z-index: 9999; }
+    </style>
+    <app-modal #modal 
+            id="modalAdicionarVisita" 
+            titulo="Adicionar Visita"
+            sizeClass="modal-lg"
+            (fechar)="visitasNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="visita">
+            
+            <div class="row">
+                <div class="form-group col-xl-1">
+                </div>
+        
+                <div class="form-group col-xl-3" style="text-align: center; padding-top: 25px;">
+                  <img id="imgFoto3x4" alt="3x4" *ngIf="pessoa && pessoa.img3x4" src="{{ pessoa.img3x4 }}" class="img-fluid" style="border: 6px dashed grey;" />
+                  <img alt="3x4" *ngIf="!pessoa || !pessoa.img3x4" src="assets/media/images/3x4.png" class="img-fluid" />
+                </div>
+        
+                <div class="form-group col-xl-1">
+                </div>
+        
+                <div class="form-group col-xl-1">
+                </div>
+        
+                <div class="form-group col-xl-5">
+                    <label style="clear: both;">Documento*:</label>
+                    <input [disabled]="visita && visita.id" #documentoPessoa="ngModel" name="documentoPessoa" [(ngModel)]="pessoa.documento" type="text" maxlength="14"
+                        class="form-control" required
+                        placeholder="CPF" appCpfFormat (blur)="carregarPessoa()" />
+
+                    <!--<mat-form-field *ngIf="!visita || !visita.id" class="example-full-width" style="display: block !important;">
+                        <input matInput
+                                placeholder="Pessoa"
+                                aria-label="Pessoa"
+                                [matAutocomplete]="auto"
+                                [formControl]="pessoaCtrl"
+                                style="padding: 5px !important; margin-bottom: 5px !important; width: 100% !important;">
+                        <mat-autocomplete #auto="matAutocomplete" style="z-index: 999999 !important; width: 400px;" (optionSelected)="carregarPessoa($event)">
+                            <mat-option *ngFor="let p of pessoasFiltered | async" [value]="p.documento" style="height: 80px;">
+                            <span style="line-height: 20px !important;">{{p.nome}}{{p.nomeFantasia}}</span>
+                            <small style="line-height: 20px !important; color: black !important; display: block !important;">{{p.documento}}</small>
+                            <hr />
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>-->
+
+                    <br />
+                    <label style="clear: both;">Nome:</label>
+                    <input *ngIf="pessoa.nome" #nomePessoa="ngModel" name="nomePessoa" [(ngModel)]="pessoa.nome" type="text"
+                        class="form-control"
+                        placeholder="Nome" disabled />
+                    <input *ngIf="pessoa.nomeFantasia" #nomeFantasiaPessoa="ngModel" name="nomeFantasiaPessoa" [(ngModel)]="pessoa.nomeFantasia" type="text"
+                        class="form-control"
+                        placeholder="Nome" disabled />
+        
+                    <br />
+                    <label style="clear: both;">Data de Nascimento:</label>
+                    <p-calendar #dataNascimentoNovo="ngModel"
+                                name="dataNascimentoNovo"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data de Nascimento"
+                                [(ngModel)]="pessoa.dataNascimento"
+                                [defaultDate]="maxDate"
+                                [maxDate]="maxDate"
+                                disabled></p-calendar>
+
+                    <br />
+                    <label style="clear: both; margin-top: 15px;">Data/Hora da Visita*:</label>
+                    <p-calendar #dataVisitaNovo="ngModel"
+                                name="dataVisitaNovo"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data/Hora da Visita"
+                                [(ngModel)]="visita.dataVisita"
+                                [defaultDate]="dataHoje"
+                                [maxDate]="maxDate"
+                                showTime="true" 
+                                hourFormat="24"
+                                required
+                                [disabled]="visita && visita.id"
+                               ></p-calendar>
+                </div>
+        
+                <div class="form-group col-xl-1">
+                </div>
+
+                <div class="form-group col-xl-12">
+                    <label>Descrição / Informações*:</label>
+                    <textarea maxlength="500" [disabled]="visita && visita.id" required name="descricaoVisita" [(ngModel)]="visita.descricao" rows="2" class="form-control"></textarea>
+                </div>
+            </div>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="visitasNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary" *ngIf="!visita || !visita.id">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

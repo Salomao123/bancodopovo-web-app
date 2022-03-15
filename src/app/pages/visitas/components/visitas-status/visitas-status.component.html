@@ -1,0 +1,23 @@
+<form #visitasStatusForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modalStatus 
+        id="modalStatusVisita" 
+        titulo="{{ ((visita) && (status.ATIVO === visita.status)) ? 'Inativar Visita' : 'Ativar Visita' }}"
+        (fechar)="visitasStatusForm.resetForm()">
+        <app-modal-body *ngIf="visita">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label *ngIf="status.INATIVO === visita.status">
+                        Deseja realmente ativar o registro?
+                    </label>
+                    <label *ngIf="status.ATIVO === visita.status">
+                        Deseja realmente excluir/inativar o registro?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="visitasStatusForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

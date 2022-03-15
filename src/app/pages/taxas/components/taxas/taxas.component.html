@@ -1,0 +1,101 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Taxas"></app-card-header>
+    <form #pesquisarTaxaForm="ngForm" class="kt-form" (ngSubmit)="pesquisar()">
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-12">
+                    <label>Serviço de Consignação:</label>
+                    <div class="input-group">
+                        <select name="servico" #servico="ngModel" [(ngModel)]="servicoSelecionado" (change)="changeServico()"
+                            class="form-control {{ (servico.invalid && pesquisarTaxaForm.submitted) ? 'is-invalid' : '' }}" required>
+                            <option [ngValue]="undefined">Selecione...</option>
+                            <option *ngFor="let s of (servicos$ | async)" [ngValue]="s">{{ s.codigoDesconto }} - {{ s.nomeDesconto }}</option>
+                        </select>
+
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">Consultar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-card-body>
+    </form>
+</app-card>
+
+<app-card *ngIf="jurosFormatado && encargoFormatado">
+    <app-card-header titulo="Manter Taxas"></app-card-header>
+    <form #manterTaxasForm="ngForm" class="kt-form" (ngSubmit)="preencherJurosEncargos(manterTaxasForm)">
+        <app-card-body>
+            <div class="row">
+                <div class="col-xl-12 mb-2">
+                    <strong>Serviço: </strong>{{ servicoSelecionado.codigoDesconto }} - {{ servicoSelecionado.nomeDesconto }}
+                </div>
+                <div class="form-group col-xl-6">
+                    <label>Juros*:</label>
+                    <input #jurosNovo="ngModel" name="jurosNovo" [(ngModel)]="jurosFormatado"
+                        class="form-control {{ (jurosNovo.invalid && manterTaxasForm.submitted) ? 'is-invalid' : '' }}"
+                        appMoedaFormat maxlength="5" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Encargos*:</label>
+                    <input #encargosNovo="ngModel" name="encargosNovo" [(ngModel)]="encargoFormatado"
+                        class="form-control {{ (encargosNovo.invalid && manterTaxasForm.submitted) ? 'is-invalid' : '' }}"
+                        appMoedaFormat maxlength="5" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <div class="kt-checkbox-list">
+                        <label class="kt-checkbox">
+                            <input type="checkbox" name="selecionarPagina" [(ngModel)]="selecionarPagina" (change)="changeSelecionarPagina($event.target.checked)" />Selecionar parcelas da página<span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <div class="kt-checkbox-list">
+                        <label class="kt-checkbox">
+                            <input type="checkbox" name="selecionarTodos" [(ngModel)]="selecionarTodos" (change)="changeSelecionarTodos($event.target.checked)" />Selecionar todos as parcelas<span></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-xl-12 text-right mb-5">
+                    <button type="submit" class="btn btn-primary">Preencher Juros e Encargos</button>
+                </div>
+            </div>
+
+            <p-table #parcelasTable
+                    [value]="parcelas$ | async"
+                    [paginator]="true"
+                    [rows]="5"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th class="text-center"></th>
+                    <th class="text-center">Parcela</th>
+                    <th class="text-center">Juros</th>
+                    <th class="text-center">Encargos</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                    <td class="text-center">
+                        <input type="checkbox" [checked]="registro.selecionado" attr.cod="{{registro.objeto.id}}" (change)="changeSelectParcela(registro.objeto.id, $event.target.checked)" class="tb-select tb-select-{{registro.objeto.id}}" [disabled]="selecionarPagina || selecionarTodos" /> 
+                    </td>
+                    <td class="text-center">{{ registro.objeto.parcela }}</td>
+                    <td class="text-center">{{ registro.objeto.juros | currency:'BRL':'' }}</td>
+                    <td class="text-center">{{ registro.objeto.encargos | currency:'BRL':'' }}</td>
+                </tr>
+                </ng-template>
+            </p-table>
+        </app-card-body>
+        <app-card-footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="cancelar(manterTaxasForm)">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="salvar()">Salvar</button>
+        </app-card-footer>
+    </form>
+</app-card>

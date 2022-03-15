@@ -1,0 +1,9 @@
+<div>
+    
+    <iframe id="printframe" name="printframe" style="display: none;width: 0px;height: 0px;"></iframe>
+  
+    <span id="idRelTemplate" *ngIf="habilitarPrint">
+      <ng-template [ngIf]="!templateRelatorio" [ngIfElse]="templateRelatorio"></ng-template>
+    </span>
+    
+  </div>

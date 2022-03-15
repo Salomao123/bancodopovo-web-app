@@ -1,0 +1,24 @@
+<form #usuarioStatusForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+        id="modalStatusUsuario" 
+        titulo="{{ ((usuario) && (status.ATIVO === usuario.status)) ? 'Inativar Usuário' : 'Ativar Usuário' }}"
+        (fechar)="usuarioStatusForm.resetForm()">
+        <app-modal-body *ngIf="usuario">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label *ngIf="status.INATIVO === usuario.status">
+                        Deseja realmente ativar o registro?
+                    </label>
+                    <label *ngIf="status.ATIVO === usuario.status">
+                        Deseja realmente excluir/inativar o registro?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="usuarioStatusForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+

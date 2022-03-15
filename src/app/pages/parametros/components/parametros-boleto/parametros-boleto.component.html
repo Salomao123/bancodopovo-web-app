@@ -1,0 +1,247 @@
+<form #parametroBoletoForm="ngForm" class="kt-form" (ngSubmit)="salvar()">
+    <app-modal #modal
+        id="modalParametroBoleto"
+        titulo="Parâmetros Gerais Boleto"
+        sizeClass="modal-xl"
+        (fehcar)="fechar()">
+
+        <app-modal-body *ngIf="parametroBoleto">
+            <div class="row">
+                <div class="form-group col-md-2">
+                    <label>Tipo Doc.:</label>
+                    <select name="parametroTipoDocumento" [(ngModel)]="parametroBoleto.tipoDocumento" #parametroTipoDocumento="ngModel"
+                        class="form-control {{ (parametroTipoDocumento.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).tiposDocumentos" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Documento:</label>
+                    <input name="parametroDocumento" [(ngModel)]="parametroBoleto.documento" #parametroDocumento="ngModel"
+                        class="form-control {{ (parametroDocumento.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Documento" appCnpjFormat />
+                </div>
+
+                <div class="form-group col-md-8">
+                    <label>Nome:</label>
+                    <input name="parametroNome" [(ngModel)]="parametroBoleto.nome" type="text" #parametroNome="ngModel"
+                        class="form-control {{ (parametroNome.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Nome" maxlength="40" />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Cód. Banco:</label>
+                    <input name="parametroBanco" [(ngModel)]="parametroBoleto.banco" type="text" #parametroBanco="ngModel"
+                        class="form-control {{ (parametroBanco.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Código do Banco" maxlength="3" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Agência:</label>
+                    <input name="parametroAgencia" [(ngModel)]="parametroBoleto.agencia" type="text" #parametroAgencia="ngModel" 
+                        class="form-control {{ (parametroAgencia.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Agência" maxlength="5" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Ag DV:</label>
+                    <input name="parametroAgenciaDv" [(ngModel)]="parametroBoleto.agenciaDv" type="text" #parametroAgenciaDv="ngModel"
+                        class="form-control {{ (parametroAgenciaDv.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Agência DV" maxlength="1" />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Conta:</label>
+                    <input name="parametroConta" [(ngModel)]="parametroBoleto.conta" type="text" #parametroConta="ngModel"
+                        class="form-control {{ (parametroConta.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Conta" maxlength="12" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Cc DV:</label>
+                    <input name="parametroContaDv" [(ngModel)]="parametroBoleto.contaDv" type="text" #parametroContaDv="ngModel" 
+                        class="form-control {{ (parametroContaDv.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Conta DV" maxlength="1" />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Convênio:</label>
+                    <input name="parametroConvenio" [(ngModel)]="parametroBoleto.convenio" type="text" #parametroConvenio="ngModel" 
+                        class="form-control {{ (parametroConvenio.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Convênio" maxlength="9" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Carteira:</label>
+                    <input name="parametroCarteira" [(ngModel)]="parametroBoleto.carteira" type="text" #parametroCarteira="ngModel" 
+                        class="form-control {{ (parametroCarteira.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Carteira" maxlength="2" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Variação:</label>
+                    <input name="parametroVariacao" [(ngModel)]="parametroBoleto.variacao" type="text" #parametroVariacao="ngModel" 
+                        class="form-control {{ (parametroVariacao.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required
+                        placeholder="Variação" maxlength="3" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Código Carteira:</label>
+                    <select name="parametroCodigoCarteira" [(ngModel)]="parametroBoleto.codigoCarteira" #parametroCodigoCarteira="ngModel" 
+                        class="form-control {{ (parametroCodigoCarteira.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).codigosCarteira" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Forma Cadastro:</label>
+                    <select name="parametroFormaCadastro" [(ngModel)]="parametroBoleto.formaCadastro" #parametroFormaCadastro="ngModel" 
+                        class="form-control {{ (parametroFormaCadastro.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).formasCadastro" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Tipo Doc. Cobrança:</label>
+                    <select name="parametroTipoDocumentoCobranca" [(ngModel)]="parametroBoleto.tipoDocCobranca" #parametroTipoDocumentoCobranca="ngModel" 
+                        class="form-control {{ (parametroTipoDocumentoCobranca.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).tiposDocCobranca" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Emissão Bloqueto:</label>
+                    <select name="parametroEmissaoBloqueto" [(ngModel)]="parametroBoleto.emissaoBloqueto" #parametroEmissaoBloqueto="ngModel" 
+                        class="form-control {{ (parametroEmissaoBloqueto.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).emissoesBloqueto" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Identificação de Distribuição:</label>
+                    <select name="parametroIdentificacaoDistribuicao" [(ngModel)]="parametroBoleto.identificacaoDistribuicao" 
+                        #parametroIdentificacaoDistribuicao="ngModel"
+                        class="form-control {{ (parametroIdentificacaoDistribuicao.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}"
+                        required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).identificacoesDistribuicao" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Espécie de Título:</label>
+                    <select name="parametroEspecieTitulo" [(ngModel)]="parametroBoleto.especieTitulo" #parametroEspecieTitulo="ngModel"
+                        class="form-control {{ (parametroEspecieTitulo.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).especiesTitulo" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Tipo de Juros:</label>
+                    <select name="parametroCodJuros" [(ngModel)]="parametroBoleto.codJuros" #parametroCodJuros="ngModel"
+                        class="form-control {{ (parametroCodJuros.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).codsJuros" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Valor de Juros:</label>
+                    <input name="parametroValorJuros" [(ngModel)]="valorJurosFormatado" class="form-control" type="text"
+                        placeholder="Valor de Juros" maxlength="15" appMoedaFormat />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Tipo de Multa:</label>
+                    <select name="parametroTipoMulta" [(ngModel)]="parametroBoleto.codMulta" class="form-control">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).codsMulta" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Valor de Multa:</label>
+                    <input name="parametroValorMulta" [(ngModel)]="valorMultaFormatado" class="form-control" type="text"
+                        placeholder="Valor de Multa" maxlength="15" appMoedaFormat />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Tipo de Desconto:</label>
+                    <select name="parametroTipoDesconto" [(ngModel)]="parametroBoleto.codDesconto" class="form-control">
+                        <option [ngValue]="null">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).codsDesconto" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Tipo de Protesto:</label>
+                    <select name="parametroTipoProtesto" [(ngModel)]="parametroBoleto.codProtesto" #parametroTipoProtesto="ngModel" 
+                        class="form-control {{ (parametroTipoProtesto.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).codsProtesto" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Dias de Prot.:</label>
+                    <input name="parametroDiasProtesto" [(ngModel)]="parametroBoleto.diasProtesto" class="form-control" type="text"
+                        placeholder="Dias de Protesto" maxlength="2" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Tipo de Baixa:</label>
+                    <select name="parametroTipoBaixa" [(ngModel)]="parametroBoleto.codBaixa" class="form-control">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).codsBaixa" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Dias de Bai.:</label>
+                    <input name="parametroDiasBaixa" [(ngModel)]="parametroBoleto.diasBaixa" class="form-control" type="text"
+                        placeholder="Dias de Baixa" maxlength="3" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label>Número Contrato:</label>
+                    <input name="parametroNumeroContrato" [(ngModel)]="parametroBoleto.numeroContrato" #parametroNumeroContrato="ngModel" 
+                        class="form-control {{ (parametroNumeroContrato.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" type="text"
+                        placeholder="Número de Contrato" maxlength="10" appNumeroFormat required />
+                </div>
+
+                <div class="form-group col-md-1">
+                    <label>Título Aceito:</label>
+                    <select name="parametroTituloAceito" [(ngModel)]="parametroBoleto.identificacaoTituloAceito" #parametroTituloAceito="ngModel" 
+                        class="form-control {{ (parametroTituloAceito.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let tipo of (opcoes$ | async).identificacoesTituloAceito" [ngValue]="tipo.codigo">{{ tipo.descricao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Sequencial Boleto:</label>
+                    <input name="parametroSequencialBoleto" [(ngModel)]="parametroBoleto.sequencialBoleto" #parametroSequencialBoleto="ngModel"
+                        class="form-control {{ (parametroSequencialBoleto.invalid && parametroBoletoForm.submitted) ? 'is-invalid' : '' }}" type="text"
+                        placeholder="Sequencial Boleto" maxlength="13" appNumeroFormat required />
+                </div>
+
+                <div class="form-group col-md-8">
+                    <label>Mensagem:</label>
+                    <input name="parametroMensagem" [(ngModel)]="parametroBoleto.mensagem" class="form-control" type="text"
+                        placeholder="Mensagem a ser apresentada no boleto" maxlength="40" />
+                </div>
+
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.PARAMETRO_BOLETO, acaoEnum.ALTERAR) | async)">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

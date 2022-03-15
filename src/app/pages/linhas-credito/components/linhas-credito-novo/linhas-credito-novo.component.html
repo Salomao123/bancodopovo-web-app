@@ -1,0 +1,94 @@
+<form #linhasCreditoNovoForm="ngForm" (ngSubmit)="salvar()">
+    <style>
+        .cdk-overlay-container { z-index: 9999; }
+    </style>
+    <app-modal #modal 
+            id="modalAdicionarLinhaCredito" 
+            titulo="Adicionar Linha de Crédito"
+            sizeClass="modal-lg"
+            (fechar)="linhasCreditoNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="linhaCredito">
+            
+            <div class="row">
+
+                <div class="form-group col-xl-12">
+                    <label>Nome*:</label>
+                    <input [(ngModel)]="linhaCredito.nome" [disabled]="linhaCredito && linhaCredito.id" maxlength="500" required name="linhaCreditoNome" type="text" class="form-control" placeholder="Nome" />
+                </div>
+
+                <div class="form-group col-xl-12">
+                    <label>Descrição / Informações*:</label>
+                    <textarea maxlength="500" [disabled]="linhaCredito && linhaCredito.id" required name="descricaoLinhaCredito" [(ngModel)]="linhaCredito.descricao" rows="2" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Tipo de Pessoa*:</label>
+                    <select name="tipoPessoa" class="form-control" [disabled]="linhaCredito && linhaCredito.id" required [(ngModel)]="linhaCredito.tipoPessoa">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="tipoPessoa.FISICA">Física</option>
+                        <option [ngValue]="tipoPessoa.JURIDICA">Jurídica</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Tipo de Taxa (Juros)*:</label>
+                    <select name="tipoTaxa" class="form-control" [disabled]="linhaCredito && linhaCredito.id" required [(ngModel)]="linhaCredito.tipoTaxa">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="tipoTaxa.MENSAL">Mensal</option>
+                        <option [ngValue]="tipoTaxa.ANUAL">Anual</option>
+                    </select>
+                </div>
+                <div class="form-group col-xl-4">
+                    <label>Taxa Padrão*:</label>
+                    <input appMoedaFormat [(ngModel)]="linhaCredito.taxaFormatada" [disabled]="linhaCredito && linhaCredito.id" maxlength="5" required name="linhaCreditoTaxa" type="text" class="form-control" placeholder="Taxa Padrão (%)" />
+                </div>
+                <div class="form-group col-xl-4">
+                    <label>Taxa Mínima*:</label>
+                    <input appMoedaFormat [(ngModel)]="linhaCredito.taxaMinimaFormatada" [disabled]="linhaCredito && linhaCredito.id" maxlength="5" required name="linhaCreditoTaxaMinima" type="text" class="form-control" placeholder="Taxa Mínima (%)" />
+                </div>
+                <div class="form-group col-xl-4">
+                    <label>Taxa Máxima*:</label>
+                    <input appMoedaFormat [(ngModel)]="linhaCredito.taxaMaximaFormatada" [disabled]="linhaCredito && linhaCredito.id" maxlength="5" required name="linhaCreditoTaxaMaxima" type="text" class="form-control" placeholder="Taxa Máxima (%)" />
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Valor Mínimo Permitido*:</label>
+                    <input appMoedaFormat maxlength="12" [(ngModel)]="linhaCredito.valorMinimoFormatado" [disabled]="linhaCredito && linhaCredito.id" required name="linhaCreditoValorMinimo" type="text" class="form-control" placeholder="Valor Mínimo (R$)" />
+                </div>
+                <div class="form-group col-xl-4">
+                    <label>Valor Máximo Permitido*:</label>
+                    <input appMoedaFormat maxlength="12" [(ngModel)]="linhaCredito.valorMaximoFormatado" [disabled]="linhaCredito && linhaCredito.id" required name="linhaCreditoValorMaximo" type="text" class="form-control" placeholder="Valor Máximo (R$)" />
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Qtd. Parcelas Mínimas*:</label>
+                    <input appNumeroFormat [(ngModel)]="linhaCredito.parcelasMinima" [disabled]="linhaCredito && linhaCredito.id" maxlength="5" required name="linhaCreditoParcelasMinimas" type="text" class="form-control" placeholder="Qtd. Parcelas Mínimas" />
+                </div>
+                <div class="form-group col-xl-4">
+                    <label>Qtd. Parcelas Máximas*:</label>
+                    <input appNumeroFormat [(ngModel)]="linhaCredito.parcelasMaxima" [disabled]="linhaCredito && linhaCredito.id" maxlength="5" required name="linhaCreditoParcelasMaximas" type="text" class="form-control" placeholder="Qtd. Parcelas Máximas" />
+                </div>
+                <div class="form-group col-xl-4">
+                    <label>Prazo de Carência (em meses):</label>
+                    <input appNumeroFormat [(ngModel)]="linhaCredito.carenciaDias" [disabled]="linhaCredito && linhaCredito.id" maxlength="5" name="linhaCreditoCarenciaDias" type="text" class="form-control" placeholder="Carência em Dias (Meses)" />
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label *ngIf="linhaCredito.carenciaDias && linhaCredito.carenciaDias != null && linhaCredito.carenciaDias > 0">Gera Boleto Juros da Carência?</label>
+                    <select name="indicadorCobrancaCarencia" [disabled]="linhaCredito && linhaCredito.id" class="form-control" *ngIf="linhaCredito.carenciaDias && linhaCredito.carenciaDias != null && linhaCredito.carenciaDias > 0" [(ngModel)]="linhaCredito.indicadorCobrancaCarencia">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="1">Sim</option>
+                        <option [ngValue]="2">Não</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="linhasCreditoNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary" *ngIf="!linhaCredito || !linhaCredito.id">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

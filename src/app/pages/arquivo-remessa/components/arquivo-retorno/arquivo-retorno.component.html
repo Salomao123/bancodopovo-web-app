@@ -1,0 +1,26 @@
+<form #arquivoRetornoForm="ngForm" (ngSubmit)="enviar()">
+    <app-modal #modal
+            id="modalArquivoRetorno"
+            titulo="Enviar Arquivo de Retorno"
+            (fechar)="fechar()">
+        <app-modal-body>
+            <div class="row">
+                <div class="form-group col-xl-12">
+                    <label>Selecionar Arquivo para Cadastro:</label>
+                    <div class="input-group">
+                        <input type="file" (change)="selectFile($event)" class="form-control" accept=".zip,.ret">
+
+                        <div class="input-group-append">
+                            <button class="btn btn-primary">
+                                Enviar Arquivo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

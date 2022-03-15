@@ -1,0 +1,45 @@
+<app-card>
+    <app-card-header titulo="Parâmetros Gerais do Sistema">
+        <button class="btn btn-sm btn-outline-primary" (click)="parametrosBoletoComp.carregar()" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.PARAMETRO_BOLETO, acaoEnum.CONSULTAR) | async)">Parâmetros Boleto</button>
+    </app-card-header>
+    <form class="kt-form">
+        <app-card-body *ngIf="parametro">
+            <div class="row">
+                <div class="form-group col-md-8">
+                    <label>URL/IP do Servidor SMTP:</label>
+                    <input name="urlServidorSmtp" [(ngModel)]="parametro.urlServidorSmtp" type="text" class="form-control" 
+                        placeholder="URL/IP do Servidor SMTP" maxlength="1024" />
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>Porta SMTP:</label>
+                    <input name="portaServidorSmtp" [(ngModel)]="parametro.portaServidorSmtp" type="text" class="form-control"
+                        placeholder="Porta SMTP" maxlength="50" appNumeroFormat />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Usuário (login) do Email:</label>
+                    <input name="usuarioEmail" [(ngModel)]="parametro.usuarioEmail" type="text" class="form-control"
+                        placeholder="Usuário (login) do Email" maxlength="500" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Senha Usuário do Email:</label>
+                    <input name="senhaEmail" [(ngModel)]="parametro.senhaEmail" type="text" class="form-control"
+                        placeholder="Senha Usuário do Email" maxlength="100" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Nome do Remetente:</label>
+                    <input name="remetenteEmail" [(ngModel)]="parametro.nomeRemetente" type="text" class="form-control"
+                        placeholder="Nome do Remetente" maxlength="100" />
+                </div>
+            </div>
+        </app-card-body>
+        <app-card-footer>
+            <button type="button" class="btn btn-primary" (click)="salvar()" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.PARAMETRO, acaoEnum.ALTERAR) | async)">Salvar Parâmetros</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-parametros-boleto #parametrosBoletoComp></app-parametros-boleto>

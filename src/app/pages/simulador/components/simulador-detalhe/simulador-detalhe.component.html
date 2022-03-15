@@ -1,0 +1,55 @@
+<app-modal #modal 
+        id="modalDetalheSimulacao" 
+        titulo="Parcelas Simuladas"
+        sizeClass="modal-lg"
+        (fechar)="fechar()">
+
+    <app-modal-body *ngIf="simulacaoVo$ | async">
+        <div class="row mb-4">
+            <div class="col-xl-3">
+                <strong>Produto de Consignação: </strong>
+            </div>
+            <div class="col-xl-9">
+                {{ (simulacaoVo$ | async).servicoConsignacao.empresaConsignataria.pessoa.nomeFantasia }} - {{ (simulacaoVo$ | async).servicoConsignacao.codigoDesconto }}
+            </div>
+
+            <div class="col-xl-3">
+                <strong>Valor do Empréstimo: </strong>
+            </div>
+            <div class="col-xl-9">
+                {{ (simulacaoVo$ | async).simulacoesEmprestimos[0].valorEmprestimo | currency:'BRL' }}
+            </div>
+        </div>
+
+        <p-table #simulacoesTable
+                 [value]="(simulacaoVo$ | async).simulacoesEmprestimos"
+                 [paginator]="true"
+                 [rows]="5"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Qtd. Parcelas</th>
+                <th>Juros</th>
+                <th>Encargos</th>
+                <th>Valor da Parcela</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-registro let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ registro.numeroParcelas }}</td>
+                <td>{{ registro.taxaJuros | currency: 'BRL':'' }} %</td>
+                <td>{{ registro.taxaEncargos | currency: 'BRL':'' }} %</td>
+                <td>{{ registro.valorParcela | currency: 'BRL' }}</td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-modal-body>
+    <app-modal-footer>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+    </app-modal-footer>
+</app-modal>

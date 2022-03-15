@@ -1,0 +1,65 @@
+<app-card>
+    <app-card-header titulo="Simulação de Consignação"></app-card-header>
+    <form #simulacaoForm="ngForm" class="kt-form" (ngSubmit)="comparar(simulacaoForm)">
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-8">
+                    <label>Vínculo Funcional*:</label>
+                    <select name="empregado" #empregado="ngModel" [(ngModel)]="empregadoSelecionado"
+                        class="form-control {{ (empregado.invalid && simulacaoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let e of (empregados$ | async)" [ngValue]="e">{{ e.empresa.pessoa.nomeFantasia }} - {{ e.matricula }} - {{ e.profissao }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-4">
+                    <label>Valor do Empréstimo*:</label>
+                    <input name="valorEmprestimo" #valorEmprestimo="ngModel" [(ngModel)]="valorEmprestimoFormatado"
+                        class="form-control {{ (valorEmprestimo.invalid && simulacaoForm.submitted) ? 'is-invalid' : '' }}" appMoedaFormat required maxlength="13" />
+                </div>
+            </div>
+        </app-card-body>
+        <app-card-footer>
+            <button type="submit" class="btn btn-primary">Comparar</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-card *ngIf="(simulacoes$ | async).length > 0">
+    <app-card-header titulo="Resultado da Busca"></app-card-header>
+    <app-card-body>
+        <p-table #simulacoesTable
+                 [value]="simulacoes$ | async"
+                 [paginator]="true"
+                 [rows]="5"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Produto de Consignação</th>
+                <th>Quantidade de Parcelas</th>
+                <th>Ações</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-registro let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ registro.servicoConsignacao.empresaConsignataria.pessoa.nomeFantasia }} - {{ registro.servicoConsignacao.codigoDesconto }}</td>
+                <td>{{ registro.servicoConsignacao.prazoMaximoMeses }}</td>
+                <td>
+                    <a title="Detalhar"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="detalhar(registro.servicoConsignacao.id)">
+                    <i class="fa fa-search"></i>
+                  </a>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<app-simulador-detalhe #simuladoDetalhe></app-simulador-detalhe>

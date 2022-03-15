@@ -1,0 +1,64 @@
+<form #eventosNovoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalAdicionarEvento" 
+            titulo="Evento"
+            sizeClass="modal-lg"
+            (fechar)="eventosNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="evento">
+            
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Nome do Evento*:</label>
+                    <input #nomeNovo="ngModel" name="nomeNovo" [(ngModel)]="evento.nome" type="text"
+                        class="form-control {{ (nomeNovo.invalid && eventosNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Nome do Evento" required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Data do Evento*:</label>
+                    <p-calendar
+                    			name="dataEventoNovo"
+                    			[(ngModel)]="evento.dataEvento"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control {{ (eventosNovoForm.submitted) ? 'is-invalid' : '' }}"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                showTime="true" 
+                                hourFormat="24"
+                                required
+                                placeholder="Data do Evento"></p-calendar>
+                </div>
+                
+                <div class="form-group col-xl-12">
+                    <label>Descri&ccedil;a&#771;o do Evento:</label>
+                    <input #descricaoEventoNovo="ngModel" name="descricaoEventoNovo" [(ngModel)]="evento.descricao" type="text"
+                        class="form-control {{ (descricaoEventoNovo.invalid && eventosNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Descri&ccedil;a&#771;o do Evento" />
+                </div>
+                
+                <div class="form-group col-xl-12">
+                    <label>Nome do Local do Evento:</label>
+                    <input #nomeLocalEventoNovo="ngModel" name="nomeLocalEventoNovo" [(ngModel)]="evento.nomeLocal" type="text"
+                        class="form-control {{ (nomeLocalEventoNovo.invalid && eventosNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Nome do Local do Evento" />
+                </div>
+                
+                <div class="form-group col-xl-12">
+                    <label>Endere&ccedil;o do Local do Evento:</label>
+                    <input #enderecoLocalEventoNovo="ngModel" name="enderecoLocalEventoNovo" [(ngModel)]="evento.enderecoLocal" type="text"
+                        class="form-control {{ (enderecoLocalEventoNovo.invalid && eventosNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        placeholder="Endere&ccedil;o do Local do Evento" />
+                </div>
+            </div>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="eventosNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

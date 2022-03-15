@@ -1,0 +1,47 @@
+<form #extratoParcelasForm="ngForm">
+    <app-modal #modal 
+            id="modalExtratoParcelas" 
+            titulo="Parcelas"
+            sizeClass="modal-lg"
+            (fechar)="fechar()">
+        <app-modal-body>
+            <p-table #consignacoesTable
+                [value]="parcelas$ | async"
+                [paginator]="true"
+                [rows]="5"
+                [rowsPerPageOptions]="[5,10,15]"
+                styleClass="table-responsive"
+                tableStyleClass="table table-striped table-bordered"
+                *ngIf="parcelas$ | async">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Número da Parcela</th>
+                        <th>Valor da Parcela</th>
+                        <th>Mês/Ano Folha</th>
+                        <th>Situação da Parcela</th>
+                        <th>Justificativa</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                    <tr>
+                        <td>{{ registro.numero }}</td>
+                        <td>{{ registro.valor | currency:'BRL' }}</td>
+                        <td>{{ registro.mesAnoFolha }}</td>
+                        <td>
+                            <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="situacao.LIQUIDADA === registro.situacao">Liquidada</span>
+                            <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="situacao.ATRASADA === registro.situacao">Atrasada</span>
+                            <span class="kt-badge  kt-badge--warning kt-badge--inline kt-badge--pill" *ngIf="situacao.AGUARDANDO === registro.situacao">Aguardando</span>
+                            <!-- <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.ENCERRADA === registro.situacao">Encerrada</span>
+                            <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.SUSPENSA === registro.situacao">Suspensa</span> -->
+                        </td>
+                        <td>{{ registro.justificativa }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+</app-modal>

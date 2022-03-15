@@ -1,0 +1,90 @@
+<form #usuarioNovoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalAdicionarUsuario" 
+            titulo="Adicionar Usuário"
+            sizeClass="modal-lg"
+            (fechar)="usuarioNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="usuario">
+            
+            <div class="row">
+
+                <div class="form-group col-xl-6">
+                    <label>Tipo de Usuário*:</label>
+                    <select #tipoUsuarioNovo="ngModel" name="tipoUsuarioNovo" [(ngModel)]="usuario.tipo"
+                        class="form-control {{ (tipoUsuarioNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        (change)="changeTipoUsuario()" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="tipoUsuario.ADMINISTRADOR">Administrador</option>
+                        <option [ngValue]="tipoUsuario.ORGAO_EMPRESA">Orgão/Empresa</option>
+                        <option [ngValue]="tipoUsuario.CONSIGNATARIO">Consignatário</option>
+                        <option [ngValue]="tipoUsuario.CONSIGNANTE">Consignante</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6" *ngIf="(usuario.tipo) && (tipoUsuario.CONSIGNANTE !== usuario.tipo)">
+                    <label>Pessoa*:</label>
+                    <select #usuarioNovo="ngModel" name="usuarioNovo" [(ngModel)]="idPessoa"
+                        class="form-control {{ (usuarioNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let pessoa of (pessoas$ | async)" [ngValue]="pessoa.id">{{ pessoa.nome }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6" *ngIf="tipoUsuario.ORGAO_EMPRESA === usuario.tipo || tipoUsuario.CONSIGNANTE === usuario.tipo">
+                    <label>Empresa*:</label>
+                    <select #empresaNovo="ngModel" name="empresaNovo" [(ngModel)]="idEmpresa"
+                        class="form-control {{ (empresaNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        (change)="changeEmpresa()" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let empresa of (empresas$ | async)" [ngValue]="empresa.id">{{ empresa.pessoa.nomeFantasia }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6" *ngIf="tipoUsuario.CONSIGNANTE === usuario.tipo">
+                    <label>Empregado*:</label>
+                    <select #empregadoNovo="ngModel" name="empregadoNovo" [(ngModel)]="idEmpregadoConsignante"
+                        class="form-control {{ (empregadoNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let empregado of (empregadosConsignantes$ | async)" [ngValue]="empregado.id">{{ empregado.pessoa.nome }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6" *ngIf="tipoUsuario.CONSIGNATARIO === usuario.tipo">
+                    <label>Empresa Consignatária*:</label>
+                    <select #empresaConsignatariaNovo="ngModel" name="empresaConsignatariaNovo" [(ngModel)]="idEmpresaConsignataria"
+                        class="form-control {{ (empresaConsignatariaNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let empresa of (empresasConsignatarias$ | async)" [ngValue]="empresa.id">{{ empresa.pessoa.nomeFantasia }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Status*:</label>
+                    <select #statusNovo="ngModel" name="statusNovo" [(ngModel)]="usuario.status"
+                        class="form-control {{ (statusNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>E-mail (login)*:</label>
+                    <input #loginNovo="ngModel" name="loginNovo" [(ngModel)]="usuario.login"
+                        class="form-control {{ (loginNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Confirmação de E-mail (login)*:</label>
+                    <input #loginConfirmacaoNovo="ngModel" name="loginConfirmacaoNovo" [(ngModel)]="confirmacaoEmail"
+                        class="form-control {{ (loginNovo.invalid && usuarioNovoForm.submitted) ? 'is-invalid' : '' }}" required/>
+                </div>
+            </div>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="usuarioNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

@@ -1,0 +1,15 @@
+.drop-user {
+    position: absolute;
+    will-change: transform;
+    top: 0px;
+    left: 0px;
+    transform: translate3d(calc(100vw - 540px), 59px, 0px);
+}
+
+.drop-user-mobile {
+    position: absolute;
+    will-change: transform;
+    top: 0px;
+    left: 0px;
+    transform: translate3d(calc(100vw - 320px), 59px, 0px);
+}

@@ -1,0 +1,20 @@
+<form #realizadoEventoForm="ngForm" (ngSubmit)="realizar()">
+    <app-modal #modalRealizar 
+        id="modalRealizarEvento" 
+        titulo="Evento Realizado"
+        (fechar)="realizadoEventoForm.resetForm()">
+        <app-modal-body *ngIf="evento">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label>
+                        Deseja realmente marcar o evento como realizado?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="realizadoEventoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

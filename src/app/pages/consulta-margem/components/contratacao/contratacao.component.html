@@ -1,0 +1,74 @@
+<form #contratacaoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalContratacao" 
+            titulo="Contratação de Consignação"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="empregado">
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Consignante:</label>
+                    <input name="consignanteNovo" value="{{ empregado.empresa.pessoa.nomeFantasia }}" class="form-control" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Nome do Consignado:</label>
+                    <input name="consignadoNovo" value="{{ empregado.pessoa.nome }}" class="form-control" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>CPF::</label>
+                    <input name="cpfNovo" value="{{ empregado.pessoa.documento }}" class="form-control" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Estrutura Organizacional:</label>
+                    <input name="profissaoNovo" value="{{ empregado.profissao }}" class="form-control" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Matrícula:</label>
+                    <input name="matriculaNovo" value="{{ empregado.matricula }}" class="form-control" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Margem de {{ empregado.margem }} %:</label>
+                    <input name="consignanteNovo" value="{{ ((empregado.salario / 100) * empregado.margem) | currency:'BRL' }}" class="form-control" disabled />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Serviço*:</label>
+                    <select #servicoNovo="ngModel" name="servicoNovo" [(ngModel)]="servicoSelecionado"
+                        class="form-control {{ (servicoNovo.invalid && contratacaoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let servico of (servicos$ | async)"
+                            [ngValue]="servico.id">{{ servico.descricao }} - {{ servico.nomeDesconto }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Quantidade de Parcelas*:</label>
+                    <input #parcelasNovo name="parcelasNovo" [(ngModel)]="proposta.parcelas" 
+                        class="form-control {{ (parcelasNovo.invalid && contratacaoForm.submitted) ? 'is-invalid' : '' }}" maxlength="3" appNumeroFormat required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Valor das Parcelas*:</label>
+                    <input #valorNovo name="valorNovo" [(ngModel)]="valorParcelaFormatado" 
+                        class="form-control {{ (valorNovo.invalid && contratacaoForm.submitted) ? 'is-invalid' : '' }}" appMoedaFormat required />
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Identificação do Contrato*:</label>
+                    <input #identificacaoNovo name="identificacao" [(ngModel)]="proposta.identificacaoContrato" 
+                        class="form-control {{ (identificacaoNovo.invalid && contratacaoForm.submitted) ? 'is-invalid' : '' }}" required />
+                </div>
+            </div>
+        </app-modal-body>
+
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

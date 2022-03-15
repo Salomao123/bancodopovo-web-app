@@ -1,0 +1,20 @@
+<!-- begin:: Aside Menu -->
+<div class="kt-aside-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_aside_menu_wrapper">
+    <div id="kt_aside_menu" class="kt-aside-menu  kt-aside-menu--dropdown " data-ktmenu-vertical="1" data-ktmenu-dropdown="1" data-ktmenu-scroll="0">
+        <ul class="kt-menu__nav ">
+            <ng-container *ngFor="let menu of menus">
+
+                <li class="kt-menu__item text-center {{ ((funcionalidadeAtiva$ | async).id === menu.funcionalidade) ? 'kt-menu__item--active' : ''}}" 
+                    aria-haspopup="true" 
+                    *ngIf="permiteFuncionalidade(menu.funcionalidade) | async">
+
+                    <a routerLink="{{ menu.link }}" class="kt-menu__link " (click)="selecionarFuncionalidade(menu.funcionalidade, menu.nome)">
+                        <i class="kt-menu__link-icon fa {{ menu.icone }} fa-2x"></i><span class="kt-menu__link-text">{{ menu.nomeMenu }}</span>
+                    </a>
+                </li>
+
+            </ng-container>
+        </ul>
+    </div>
+</div>
+<!-- end:: Aside Menu -->

@@ -1,0 +1,94 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Arquivos Remessa">
+      <button class="btn btn-sm btn-outline-secondary mr-2" (click)="gerarRemessa()" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.ARQUIVO_REMESSA, acaoEnum.IMPORTAR_REMESSA_RETORNO) | async)">Gerar Remessa</button>
+      <button class="btn btn-sm btn-outline-primary" (click)="arquivoRetorno.abrir()" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.ARQUIVO_REMESSA, acaoEnum.IMPORTAR_REMESSA_RETORNO) | async)">Importar Arquivo Retorno</button>
+    </app-card-header>
+    <form class="kt-form" >
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Período Inicial:</label>
+                    <p-calendar name="dataCadastro"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data cadastro"
+                                [(ngModel)]="filtro.periodoInicial"></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Período Final:</label>
+                    <p-calendar name="dataCadastro"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data cadastro"
+                                [minDate]="filtro.periodoInicial"
+                                [(ngModel)]="filtro.periodoFinal"></p-calendar>
+                </div>
+            </div>
+        </app-card-body>
+
+        <app-card-footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="limparFiltro()">Limpar</button>
+            <button type="button" class="btn btn-primary" (click)="pesquisar()">Pesquisar</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-card *ngIf="totalRecords$ | async">
+    <app-card-header titulo="Resultado da Busca"></app-card-header>
+    <app-card-body>
+        <p-table #arquivosTable
+                 [value]="records$ | async"
+                 [totalRecords]="totalRecords$ | async"
+                 (onLazyLoad)="loadRecords($event)"
+                 [paginator]="true"
+                 [rows]="5"
+                 [lazy]="true"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Situação</th>
+                <th pSortableColumn="ar.nome">Nome <p-sortIcon field="ar.nome"></p-sortIcon></th>
+                <th>Data de Cadastro</th>
+                <th>Data de Processamento</th>
+                <th>Tipo</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-registro let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="situacao.ERRO === registro.situacao">Erro</span>
+                  <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="situacao.PROCESSADO === registro.situacao">Processado</span>
+                  <span class="kt-badge  kt-badge--warning kt-badge--inline kt-badge--pill" *ngIf="situacao.CRIADO === registro.situacao">Criado</span>
+                  <span class="kt-badge  kt-badge--dark kt-badge--inline kt-badge--pill" *ngIf="situacao.EM_PROCESSAMENTO === registro.situacao">Em Processamento</span>
+                </td>
+                <td>
+                  <span>{{ registro.nome }}</span>
+                </td>
+                <td>{{ registro.dataCriacao | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>{{ registro.dataProcessamento | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>
+                    {{ (tipo.REMESSA === registro.tipo) ? 'Remessa' : 'Retorno de Remessa' }}
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<app-arquivo-retorno #arquivoRetorno></app-arquivo-retorno>

@@ -1,0 +1,26 @@
+<div id="idDropUser" 
+    [ngClass]="style">
+
+    <!--begin: Head -->
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(assets/media/misc/bg-1.jpg)">
+        <div class="kt-user-card__name">
+            <span *ngIf="usuarioLogado$ && (usuarioLogado$ | async) && (usuarioLogado$ | async).tipo !== tipo.CONSIGNANTE">
+                {{ (usuarioLogado$ | async).pessoa.nome }}
+            </span>
+            <span *ngIf="usuarioLogado$ && (usuarioLogado$ | async) && (usuarioLogado$ | async).tipo === tipo.CONSIGNANTE">
+                {{ (usuarioLogado$ | async).empregadoConsignante.pessoa.nome }}
+            </span>
+        </div>
+    </div>
+
+    <!--end: Head -->
+
+    <!--begin: Navigation -->
+    <div class="kt-notification">
+        <div class="kt-notification__custom kt-space-between">
+            <a class="btn btn-label btn-label-brand btn-sm btn-bold" (click)="logout()">Sair (Logout)</a>
+        </div>
+    </div>
+
+    <!--end: Navigation -->
+</div>

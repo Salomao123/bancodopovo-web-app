@@ -1,0 +1,24 @@
+<form #contatoStatusForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+        id="modalStatusContato" 
+        titulo="{{ ((contato) && (status.ATIVO === contato.status)) ? 'Inativar Contato' : 'Ativar Contato' }}"
+        (fechar)="contatoStatusForm.resetForm(); modal.close();"
+        modalVinculada="modalContato" [showModalVinculadaOnClose]="true">
+        <app-modal-body *ngIf="contato">
+            <div class="row">
+                <div class="col-xl-12">
+                    <label *ngIf="status.INATIVO === contato.status">
+                        Deseja realmente ativar o registro?
+                    </label>
+                    <label *ngIf="status.ATIVO === contato.status">
+                        Deseja realmente excluir/inativar o registro?
+                    </label>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="contatoStatusForm.resetForm(); modal.close();">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

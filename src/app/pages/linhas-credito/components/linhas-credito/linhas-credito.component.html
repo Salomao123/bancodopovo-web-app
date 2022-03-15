@@ -1,0 +1,151 @@
+<app-card>
+    <app-card-header titulo="Pesquisar Linha de Crédito">
+        <button *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.LINHA_CREDITO, acaoEnum.INCLUIR) | async" class="btn btn-sm btn-outline-primary" (click)="linhasCreditoNovo.adicionar()">Adicionar</button>
+    </app-card-header>
+    <form class="kt-form" >
+        <app-card-body>
+            <div class="row">
+                <div class="form-group col-xl-6">
+                    <label>Nome da Linha:</label>
+                    <input [(ngModel)]="filtro.nome" name="nome" type="text" class="form-control" placeholder="Nome da Linha" />
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Data de Cadastro:</label>
+                    <p-calendar name="dataCadastro"
+                                [locale]="pt"
+                                styleClass="w-100"
+                                inputStyleClass="form-control"
+                                monthNavigator="true"
+                                yearNavigator="true"
+                                dateFormat="dd/mm/yy"
+                                yearRange="1900:2100"
+                                placeholder="Data de Cadastro"
+                                [(ngModel)]="filtro.dataCadastro"></p-calendar>
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Status:</label>
+                    <select name="status" class="form-control" [(ngModel)]="filtro.status">
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+            </div>
+        </app-card-body>
+
+        <app-card-footer>
+            <button type="button" class="btn btn-secondary mr-2" (click)="limparFiltro()">Limpar</button>
+            <button type="button" class="btn btn-primary" (click)="pesquisar()">Pesquisar</button>
+        </app-card-footer>
+    </form>
+</app-card>
+
+<app-card *ngIf="totalRecords$ | async">
+    <app-card-header titulo="Resultado da Busca"></app-card-header>
+    <app-card-body>
+        <p-table #linhasCreditoTable
+                 [value]="linhasCredito$ | async"
+                 [totalRecords]="totalRecords$ | async"
+                 (onLazyLoad)="loadLinhasCredito($event)"
+                 [paginator]="true"
+                 [rows]="5"
+                 [lazy]="true"
+                 [rowsPerPageOptions]="[5,10,15]"
+                 styleClass="table-responsive"
+                 tableStyleClass="table table-striped table-bordered">
+            
+            <ng-template pTemplate="header">
+              <tr>
+                <th>#</th>
+                <th>Status</th>
+                <th>Id</th>
+                <th>Data de Cadastro</th>
+                <th>Nome</th>
+                <th>Ações</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-linhaCredito let-i="rowIndex">
+              <tr>
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === linhaCredito.status">Inativo</span>
+                  <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === linhaCredito.status">Ativo</span>
+                </td>
+                <td>{{ linhaCredito.id }}</td>
+                <td>{{ linhaCredito.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                <td>{{ linhaCredito.nome }}</td>
+                <td>
+                  <a *ngIf="status.ATIVO === linhaCredito.status && (permiteFuncionalidadeAcao(funcionalidadeEnum.LINHA_CREDITO, acaoEnum.INATIVAR) | async)"
+                    style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                    title="Excluir/Inativar"
+                    (click)="carregar(linhaCredito)"><i class="fa fa-times"></i></a>
+               
+                  <!--<a *ngIf="status.INATIVO === linhaCredito.status && (permiteFuncionalidadeAcao(funcionalidadeEnum.LINHA_CREDITO, acaoEnum.ATIVAR) | async)"
+                    style="margin-right: 10px; color: green; cursor: pointer;" 
+                    title="Ativar"
+                    (click)="linhasCreditoStatus.carregar(linhaCredito)"><i class="fa fa-check"></i></a>-->
+
+                  <a title="Detalhar/Editar"
+                     style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                     (click)="linhasCreditoNovo.editar(linhaCredito)"
+                     *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.LINHA_CREDITO, acaoEnum.ALTERAR) | async">
+                    <i class="fa fa-search"></i>
+                  </a>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+    </app-card-body>
+</app-card>
+
+<form #linhasCreditoStatusForm="ngForm" (ngSubmit)="salvar()">
+  <app-modal #modalStatus 
+      id="modalStatusLinhaCredito" 
+      titulo="{{ ((linhaCredito) && (status.ATIVO === linhaCredito.status)) ? 'Inativar Linha de Crédito' : 'Ativar Linha de Crédito' }}"
+      (fechar)="linhasCreditoStatusForm.resetForm()">
+      <app-modal-body *ngIf="linhaCredito">
+          <div class="row">
+              <div class="col-xl-12">
+                  <label *ngIf="status.INATIVO === linhaCredito.status">
+                      Deseja realmente ativar o registro?
+                  </label>
+                  <label *ngIf="status.ATIVO === linhaCredito.status">
+                      A linha de crédito já é utilizada em empréstimo(s) e por isso será apenas inativada. Após a sua inativação, não será possível reativá-lo. Deseja realmente inativar o registro?
+                  </label>
+              </div>
+          </div>
+      </app-modal-body>
+      <app-modal-footer>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="linhasCreditoStatusForm.resetForm()">Fechar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+      </app-modal-footer>
+  </app-modal>
+</form>
+
+<form #linhasCreditoStatus2Form="ngForm" (ngSubmit)="excluir()">
+  <app-modal #modalStatusExclusao 
+      id="modalStatusLinha2Credito" 
+      titulo="{{ ((linhaCredito) && (status.ATIVO === linhaCredito.status)) ? 'Inativar Linha de Crédito' : 'Ativar Linha de Crédito' }}"
+      (fechar)="linhasCreditoStatus2Form.resetForm()">
+      <app-modal-body *ngIf="linhaCredito">
+          <div class="row">
+              <div class="col-xl-12">
+                  <label *ngIf="status.INATIVO === linhaCredito.status">
+                      Deseja realmente ativar o registro?
+                  </label>
+                  <label *ngIf="status.ATIVO === linhaCredito.status">
+                      Não existem empréstimos utilizando a linha de crédito. Deseja realmente excluir o registro definitivamente?
+                  </label>
+              </div>
+          </div>
+      </app-modal-body>
+      <app-modal-footer>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="linhasCreditoStatus2Form.resetForm()">Fechar</button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+      </app-modal-footer>
+  </app-modal>
+</form>
+
+<app-linhas-credito-novo #linhasCreditoNovo></app-linhas-credito-novo>

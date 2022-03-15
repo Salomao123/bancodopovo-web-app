@@ -1,0 +1,116 @@
+<form #enderecoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalEnderecos" 
+            titulo="Endereço"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+
+        <app-modal-body *ngIf="pessoa">
+            <div class="row" *ngIf="permiteFuncionalidadeAcao(funcionalidadeEnum.ENDERECO, acaoEnum.INCLUIR) | async">
+                <div class="form-group col-xl-12">
+                    <label>Logradouro*:</label>
+                    <input type="text" #logradouroNovo="ngModel" name="logradouroNovo" [(ngModel)]="endereco.logradouro"
+                        class="form-control {{ (logradouroNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" maxlength="1000" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Bairro*:</label>
+                    <input type="text" #bairroNovo="ngModel" name="bairroNovo" [(ngModel)]="endereco.bairro"
+                        class="form-control {{ (bairroNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" maxlength="500" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Número*:</label>
+                    <input type="text" #numeroNovo="ngModel" name="numeroNovo" [(ngModel)]="endereco.numero"
+                        class="form-control {{ (numeroNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" maxlength="100" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Complemento*:</label>
+                    <input type="text" #complementoNovo="ngModel" name="complementoNovo" [(ngModel)]="endereco.complemento"
+                        class="form-control {{ (complementoNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" maxlength="500" required/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>CEP*:</label>
+                    <input type="text" #cepNovo="ngModel" name="cepNovo" [(ngModel)]="endereco.cep"
+                        class="form-control {{ (cepNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" maxlength="10" required appCepFormat/>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>UF*:</label>
+                    <select #ufNovo="ngModel" name="ufNovo" [(ngModel)]="ufSelecionada" (change)="changeUf()"
+                        class="form-control {{ (ufNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let uf of (ufs$ | async)" [ngValue]="uf.id">{{ uf.nome }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Cidade*:</label>
+                    <select #cidadeNovo="ngModel" name="cidadeNovo" [(ngModel)]="cidadeSelecionada"
+                        class="form-control {{ (cidadeNovo.invalid && enderecoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let cidade of (cidades$ | async)" [ngValue]="cidade.id">{{ cidade.nome }}</option>
+                    </select>
+                </div>
+
+                <div class="col-xl-12 text-right pb-4">
+                    <button type="submit" class="btn btn-primary" [disabled]="!(permiteFuncionalidadeAcao(funcionalidadeEnum.ENDERECO, acaoEnum.INCLUIR) | async)">Adicionar Endereço</button>
+                </div>
+                
+            </div>
+
+            <p-table #enderecosTable
+                    [value]="registros$ | async"
+                    [totalRecords]="totalRegistros$ | async"
+                    (onLazyLoad)="loadRegistros($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered"
+                    *ngIf="totalRegistros$ | async">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Status</th>
+                    <th>Endereço</th>
+                    <th>Data de Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === registro.status">Inativo</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === registro.status">Ativo</span>
+                    </td>
+                    <td style="white-space: pre-wrap !important; word-wrap: break-word !important;">{{ registro.logradouro }}, Bairro {{ registro.bairro }}, {{ registro.numero }}, ({{ registro.complemento }}), CEP: {{ registro.cep }}, {{ registro.cidade.nome }}/{{ registro.cidade.uf.nome }}</td>
+                    <td>{{ registro.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                    <a *ngIf="(status.ATIVO === registro.status) && (permiteFuncionalidadeAcao(funcionalidadeEnum.ENDERECO, acaoEnum.INATIVAR)) | async"
+                        style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                        title="Excluir/Inativar"
+                        (click)="enderecoStatus.carregar(registro)"><i class="fa fa-times"></i></a>
+                    
+                    <a *ngIf="(status.INATIVO === registro.status) && (permiteFuncionalidadeAcao(funcionalidadeEnum.ENDERECO, acaoEnum.ATIVAR)) | async"
+                        style="margin-right: 10px; color: green; cursor: pointer;" 
+                        title="Ativar"
+                        (click)="enderecoStatus.carregar(registro)"><i class="fa fa-check"></i></a>
+                    </td>
+                </tr>
+                </ng-template>
+            </p-table>
+
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+
+<app-endereco-status #enderecoStatus></app-endereco-status>

@@ -1,0 +1,41 @@
+<form #empresaNovoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal 
+            id="modalAdicionarEmpresa" 
+            titulo="Adicionar Empresa"
+            sizeClass="modal-lg"
+            (fechar)="empresaNovoForm.resetForm()">
+
+        <app-modal-body *ngIf="empresa">
+            <div class="row">
+
+                <div class="form-group col-xl-6">
+                    <label>Empresa*:</label>
+                    <select #empresaNovo="ngModel" name="empresaNovo" [(ngModel)]="idPessoa"
+                        class="form-control {{ ((!empresa.pessoa) && empresaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="undefined">Selecione...</option>
+                        <option *ngFor="let pessoa of (pessoas$ | async)" [ngValue]="pessoa.id">{{ pessoa.nomeFantasia }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-6">
+                    <label>Status*:</label>
+                    <select #statusNovo="ngModel" name="statusNovo" [(ngModel)]="empresa.status"
+                        class="form-control {{ (statusNovo.invalid && empresaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        <option [ngValue]="status.ATIVO">Ativo</option>
+                        <option [ngValue]="status.INATIVO">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-xl-12">
+                    <label>Descrição*:</label>
+                    <input #descricaoNovo="ngModel" name="descricaoNovo" [(ngModel)]="empresa.descricao" 
+                        maxlength="1000" class="form-control {{ (descricaoNovo.invalid && empresaNovoForm.submitted) ? 'is-invalid' : '' }}" required/>
+                </div>
+            </div>
+        </app-modal-body>
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="empresaNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>

@@ -1,0 +1,106 @@
+<form #servicoConsignacaoForm="ngForm" (ngSubmit)="salvar()">
+    <app-modal #modal
+            id="modalServicoConsignacao" 
+            titulo="Serviços de Consignação"
+            sizeClass="modal-xl"
+            (fechar)="fechar()">
+        <app-modal-body *ngIf="empresaConsignataria">
+            <div class="row">
+                <div class="form-group col-xl-3">
+                    <label>Serviço*:</label>
+                    <input #servicoNovo="ngModel" name="servicoNovo" [(ngModel)]="servicoConsignacao.descricao"
+                        class="form-control {{ (servicoNovo.invalid && servicoConsignacaoForm.submitted) ? 'is-invalid' : '' }}"
+                        maxlength="100" required />
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Código do Desconto*:</label>
+                    <input #codigoNovo="ngModel" name="codigoNovo" [(ngModel)]="servicoConsignacao.codigoDesconto"
+                        class="form-control {{ (codigoNovo.invalid && servicoConsignacaoForm.submitted) ? 'is-invalid' : '' }}"
+                        maxlength="5" appNumeroFormat required />
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Nome do Desconto*:</label>
+                    <input #nomeNovo="ngModel" name="nomeNovo" [(ngModel)]="servicoConsignacao.nomeDesconto"
+                        class="form-control {{ (nomeNovo.invalid && servicoConsignacaoForm.submitted) ? 'is-invalid' : '' }}"
+                        maxlength="100" required />
+                </div>
+
+                <div class="form-group col-xl-3">
+                    <label>Prazo Max. (meses):</label>
+                    <input #prazoNovo="ngModel" name="prazoNovo" [(ngModel)]="servicoConsignacao.prazoMaximoMeses"
+                        class="form-control {{ (prazoNovo.invalid && servicoConsignacaoForm.submitted) ? 'is-invalid' : '' }}"
+                        maxlength="3" appNumeroFormat required />
+                </div>
+
+                <div class="col-xl-12 text-right pb-4">
+                    <button type="submit" class="btn btn-primary">Adicionar Serviço</button>
+                </div>
+            </div>
+
+            <p-table #servicosConsignacaoTable
+                    [value]="registros$ | async"
+                    [totalRecords]="totalRegistros$ | async"
+                    (onLazyLoad)="loadRegistros($event)"
+                    [paginator]="true"
+                    [rows]="5"
+                    [lazy]="true"
+                    [rowsPerPageOptions]="[5,10,15]"
+                    styleClass="table-responsive"
+                    tableStyleClass="table table-striped table-bordered"
+                    *ngIf="totalRegistros$ | async">
+                
+                <ng-template pTemplate="header">
+                <tr>
+                    <th>#</th>
+                    <th>Status</th>
+                    <th>Serviço</th>
+                    <th>Cód. Desconto</th>
+                    <th>Nome Desconto</th>
+                    <th>Prazo Máx.</th>
+                    <th>Data de Cadastro</th>
+                    <th>Ações</th>
+                </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-registro let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                    <span class="kt-badge  kt-badge--danger kt-badge--inline kt-badge--pill" *ngIf="status.INATIVO === registro.status">Inativo</span>
+                    <span class="kt-badge  kt-badge--success kt-badge--inline kt-badge--pill" *ngIf="status.ATIVO === registro.status">Ativo</span>
+                    </td>
+                    <td>{{ registro.descricao }}</td>
+                    <td>{{ registro.codigoDesconto }}</td>
+                    <td>{{ registro.nomeDesconto }}</td>
+                    <td>{{ registro.prazoMaximoMeses }} meses</td>
+                    <td>{{ registro.dataCadastro | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+                    <td>
+                    <a *ngIf="status.ATIVO === registro.status"
+                        style="margin-right: 10px; color: #ea5252; cursor: pointer;" 
+                        title="Excluir/Inativar"
+                        (click)="servicoConsignacaoStatus.carregar(registro)"><i class="fa fa-times"></i></a>
+                    
+                    <a *ngIf="status.INATIVO === registro.status"
+                        style="margin-right: 10px; color: green; cursor: pointer;" 
+                        title="Ativar"
+                        (click)="servicoConsignacaoStatus.carregar(registro)"><i class="fa fa-check"></i></a>
+
+                        <a title="Detalhar"
+                            style="margin-right: 10px; color: #5d78ff; cursor: pointer;"
+                            (click)="editar(registro)">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </td>                    
+                </tr>
+                </ng-template>
+            </p-table>
+        </app-modal-body>
+
+        <app-modal-footer>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="fechar()">Fechar</button>
+        </app-modal-footer>
+    </app-modal>
+</form>
+
+<app-servico-consignacao-status #servicoConsignacaoStatus></app-servico-consignacao-status>
