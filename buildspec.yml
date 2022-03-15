@@ -14,4 +14,4 @@ phases:
   post_build:
     commands:
       - echo "Updating files in the S3 bucket..."
-      - aws s3 sync dist/web/ s3://codepipeline-angular-bancodopovo --delete
+      - aws s3 sync dist/banco-povo-web/ s3://bancodopovo-app --delete
