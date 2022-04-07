@@ -1,17 +1,15 @@
 <form #pessoaNovoForm="ngForm" (ngSubmit)="salvar()">
-    <app-modal #modal 
-            id="modalAdicionarPessoa" 
-            titulo="Adicionar Pessoa"
-            sizeClass="modal-lg"
-            (fechar)="pessoaNovoForm.resetForm()">
+    <app-modal #modal id="modalAdicionarPessoa" titulo="Adicionar Pessoa" sizeClass="modal-lg"
+        (fechar)="pessoaNovoForm.resetForm()">
 
         <app-modal-body *ngIf="pessoa">
-            
+
             <div class="row">
                 <div class="form-group col-xl-6">
-                    <label>Tipo de Pessoa*:</label>
+                    <label>Alterando aqui para teste*:</label>
                     <select #tipoPessoaNovo="ngModel" name="tipoPessoaNovo" [(ngModel)]="pessoa.tipo"
-                        class="form-control {{ (tipoPessoaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        class="form-control {{ (tipoPessoaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        required>
                         <option [ngValue]="undefined">Selecione...</option>
                         <option [ngValue]="tipoPessoa.FISICA">Pessoa Física</option>
                         <option [ngValue]="tipoPessoa.JURIDICA">Pessoa Jurídica</option>
@@ -21,50 +19,53 @@
                 <div class="form-group col-xl-6">
                     <label>Status*:</label>
                     <select #statusNovo="ngModel" name="statusNovo" [(ngModel)]="pessoa.status"
-                        class="form-control {{ (statusNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        class="form-control {{ (statusNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        required>
                         <option [ngValue]="status.ATIVO">Ativo</option>
                         <option [ngValue]="status.INATIVO">Inativo</option>
                     </select>
                 </div>
             </div>
 
+            <!--formulário pessoa física : criar component-->
             <span class="row" *ngIf="tipoPessoa.FISICA === pessoa.tipo">
-                <div class="form-group col-xl-6">
+                <div class="form-group col-xl-6"  [ngClass]="aplicaErro(nomeNovo)">
                     <label>Nome*:</label>
-                    <input #nomeNovo="ngModel" name="nomeNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.nome" type="text"
-                        class="form-control {{ (nomeNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                    <input #nomeNovo="ngModel" name="nomeNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.nome"
+                        type="text"
+                        class="form-control"
                         placeholder="Nome" required />
+
+                        <span *ngIf="!nomeNovo.valid && nomeNovo.touched" style="color: red">
+                            NOME é um campo obrigatório.</span>
                 </div>
 
-                <div class="form-group col-xl-6">
-                    <label>CPF*:</label>
-                    <input #cpfNovo="ngModel" id="cpf" name="cpfNovo" [(ngModel)]="pessoa.documento" type="text" maxlength="14"
-                        class="form-control {{ (cpfNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
-                        placeholder="CPF" appCpfFormat required />
+                <div 
+                    class="form-group col-xl-6" [ngClass]="aplicaErro(cpfNovo)">
+                    <label class="control-label" for="cpf">CPF*:</label>
+                    <input #cpfNovo="ngModel" class="form-control" id="cpf" name="cpfNovo" [(ngModel)]="pessoa.documento" type="text" placeholder="000.000.000-00" required />
+
+                    <span class="glyphicon glyphicon-remove from-control-feedback" aria-hidden="true" *ngIf="!cpfNovo.valid && cpfNovo.touched"></span>
+                    <span id="cpf" class="sr-only" *ngIf="!cpfNovo.valid && cpfNovo.touched">(error)</span>
+
+                    <span *ngIf="!cpfNovo.valid && cpfNovo.touched" style="color: red">
+                        CPF é um campo obrigatório.</span>
                 </div>
 
                 <div class="form-group col-xl-6">
                     <label>Data de Nascimento*:</label>
-                    <p-calendar #dataNascimentoNovo="ngModel"
-                                name="dataNascimentoNovo"
-                                [locale]="pt"
-                                styleClass="w-100"
-                                inputStyleClass="form-control {{ (dataNascimentoNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
-                                monthNavigator="true"
-                                yearNavigator="true"
-                                dateFormat="dd/mm/yy"
-                                yearRange="1900:2100"
-                                [maxDate]="maxDate"
-                                [defaultDate]="maxDate"
-                                placeholder="Data de Nascimento"
-                                [(ngModel)]="pessoa.dataNascimento"
-                                required></p-calendar>
+                    <p-calendar #dataNascimentoNovo="ngModel" name="dataNascimentoNovo" [locale]="pt" styleClass="w-100"
+                        inputStyleClass="form-control {{ (dataNascimentoNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        monthNavigator="true" yearNavigator="true" dateFormat="dd/mm/yy" yearRange="1900:2100"
+                        [maxDate]="maxDate" [defaultDate]="maxDate" placeholder="Data de Nascimento"
+                        [(ngModel)]="pessoa.dataNascimento" required></p-calendar>
                 </div>
 
                 <div class="form-group col-xl-6">
                     <label>Estado Civil*:</label>
                     <select #estadoCivilNovo="ngModel" name="estadoCivilNovo" [(ngModel)]="pessoa.estadoCivil"
-                            class="form-control {{ (estadoCivilNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}" required>
+                        class="form-control {{ (estadoCivilNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        required>
                         <option [ngValue]="null">Selecione...</option>
                         <option [ngValue]="estadoCivil.SOLTEIRO">Solteiro</option>
                         <option [ngValue]="estadoCivil.CASADO">Casado</option>
@@ -77,31 +78,35 @@
 
                 <div class="form-group col-xl-6">
                     <label>Atividade Econômica*:</label>
-                    <input #atividadeEconomicaNovo="ngModel" name="atividadeEconomicaNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.atividadeEconomica" type="text"
+                    <input #atividadeEconomicaNovo="ngModel" name="atividadeEconomicaNovo" (keyup)="formatInput($event)"
+                        [(ngModel)]="pessoa.atividadeEconomica" type="text"
                         class="form-control {{ (atividadeEconomicaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
                         placeholder="Atividade Econômica" required />
                 </div>
 
                 <div class="form-group col-xl-6">
                     <label>Profissão:</label>
-                    <input #profissaoNovo="ngModel" (keyup)="formatInput($event)" name="profissaoNovo" [(ngModel)]="pessoa.profissao" type="text"
-                        class="form-control"
-                        placeholder="Profissão" />
+                    <input #profissaoNovo="ngModel" (keyup)="formatInput($event)" name="profissaoNovo"
+                        [(ngModel)]="pessoa.profissao" type="text" class="form-control" placeholder="Profissão" />
                 </div>
-                
+
             </span>
 
+
+            <!--formulario pessoa júridica : criar component próprio-->
             <span class="row" *ngIf="tipoPessoa.JURIDICA === pessoa.tipo">
                 <div class="form-group col-xl-6">
                     <label>Razão Social*:</label>
-                    <input #razaoSocialNovo="ngModel" name="razaoSocialNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.razaoSocial" type="text"
+                    <input #razaoSocialNovo="ngModel" name="razaoSocialNovo" (keyup)="formatInput($event)"
+                        [(ngModel)]="pessoa.razaoSocial" type="text"
                         class="form-control {{ (razaoSocialNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
                         placeholder="Razão Social" required />
                 </div>
 
                 <div class="form-group col-xl-6">
                     <label>Nome Fantasia*:</label>
-                    <input #nomeFantasiaNovo="ngModel" name="nomeFantasiaNovo" (keyup)="formatInput($event)" [(ngModel)]="pessoa.nomeFantasia" type="text"
+                    <input #nomeFantasiaNovo="ngModel" name="nomeFantasiaNovo" (keyup)="formatInput($event)"
+                        [(ngModel)]="pessoa.nomeFantasia" type="text"
                         class="form-control {{ (nomeFantasiaNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
                         placeholder="Nome Fantasia" required />
                 </div>
@@ -115,20 +120,11 @@
 
                 <div class="form-group col-xl-6">
                     <label>Data de Criação*:</label>
-                    <p-calendar #dataCriacaoNovo="ngModel"
-                                name="dataCriacaoNovo"
-                                [locale]="pt"
-                                styleClass="w-100"
-                                inputStyleClass="form-control {{ (dataCriacaoNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
-                                monthNavigator="true"
-                                yearNavigator="true"
-                                dateFormat="dd/mm/yy"
-                                yearRange="1900:2100"
-                                [maxDate]="maxDate"
-                                placeholder="Data de Criação"
-                                [(ngModel)]="pessoa.dataNascimento"
-                                [defaultDate]="maxDate"
-                                required></p-calendar>
+                    <p-calendar #dataCriacaoNovo="ngModel" name="dataCriacaoNovo" [locale]="pt" styleClass="w-100"
+                        inputStyleClass="form-control {{ (dataCriacaoNovo.invalid && pessoaNovoForm.submitted) ? 'is-invalid' : '' }}"
+                        monthNavigator="true" yearNavigator="true" dateFormat="dd/mm/yy" yearRange="1900:2100"
+                        [maxDate]="maxDate" placeholder="Data de Criação" [(ngModel)]="pessoa.dataNascimento"
+                        [defaultDate]="maxDate" required></p-calendar>
                 </div>
 
                 <div class="form-group col-xl-6">
@@ -146,8 +142,9 @@
 
         </app-modal-body>
         <app-modal-footer>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="pessoaNovoForm.resetForm()">Fechar</button>
-            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                (click)="pessoaNovoForm.resetForm()">Fechar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!pessoaNovoForm.valid">Salvar</button>
         </app-modal-footer>
     </app-modal>
 </form>

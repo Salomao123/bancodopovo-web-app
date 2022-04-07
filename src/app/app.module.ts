@@ -62,7 +62,7 @@ registerLocaleData(localePt, 'pt-BR')
     PublicComponent,
     MenuComponent,
     HeaderComponent,
-    UserDropComponent
+    UserDropComponent,
   ],
   imports: [
     BrowserModule,

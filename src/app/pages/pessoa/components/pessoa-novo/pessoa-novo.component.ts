@@ -61,12 +61,12 @@ export class PessoaNovoComponent implements OnInit {
     if (Resto != parseInt(inputCPF.substring(10, 11))) return false;
     return true;
   }
-     formatInput(event: any) {
-      const text = event.target.value;
-      const formattedText = text.replace(/[^A-Za-z áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ-]/g,"")
-      event.target.value = formattedText
-  
-    }
+
+  formatInput(event: any) {
+    const text = event.target.value;
+    const formattedText = text.replace(/[^A-Za-z áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ-]/g,"");
+    event.target.value = formattedText;
+  }
 
   adicionar() {
     this.pessoa = new Pessoa();
@@ -89,8 +89,12 @@ export class PessoaNovoComponent implements OnInit {
   salvar() {
     const cpfInput = document.getElementById("cpf");
 
+    console.log(cpfInput);
+
     if (cpfInput !== null) {
     const cpfValue = this.formatarCPF();
+
+    console.log(cpfValue);
 
     if (this.form.valid && this.validarCPF(cpfValue)) {
       this.store.dispatch(
@@ -112,6 +116,17 @@ export class PessoaNovoComponent implements OnInit {
         })
       );
     }
+  }
+
+  verificaValidTouched(campo) {
+    return !campo.valid && campo.touched;
+  }
+
+  aplicaErro(campo) {
+    return {
+      'has-error': this.verificaValidTouched(campo),
+      'has-feedback' : this.verificaValidTouched(campo)
+  }
   }
 
   fecharModal = () => {

@@ -1,0 +1,84 @@
+
+.ui-widget, .ui-widget * {
+    box-sizing: border-box;
+}
+
+.ui-table {
+    padding-bottom: 1rem !important;
+}
+
+.ui-table table {
+    width: 100% !important;
+    table-layout: unset !important;
+}
+
+.ui-table .ui-table-thead > tr > th,
+.ui-table .ui-table-tbody > tr > td,
+.ui-table .ui-table-tfoot > tr > td {
+    padding: .625rem !important;
+    white-space: nowrap !important;
+}
+
+.ui-table .ui-table-thead > tr > th:first-child,
+.ui-table .ui-table-tbody > tr > td:first-child,
+.ui-table .ui-table-tfoot > tr > td:first-child {
+    padding-left: 1.5rem !important;
+}
+
+.ui-paginator > p-dropdown {
+    display: none !important;
+}
+
+.ui-paginator .ui-paginator-first,
+.ui-paginator .ui-paginator-prev,
+.ui-paginator .ui-paginator-next,
+.ui-paginator .ui-paginator-last,
+.ui-paginator .ui-paginator-pages .ui-paginator-page {
+    color: #a3a4a6 !important;
+    font-size: .75rem !important;
+    min-width: calc(1.5rem + 2px) !important;
+    box-sizing: border-box;
+    white-space: normal;
+    border: 1px solid #d1d2d3;
+    border-radius: .25rem;
+    text-align: center !important;
+    position: relative !important;
+    font-family: unset !important;
+    border-color: rgba(24,28,33,0.06);
+    width: 26px !important;
+    height: 26px !important;
+}
+
+.ui-paginator .ui-paginator-pages {
+    bottom: 4px !important;
+}
+
+.ui-paginator .ui-paginator-pages .ui-paginator-page {
+    padding-top: 3px !important;
+}
+
+.ui-paginator .ui-paginator-pages .ui-state-active {
+    border-color: #5d78ff;
+    background-color: #5d78ff;
+    color: #fff !important;
+}
+
+/* PrimeNG Calendar */
+.ui-calendar .ui-datepicker {
+    background-color: white !important;
+    min-width: unset !important;
+}
+
+.modal .modal-content .modal-header .close:before {
+    content: ""
+}
+
+/* PrimeNG Checkbox */
+.ui-chkbox .ui-chkbox-box {
+    border: 1px solid #d1d7e2 !important;
+}
+
+.btn-ssm {
+    height: 1.5em !important;
+    width: 1.5em !important;
+}
